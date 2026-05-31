@@ -1,11 +1,11 @@
 
-const Contact = () => {
+const Contactus = () => {
   return (
     <div>
-      <div>Contact</div>
+      <div>Contact US</div>
     
     </div>
   );
 };
 
-export default Contact;
+export default Contactus;

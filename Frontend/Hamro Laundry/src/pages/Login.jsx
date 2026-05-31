@@ -1,10 +1,29 @@
+
+import {useState} from "react";
+import toast from "react-hot-toast";
+import { loginUser } from "../service/Api"
+
 const Login = () => {
-  return (
-    <div>
-      <div>Login</div>
-      
-    </div>
-  );
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = async () => {
+    try {
+      const data = { email, password };
+      const response = await loginUser(data);
+      toast.success(response.data.message);
+    } catch (e) {
+      toast.error(e.response?.data?.message || "Not successfull");
+    }
+  };
+     return(
+        <div>
+            <div>Login</div>;
+            <input type="email" onChange={(e) => setEmail(e.target.value)} />
+            <input type="password" onChange={(e) => setPassword(e.target.value)} />
+            <button onClick={login}>Click</button>
+        </div>
+     );
 };
 
 export default Login;
