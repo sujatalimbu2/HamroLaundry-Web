@@ -1,134 +1,264 @@
-/* Styles for Home page layout and hero */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+
+.home {
+  width: 100%;
 }
 
-.site-header {
-  background:#fafafa;
-  padding: 40px 0 120px;
-  overflow: hidden;
-  z-index: 20;
+/* Header Styling */
+.header {
+  background: #f8f8f8;
+  padding: 18px 0;
+  z-index: 100;
 }
-.why-inner {
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 36px;
   display: flex;
-  align-items: flex-start;
-  gap: 40px;
-  position: relative;
-}
-.why-image {
-  flex: 0 0 320px;
-  margin-left: -80px;
-}
-.why-image img {
-  width: 320px;
-  height: auto;
-  display: block;
-}
-.why-copy {
-.subtitle {
-  color: #666;
-  margin-bottom: 18px;
-    margin-right: 0;
-}
-.cta {
-  display: block;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: +130px;
-  padding: 5px 12px;
-  border-radius: 8px;
-  border: 1px solid #aaa;
-  background: #fff;
-  color: #111;
-  text-decoration: none;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.cta img {
-  width: 16px;
-  height: 20px;
-  margin-left: 8px;
-  vertical-align: middle;
-  display: inline-block;
+
+/* Laundry Section (Hero) */
+.laundry-section {
+  background: #f8f8f8;
+  padding: 54px 36px 72px;
+  min-height: auto;
 }
 
-.services {
-  padding: 100px 0 140px;
-  background: #fff;
+.laundry-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 54px;
+  align-items: center;
   text-align: center;
 }
-.services-title {
-  font-size: 96px;
-  margin: 0;
-  font-weight: 650;
-  color:#000
+
+.laundry-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
-/* Why choose us section */
-.why-choose {
-  position: relative;
-  background: #f77089;
-  color: #111;
-  padding: 60px 0 100px;
-  overflow: hidden;
+.laundry-text {
+  text-align: center;
+  max-width: 600px;
 }
-.why-inner {
+
+.laundry-text h1 {
+  font-size: 45px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  line-height: 1.1;
+  color: #000;
+}
+
+.laundry-text p {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 36px;
+  font-weight: 400;
+}
+
+.btn-primary {
+  padding: 4px 10px;
+  font-size: 18px;
+  border: 1px solid #000;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background: #000;
+  color: white;
+}
+
+.btn-primary img {
+  width: 10px;
+  height: 20px;
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Services Section */
+.services-section {
+  background: white;
+  max-width: 100%;
+  margin: 0;
+  padding: 72px 36px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.features {
+  background: #f48aa5; /* pink background for feature area */
+  padding: 40px 0 60px;
+}
+
+.services-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px;
+  align-items: start;
+  padding: 0 36px;
+}
+
+.service-item {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.service-icon {
+  width: 64px;
+  height: 64px;
+  background: #0b74de;
+  border-radius: 8px;
   display: flex;
   align-items: center;
-  gap: 40px;
+  justify-content: center;
+  flex: 0 0 64px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
-.why-image img {
-  width: 260px;
+
+.service-body h3 {
+  margin: 0 0 6px 0;
+  font-size: 32px;
+  color: #111;
+  font-weight: 700;
+}
+.half {
+  size: -9px;
+}
+.service-body p {
+  margin: 0;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .services-grid { grid-template-columns: 1fr; gap: 28px; }
+  .service-icon { width: 56px; height: 56px; flex: 0 0 56px }
+  .service-body h3 { font-size: 24px }
+}
+
+.services-header {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.services-header h2 {
+  font-size: 54px;
+  font-weight: 700;
+  margin-bottom: 9px;
+  color:#000;
+}
+
+.services-header p {
+  font-size: 19.8px;
+  color: #666;
+}
+
+/* Why Choose Section */
+.why-choose-section {
+  background: #000000;
+  padding: 72px 36px;
+  min-height: auto;
+}
+
+.why-choose-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 54px;
+  margin-top: 36px; /* push content down below the heading */
+  align-items: center;
+}
+
+.why-choose-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clothes-img {
+  max-width: 70%;
   height: auto;
   display: block;
 }
-.why-copy {
-  flex: 1;
-  max-width: 640px;
-}
-.why-copy h2 {
-  font-size: 40px;
-  margin: 0 0 12px;
-  font-weight: 800;
-}
-.why-copy p {
-  color: #fff;
-  line-height: 1.5;
-}
-.why-watermark {
-  position: absolute;
-  right: -10px;
-  bottom: 10px;
-  font-size: 180px;
-  font-weight: 900;
-  color: rgba(255,255,255,0.15);
-  text-transform: lowercase;
-  pointer-events: none;
+
+.why-choose-text {
+  color: white;
 }
 
-@media (max-width: 900px) {
-  .why-inner { flex-direction: column; text-align: center; }
-  .why-image img { width: 180px; }
-  .why-copy p { color: #fff; }
-  .why-watermark { font-size: 80px; right: 0; bottom: -20px; }
-}
-.services-sub {
-  color: #080707;
-  margin-top: 12px;
-  font-size: 18px;
+.why-choose-text h2 {
+  font-size: 50.4px;
+  font-weight: 700;
+  margin-bottom: 27px;
+  line-height: 1.1;
 }
 
-@media (max-width: 900px) {
-  .washer-row { gap: 28px; }
-  .washer-row img { width: 160px; }
-  .hero-copy h1 { font-size: 36px; }
-  .services-title { font-size: 56px; }
-  .header-inner { height: 64px; }
+.why-choose-text p {
+  font-size: 18.9px;
+  line-height: 1.6;
+  color: white;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .nav {
+    gap: 18px;
+    font-size: 16.2px;
+  }
+
+  .laundry-content {
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .laundry-text h1 {
+    font-size: 32.4px;
+  }
+
+  .services-header h2 {
+    font-size: 36px;
+  }
+
+  .why-choose-content {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    margin-top: 18px;
+  }
+
+  .why-choose-text h2 {
+    font-size: 32.4px;
+  }
+
+  .header-content {
+    padding: 0 18px;
+  }
+
+  .laundry-section,
+  .services-section,
+  .why-choose-section {
+    padding: 36px 18px;
+  }
 }

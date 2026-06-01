@@ -1,0 +1,38 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 22.5px;
+  font-weight: 600;
+  text-decoration: none;
+  color: black;
+}
+
+.logo-icon {
+  width: 60px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.logo-text {
+  font-weight: 600;
+  color: black;
+}
+
+.nav {
+  display: flex;
+  gap: 30px;
+  margin-left: -125px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+  transition: color 0.3s;
+
+}
+
+.nav a:hover {
+  color: #666;
+}
