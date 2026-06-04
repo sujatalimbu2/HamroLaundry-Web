@@ -1,6 +1,7 @@
 
 .home {
   width: 100%;
+  background-color:#fff;
 }
 
 /* Header Styling */
@@ -171,6 +172,38 @@
   color: #666;
 }
 
+.how { background-color:rgba(255, 255, 255, 0.932); padding: 80px 60px; text-align: center; border-bottom: 1px solid #E8E8E8; color:#000}
+  .section-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--gray); display: block; margin-bottom: 12px;
+  }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; margin-bottom: 56px;color:#000; }
+  .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; max-width: 860px; margin: 0 auto; }
+  .step { text-align: center; }
+  .step-num {
+    width: 52px; height: 52px; background: var(--black); color: var(--white);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900;
+    margin: 0 auto 18px;
+  }
+  .step h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+  .step p { color: var(--gray); font-size: 0.85rem; line-height: 1.6; font-weight: 300; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--white); padding: 80px 60px; border-bottom: 1px solid #E8E8E8;background-color:rgb(255, 255, 255); color:#000; }
+  .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 48px; }
+  .review-card { border: 1px solid #E8E8E8; border-radius: 10px; padding: 28px; transition: all 0.2s; }
+  .review-card:hover { border-color: var(--black); box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+  .stars { color: var(--black); font-size: 0.85rem; letter-spacing: 3px; margin-bottom: 14px; }
+  .review-text { color: var(--mid); font-size: 0.88rem; line-height: 1.7; font-style: italic; margin-bottom: 20px; font-weight: 300; }
+  .reviewer { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 40px; height: 40px; background: var(--black); color: var(--white);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .reviewer-name { font-weight: 700; font-size: 0.88rem; }
+  .reviewer-role { font-size: 0.75rem; color: var(--gray); }
+
 /* Why Choose Section */
 .why-choose-section {
   background: #000000;
@@ -190,18 +223,19 @@
 
 .why-choose-image {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+
 }
 
 .clothes-img {
-  max-width: 70%;
-  height: auto;
-  display: block;
+  margin-left: -36px; 
+    margin-top :-200px;
+
 }
 
 .why-choose-text {
   color: white;
+   text-align: left;
 }
 
 .why-choose-text h2 {
@@ -211,10 +245,12 @@
   line-height: 1.1;
 }
 
-.why-choose-text p {
-  font-size: 18.9px;
+.why-choose-text p1 {
+  font-size: 25px;
   line-height: 1.6;
   color: white;
+   font-weight: 400;
+
 }
 
 /* Responsive Design */

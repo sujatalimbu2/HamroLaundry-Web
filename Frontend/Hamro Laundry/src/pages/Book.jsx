@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../assets/CCS/Book.css";
 import Navbar from "../component/Navbar";
+import Footer from "../component/Footer";
 
 const checkboxServices = [
   "Wash & Fold",
@@ -187,6 +188,7 @@ const Book = () => {
           )}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
