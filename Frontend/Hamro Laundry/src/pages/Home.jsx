@@ -1,4 +1,4 @@
-import Navbar from "../component/Navbar";
+
 import Footer from "../component/Footer";
 import "../assets/CCS/Home.css";
 import laundry from "../assets/laundry.png";
@@ -9,7 +9,6 @@ import clothes from "../assets/clothes.png";
 const Home = () => {
   return (
     <div>
-      <Navbar/>
       <section className="laundry-section">
         <div className="laundry-content">
           <div className="laundry-images">

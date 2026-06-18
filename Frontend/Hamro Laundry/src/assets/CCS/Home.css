@@ -12,7 +12,7 @@
 }
 
 .header-content {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 36px;
   display: flex;
@@ -26,6 +26,7 @@
   background: #f8f8f8;
   padding: 54px 36px 72px;
   min-height: auto;
+  width:100%
 }
 
 .laundry-content {
@@ -163,7 +164,7 @@
 .services-header h2 {
   font-size: 54px;
   font-weight: 700;
-  margin-bottom: 9px;
+  margin-bottom: 15px;
   color:#000;
 }
 
@@ -228,14 +229,16 @@
 }
 
 .clothes-img {
-  margin-left: -36px; 
-    margin-top :-200px;
+  margin-left: -45px; 
+  margin-top :-180px;
+    width: 550px;
+    height: 600px;
 
 }
 
 .why-choose-text {
   color: white;
-   text-align: left;
+  text-align: left;
 }
 
 .why-choose-text h2 {

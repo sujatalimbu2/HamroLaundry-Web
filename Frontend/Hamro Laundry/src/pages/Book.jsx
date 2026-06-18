@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../assets/CCS/Book.css";
-import Navbar from "../component/Navbar";
+
 import Footer from "../component/Footer";
 
 const checkboxServices = [
@@ -56,7 +56,6 @@ const Book = () => {
 
   return (
     <div className="book-page">
-      <Navbar/>
       <div className="book-wrap">
         <div className="book-info fade-up">
           <span className="book-info-tag">Reserve Your Slot</span>

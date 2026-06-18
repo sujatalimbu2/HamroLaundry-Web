@@ -1,25 +1,33 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.png";
+import { MdLocalLaundryService } from "react-icons/md";
 import "../assets/CCS/Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ basket, setShowBasket }) => {
   return (
     <header className="header">
-      <div className="header-content">
-        <div className="logo">
-          <img src={logo} alt="logo" className="logo-icon" />
-          <span className="logo-text">Hamro Laundry</span>
-        </div>
+      <div className="logo">Hamro Laundry</div>
 
-         <nav className="nav">
-          <Link to="/">Home</Link>
-          <Link to="/book">Book</Link>
-          <Link to="/price">Price</Link>
-          <Link to="/about">About</Link>
-        </nav>
-         </div>
+      <nav className="nav">
+        <Link to="/">Home</Link>
+        <Link to="/book">Book</Link>
+        <Link to="/price">Price</Link>
+        <Link to="/about">About</Link>
+
+        {/* BASKET ICON */}
+        <button
+          className="basket-btn"
+          onClick={() => setShowBasket(true)}
+        >
+          <MdLocalLaundryService size={26} />
+
+          {basket.length > 0 && (
+            <span className="count">
+              {basket.length}
+            </span>
+          )}
+        </button>
+      </nav>
     </header>
-    
   );
 };
 
