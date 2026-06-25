@@ -143,7 +143,7 @@ function Book ({addToBasket=()=>{},navBasket=[],goPrice=()=>{}}){
               </select>
             </div>
             {total>0&&date&&time&&<div className="bp-hint">✓ {total} item{total!==1?"s":""} · {date}</div>}
-            <button className="bp-cfm" onClick={confirm}><span>✓</span> Confirm Booking</button>
+            <button className="bp-cfm" onClick={confirm} disabled={total===0} style={{opacity: total===0 ? 0.5 : 1, cursor: total===0 ? 'not-allowed' : 'pointer'}}><span>✓</span> Confirm Booking</button>
           </div>
           <div className="bp-panel">
             <div className="bp-nudge">

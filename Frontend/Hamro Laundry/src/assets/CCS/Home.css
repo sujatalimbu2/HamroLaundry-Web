@@ -1,6 +1,8 @@
 
 .home {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   background-color:#fff;
 }
 
@@ -26,7 +28,20 @@
   background: #f8f8f8;
   padding: 54px 36px 72px;
   min-height: auto;
-  width:100%
+  width:100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .laundry-section {
+    padding: 36px 20px 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .laundry-section {
+    padding: 24px 16px 32px;
+  }
 }
 
 .laundry-content {
@@ -114,6 +129,21 @@
   gap: 48px;
   align-items: start;
   padding: 0 36px;
+}
+
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    padding: 0 16px;
+    gap: 24px;
+  }
 }
 
 .service-item {
@@ -229,16 +259,18 @@
 }
 
 .clothes-img {
-  margin-left: -45px; 
-  margin-top :-180px;
-    width: 550px;
-    height: 600px;
+  margin-left: -34px; 
+  margin-top :-128px;
+    width: 290px;
+    height: 580px;
 
 }
 
 .why-choose-text {
   color: white;
   text-align: left;
+  width: 400px;
+  margin-top :-400px;
 }
 
 .why-choose-text h2 {

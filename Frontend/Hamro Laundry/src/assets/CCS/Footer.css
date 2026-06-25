@@ -24,15 +24,14 @@
       min-width: 160px; 
     }
 .footer-bottom {
-     width: 100%;
-      margin-top: 18px; 
-    }
-.footer-bottom {
      max-width: 1400px;  
-     padding: 18px 12px 6px;  
+     padding: 18px 12px 6px; 
+     text-align: center;
      color: rgba(255,255,255,0.6); 
-     font-size: 0.78rem; box-sizing: border-box; 
-     border-top: 1px solid rgba(255,255,255,0.06); 
+     font-size: 0.78rem; 
+     box-sizing: border-box; 
+     border-top: 1px solid rgba(255,255,255,0.2); 
+     margin-top: 18px;
     }
 
 .footer-logo {

@@ -5,6 +5,7 @@
   font-weight: 600;
   text-decoration: none;
   color: black;
+    margin-left: 25px;
 }
 .header {
   display: flex;
@@ -36,8 +37,18 @@
   
 
 }
+.basket-btn {
+  cursor: pointer;
+   margin-right: 25px;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .nav a:hover {
-
   color: #666;
 }
+

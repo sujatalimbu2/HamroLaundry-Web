@@ -12,13 +12,14 @@ const Navbar = ({ basket, setShowBasket }) => {
         <Link to="/book">Book</Link>
         <Link to="/price">Price</Link>
         <Link to="/about">About</Link>
+      </nav>
 
         {/* BASKET ICON */}
         <button
           className="basket-btn"
           onClick={() => setShowBasket(true)}
         >
-          <MdLocalLaundryService size={26} />
+          <MdLocalLaundryService size={24} />
 
           {basket.length > 0 && (
             <span className="count">
@@ -26,7 +27,6 @@ const Navbar = ({ basket, setShowBasket }) => {
             </span>
           )}
         </button>
-      </nav>
     </header>
   );
 };
