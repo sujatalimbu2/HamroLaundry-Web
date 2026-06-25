@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import Navbar from "./component/Navbar";
@@ -15,6 +15,29 @@ function App() {
 
   return (
     <BrowserRouter>
+      <AppShell
+        basket={basket}
+        setBasket={setBasket}
+        showBasket={showBasket}
+        setShowBasket={setShowBasket}
+      />
+    </BrowserRouter>
+  );
+}
+
+function AppShell({ basket, setBasket, showBasket, setShowBasket }) {
+  const navigate = useNavigate();
+
+  const addToBasket = (item) => {
+    setBasket((prev) => [...prev, item]);
+  };
+
+  const goPrice = () => {
+    navigate("/price");
+  };
+
+  return (
+    <>
 
       {/* ✅ NAVBAR ALWAYS SHOWS */}
       <Navbar
@@ -30,10 +53,16 @@ function App() {
         />
         <Route
           path="/book"
-          element={<Book basket={basket} setBasket={setBasket} />}
+          element={
+            <Book
+              addToBasket={addToBasket}
+              navBasket={basket}
+              goPrice={goPrice}
+            />
+          }
         />
-        <Route path="/price" element={<Price />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/price" element={<Price basket={basket} setBasket={setBasket} />} />
+        <Route path="/about" element={<About basket={basket} setBasket={setBasket} />} />
       </Routes>
 
       {/* SIDEBAR BASKET */}
@@ -44,8 +73,7 @@ function App() {
           onClose={() => setShowBasket(false)}
         />
       )}
-
-    </BrowserRouter>
+    </>
   );
 }
 
