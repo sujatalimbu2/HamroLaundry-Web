@@ -1,0 +1,56 @@
+const pool =require("../database/db");
+
+const createUser = async(name, email, password, image)=>{
+    const result = await pool.query(
+        "insert into users(name, email, password, image) values ($1,$2,$3,$4) returning *",
+        [name, email, password, image]
+    );
+
+    return result.rows[0];
+};
+const existingUser = async(email) =>{
+      const result = await pool.query(
+        "Select * from users where email = $1",
+        [email]
+    );
+    return result.rows[0];
+
+};
+
+const getAllUser = async() => {
+    const result = await pool.query("Select * from users");
+    return result.rows;
+};
+
+const searchUser = async (keyword) => {
+  const result = await pool.query(
+    "select * from users where name ILike $1 or email like $1",
+    [`%${keyword}%`],
+  );
+  return result.rows;
+};
+
+const getUserById = async(id) =>{
+    const result = await pool.query("Select * from users where id = $1", 
+        [id]
+    );
+    return result.rows[0];
+};
+
+const deleteById = async(id) => {
+    const result = await pool.query("Delete from users where id = $1",
+        [id]
+    );
+    return result.rows;
+};
+
+const updateUser = async(id,name, email, password, image) => {
+    const result = await pool.query
+    ("Update users SET name = $1, email = $2, password = $3, image = $4 WHERE id = $5 RETURNING *",
+        [name, email, password, image, id]
+    );
+    return result.rows[0];
+};
+
+
+module.exports ={createUser, existingUser,getAllUser, getUserById, deleteById, updateUser, searchUser}; // for exports to run any file
