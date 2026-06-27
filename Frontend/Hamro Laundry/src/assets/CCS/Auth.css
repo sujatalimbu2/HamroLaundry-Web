@@ -12,12 +12,10 @@
   position: relative;
   width: min(100%, 440px);
   background: #fff;
-  border: 1px solid #e0e0e0;
   border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.22);
+  overflow: hidden;   /* Keep this */
+  padding: 0;         /* Add this */
 }
-
 .auth-close {
   position: absolute;
   top: 12px;

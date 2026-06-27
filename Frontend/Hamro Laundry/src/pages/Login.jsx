@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import "../assets/CCS/Auth.css";
 
 const getUsers = () => JSON.parse(localStorage.getItem("hamro_users") || "[]");
 
 function Login({ onLogin }) {
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -55,10 +56,18 @@ function Login({ onLogin }) {
             {message && <div className="auth-error">{message}</div>}
             <button type="submit">Sign In</button>
           </form>
-
           <div className="auth-switch">
-            No account? <Link to="/register">Register</Link>
-          </div>
+              No account?{" "}
+              <Link
+                to="/register"
+                state={{
+                  backgroundLocation:
+                    location.state?.backgroundLocation || location,
+                }} >
+                Register
+              </Link>
+            </div>
+          
         </div>
       </section>
     </main>

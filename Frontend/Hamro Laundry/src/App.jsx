@@ -57,9 +57,7 @@ function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) 
   const navigate = useNavigate();
   const location = useLocation();
   const modalRoutes = ["/login", "/register", "/profile"];
-  const isModalRoute =
-  modalRoutes.includes(location.pathname) &&
-  location.state?.backgroundLocation;
+  const isModalRoute = modalRoutes.includes(location.pathname);
   const backgroundLocation = location.state?.backgroundLocation;
  const pageLocation = backgroundLocation || location;
 

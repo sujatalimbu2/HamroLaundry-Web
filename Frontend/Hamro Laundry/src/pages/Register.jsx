@@ -1,34 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation  } from "react-router-dom";
 import { useState } from "react";
 import "../assets/CCS/Auth.css";
 
 const getUsers = () => JSON.parse(localStorage.getItem("hamro_users") || "[]");
 
 function Register() {
+  const location = useLocation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-
-  const handleImageChange = (event) => {
-    const file = event.target.files?.[0];
-
-    if (!file) {
-      setImage("");
-      return;
-    }
-
-    if (!file.type.startsWith("image/")) {
-      setMessage("Please choose an image file.");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => setImage(reader.result);
-    reader.readAsDataURL(file);
-  };
 
   const register = (event) => {
     event.preventDefault();
@@ -59,21 +41,49 @@ function Register() {
       setMessage("An account with this email already exists.");
       return;
     }
+      localStorage.setItem( "hamro_users", JSON.stringify([
+      ...users,
+      {
+        name: cleanName,
+        email: cleanEmail,
+        password,
+        image: "",
+      },
+    ])
+  );
 
-    localStorage.setItem(
-      "hamro_users",
-      JSON.stringify([...users, { name: cleanName, email: cleanEmail, password, image }])
-    );
+    navigate("/login", {
+     state: {
+    backgroundLocation:
+      location.state?.backgroundLocation || location,
+  },
+});
 
-    navigate("/login");
+  
   };
 
   return (
     <main className="auth-page">
-      <section className="auth-card">
-        <button className="auth-close" onClick={() => navigate("/login")} aria-label="Close register">x</button>
+      <section className="auth-card register-card">
+       <button
+            className="auth-close"
+            onClick={() =>
+              navigate("/login", {
+                state: {
+                  backgroundLocation:
+                    location.state?.backgroundLocation || location,
+                },
+              })
+            }
+            aria-label="Close register"
+          >
+            ×
+         </button>
+        
         <div className="auth-panel-head">
-          <div className="auth-avatar">{image ? <img src={image} alt="Profile preview" /> : "U"}</div>
+        <div className="auth-avatar">
+          {name ? name.charAt(0).toUpperCase() : "U"}
+        </div>
           <div>
             <h1>Create Account</h1>
             <p>Join Hamro Laundry</p>
@@ -97,17 +107,23 @@ function Register() {
               Password
               <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 6 characters" required />
             </label>
-            <label>
-              Profile Picture
-              <input type="file" accept="image/*" onChange={handleImageChange} />
-            </label>
             {message && <div className="auth-error">{message}</div>}
             <button type="submit">Register</button>
           </form>
-
           <div className="auth-switch">
-            Already have an account? <Link to="/login">Sign In</Link>
-          </div>
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              state={{
+                backgroundLocation:
+                  location.state?.backgroundLocation || location,
+              }}
+            >
+              Sign In
+            </Link>
+             </div>
+
+         
         </div>
       </section>
     </main>

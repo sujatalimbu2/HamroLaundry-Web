@@ -3,65 +3,142 @@ import { useNavigate } from "react-router-dom";
 import "../assets/CCS/Auth.css";
 
 function User({ user, onUserUpdate, goLogin }) {
-  const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!user) {
       goLogin();
+      return;
     }
-  }, [goLogin, user]);
+
+    setName(user.name);
+    setImage(user.image || "");
+  }, [user, goLogin]);
 
   const handleImageChange = (event) => {
     const file = event.target.files?.[0];
 
-    if (!file || !user) {
-      return;
-    }
+    if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setMessage("Please choose an image file.");
+      setMessage("Please choose an image.");
       return;
     }
 
     const reader = new FileReader();
+
     reader.onload = () => {
-      onUserUpdate({ ...user, image: reader.result });
-      setMessage("Profile picture updated.");
+      setImage(reader.result);
     };
+
     reader.readAsDataURL(file);
   };
 
-  if (!user) {
-    return null;
-  }
+  const saveProfile = (e) => {
+    e.preventDefault();
+
+    if (name.trim().length < 3) {
+      setMessage("Name must be at least 3 characters.");
+      return;
+    }
+
+    onUserUpdate({
+      ...user,
+      name: name.trim(),
+      image,
+    });
+
+    setMessage("Profile updated successfully.");
+  };
+
+  if (!user) return null;
 
   return (
     <main className="auth-page">
       <section className="auth-card profile-card">
-        <button className="auth-close" onClick={() => navigate("/")} aria-label="Close profile">x</button>
+
+        <button
+          className="auth-close"
+          onClick={() => navigate(-1)}
+        >
+          ×
+        </button>
+
         <div className="auth-panel-head">
+
           <div className="auth-avatar">
-            {user.image ? <img src={user.image} alt={user.name} /> : user.name?.charAt(0) || "U"}
+            {image ? (
+              <img src={image} alt={name} />
+            ) : (
+             name ? name.charAt(0).toUpperCase() : "U"
+            )}
           </div>
+
           <div>
-            <h1>{user.name}</h1>
+            <h1>{name}</h1>
             <p>{user.email}</p>
           </div>
+
         </div>
 
         <div className="auth-panel-body">
-          <span className="auth-eyebrow">Profile</span>
-          <p>Manage your account picture.</p>
 
-          <form className="auth-form">
+          <span className="auth-eyebrow">
+            Edit Profile
+          </span>
+
+          <p>
+            Update your account information.
+          </p>
+
+          <form
+            className="auth-form"
+            onSubmit={saveProfile}
+          >
+
             <label>
-              Change Profile Picture
-              <input type="file" accept="image/*" onChange={handleImageChange} />
+              Name
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </label>
-            {message && <div className="auth-success">{message}</div>}
+
+            <label>
+              Email
+              <input
+                value={user.email}
+                readOnly
+              />
+            </label>
+
+            <label>
+              Profile Picture
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </label>
+
+            {message && (
+              <div className="auth-success">
+                {message}
+              </div>
+            )}
+
+            <button type="submit">
+              Save Changes
+            </button>
+
           </form>
+
         </div>
+
       </section>
     </main>
   );

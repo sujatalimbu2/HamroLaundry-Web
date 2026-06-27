@@ -18,11 +18,17 @@ const location = useLocation();
       <div className="auth-nav">
         {user ? (
           <>
-            <Link className="profile-link" to="/profile">
+           <Link
+              className="profile-link"
+              to="/profile"
+              state={{ backgroundLocation: location }}
+            >
               {user.image ? (
                 <img className="profile-thumb" src={user.image} alt={user.name} />
               ) : (
-                <span className="profile-thumb profile-initial">{user.name?.charAt(0) || "U"}</span>
+                <span className="profile-thumb profile-initial">
+                  {user.name?.charAt(0) || "U"}
+                </span>
               )}
             </Link>
             <button className="auth-link" onClick={onLogout}>Logout</button>
