@@ -37,18 +37,85 @@
   
 
 }
-.basket-btn {
+.nav a:hover {
+  color: #666;
+}
+
+.auth-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 25px;
+}
+
+.auth-nav a,
+.auth-link {
+  border: 1px solid transparent;
+  background: transparent;
+  color: black;
   cursor: pointer;
-   margin-right: 25px;
-  padding: 0;
-  width: 30px;
-  height: 30px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.account-button {
+  border-color: #111 !important;
+  border-radius: 8px;
+  padding: 8px 14px;
+  line-height: 1;
+}
+
+.profile-link {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-color: #111 !important;
+  border-radius: 10px;
+  background: #f8f8f8;
 }
 
-.nav a:hover {
-  color: #666;
+.profile-thumb {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #d8d8d8;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 28px;
+}
+
+.profile-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .logo {
+    margin-left: 0;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+  }
+
+  .auth-nav {
+    margin-right: 0;
+  }
 }
 

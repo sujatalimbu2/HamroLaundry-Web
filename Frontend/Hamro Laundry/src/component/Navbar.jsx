@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
-import { MdLocalLaundryService } from "react-icons/md";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../assets/CCS/Navbar.css";
 
-const Navbar = ({ basket, setShowBasket }) => {
+
+const Navbar = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+const location = useLocation();
   return (
     <header className="header">
       <div className="logo">Hamro Laundry</div>
@@ -13,20 +15,29 @@ const Navbar = ({ basket, setShowBasket }) => {
         <Link to="/price">Price</Link>
         <Link to="/about">About</Link>
       </nav>
-
-        {/* BASKET ICON */}
-        <button
-          className="basket-btn"
-          onClick={() => setShowBasket(true)}
-        >
-          <MdLocalLaundryService size={24} />
-
-          {basket.length > 0 && (
-            <span className="count">
-              {basket.length}
-            </span>
-          )}
-        </button>
+      <div className="auth-nav">
+        {user ? (
+          <>
+            <Link className="profile-link" to="/profile">
+              {user.image ? (
+                <img className="profile-thumb" src={user.image} alt={user.name} />
+              ) : (
+                <span className="profile-thumb profile-initial">{user.name?.charAt(0) || "U"}</span>
+              )}
+            </Link>
+            <button className="auth-link" onClick={onLogout}>Logout</button>
+          </>
+        ) : (
+          <button
+            className="account-button"
+            onClick={() =>
+              navigate("/login", {
+                state: { backgroundLocation: location },
+              })
+            }> Login
+         </button>
+        )}
+      </div>
     </header>
   );
 };

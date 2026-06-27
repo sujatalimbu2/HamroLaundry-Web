@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import Navbar from "./component/Navbar";
@@ -6,47 +6,95 @@ import Home from "./pages/Home";
 import Book from "./pages/Book";
 import Price from "./pages/Price";
 import About from "./pages/About";
-import Basket from "./component/Basket";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import User from "./pages/User";
 
 
 function App() {
   const [basket, setBasket] = useState([]);
-  const [showBasket, setShowBasket] = useState(false);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("hamro_user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const handleLogin = (userData) => {
+    localStorage.setItem("hamro_user", JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  const handleUserUpdate = (userData) => {
+    const users = JSON.parse(localStorage.getItem("hamro_users") || "[]");
+    const updatedUsers = users.map((savedUser) =>
+      savedUser.email === userData.email ? { ...savedUser, ...userData } : savedUser
+    );
+
+    localStorage.setItem("hamro_users", JSON.stringify(updatedUsers));
+    localStorage.setItem("hamro_user", JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("hamro_user");
+    setUser(null);
+  };
 
   return (
     <BrowserRouter>
       <AppShell
         basket={basket}
         setBasket={setBasket}
-        showBasket={showBasket}
-        setShowBasket={setShowBasket}
+        user={user}
+        onLogin={handleLogin}
+        onLogout={handleLogout}
+        onUserUpdate={handleUserUpdate}
       />
     </BrowserRouter>
   );
 }
 
-function AppShell({ basket, setBasket, showBasket, setShowBasket }) {
+function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const modalRoutes = ["/login", "/register", "/profile"];
+  const isModalRoute =
+  modalRoutes.includes(location.pathname) &&
+  location.state?.backgroundLocation;
+  const backgroundLocation = location.state?.backgroundLocation;
+ const pageLocation = backgroundLocation || location;
 
   const addToBasket = (item) => {
-    setBasket((prev) => [...prev, item]);
+    setBasket((prev) => {
+      const existingItem = prev.find((basketItem) => basketItem.id === item.id);
+
+      if (!existingItem) {
+        return [...prev, item];
+      }
+
+      return prev.map((basketItem) =>
+        basketItem.id === item.id
+          ? { ...basketItem, qty: basketItem.qty + item.qty }
+          : basketItem
+      );
+    });
   };
 
   const goPrice = () => {
     navigate("/price");
   };
 
+  const goLogin = () => {
+    navigate("/login", { state: { backgroundLocation: location } });
+  };
+
   return (
     <>
 
       {/* ✅ NAVBAR ALWAYS SHOWS */}
-      <Navbar
-        basket={basket}
-        setShowBasket={setShowBasket}
-      />
+      <Navbar user={user} onLogout={onLogout} />
 
       {/* PAGE CONTENT CHANGES */}
-      <Routes>
+      <Routes location={pageLocation}>
         <Route
           path="/"
           element={<Home basket={basket} setBasket={setBasket} />}
@@ -57,7 +105,10 @@ function AppShell({ basket, setBasket, showBasket, setShowBasket }) {
             <Book
               addToBasket={addToBasket}
               navBasket={basket}
+              setBasket={setBasket}
               goPrice={goPrice}
+              goLogin={goLogin}
+              isLoggedIn={Boolean(user)}
             />
           }
         />
@@ -65,13 +116,15 @@ function AppShell({ basket, setBasket, showBasket, setShowBasket }) {
         <Route path="/about" element={<About basket={basket} setBasket={setBasket} />} />
       </Routes>
 
-      {/* SIDEBAR BASKET */}
-      {showBasket && (
-        <Basket
-          basket={basket}
-          setBasket={setBasket}
-          onClose={() => setShowBasket(false)}
+      {isModalRoute && (
+        <Routes>
+        <Route path="/login" element={<Login onLogin={onLogin} />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/profile"
+          element={<User user={user} onUserUpdate={onUserUpdate} goLogin={goLogin} />}
         />
+        </Routes>
       )}
     </>
   );
