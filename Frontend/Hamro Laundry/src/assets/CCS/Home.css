@@ -203,37 +203,6 @@
   color: #666;
 }
 
-.how { background-color:rgba(255, 255, 255, 0.932); padding: 80px 60px; text-align: center; border-bottom: 1px solid #E8E8E8; color:#000}
-  .section-label {
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
-    color: var(--gray); display: block; margin-bottom: 12px;
-  }
-  .section-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; margin-bottom: 56px;color:#000; }
-  .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; max-width: 860px; margin: 0 auto; }
-  .step { text-align: center; }
-  .step-num {
-    width: 52px; height: 52px; background: var(--black); color: var(--white);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900;
-    margin: 0 auto 18px;
-  }
-  .step h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
-  .step p { color: var(--gray); font-size: 0.85rem; line-height: 1.6; font-weight: 300; }
-
-  /* TESTIMONIALS */
-  .testimonials { background: var(--white); padding: 80px 60px; border-bottom: 1px solid #E8E8E8;background-color:rgb(255, 255, 255); color:#000; }
-  .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 48px; }
-  .review-card { border: 1px solid #E8E8E8; border-radius: 10px; padding: 28px; transition: all 0.2s; }
-  .review-card:hover { border-color: var(--black); box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
-  .stars { color: var(--black); font-size: 0.85rem; letter-spacing: 3px; margin-bottom: 14px; }
-  .review-text { color: var(--mid); font-size: 0.88rem; line-height: 1.7; font-style: italic; margin-bottom: 20px; font-weight: 300; }
-  .reviewer { display: flex; align-items: center; gap: 12px; }
-  .avatar {
-    width: 40px; height: 40px; background: var(--black); color: var(--white);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem;
-  }
-  .reviewer-name { font-weight: 700; font-size: 0.88rem; }
-  .reviewer-role { font-size: 0.75rem; color: var(--gray); }
 
 /* Why Choose Section */
 .why-choose-section {
@@ -269,8 +238,7 @@
 .why-choose-text {
   color: white;
   text-align: left;
-  width: 400px;
-  margin-top :-400px;
+  margin-top :-100px;
 }
 
 .why-choose-text h2 {
@@ -280,14 +248,97 @@
   line-height: 1.1;
 }
 
-.why-choose-text p1 {
-  font-size: 25px;
-  line-height: 1.6;
+.why-choose-text p {
+  font-size: 20px;
   color: white;
-   font-weight: 400;
+  font-weight: 400;
 
 }
+.feedback-section{
+    background:white;
+    padding:80px 8%;
+    margin-top:80px;
+}
 
+.feedback-content{
+    max-width:1300px;
+    margin:auto;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+}
+
+.feedback-text h2{
+    color:#000000;
+    font-size:50px;
+    font-weight:700;
+    margin-bottom:18px;
+}
+
+.feedback-text p{
+    color:#8b8b8b;
+    font-size:20px;
+    line-height:1.6;
+    max-width:650px;
+}
+
+.feedback-btn{
+    background:black;
+    color:#ffffff;
+
+    border:none;
+    border-radius:22px;
+
+    padding:22px 42px;
+
+    font-size:16px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.feedback-btn:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 30px rgba(255,255,255,.15);
+}
+
+.h-reviews{padding:60px 56px;border-bottom:1px solid var(--border)}
+.h-rev-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
+.h-rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.h-rev-card{border:1px solid var(--border);border-radius:16px;padding:29px;transition:all .2s;}
+.h-rev-card:hover{border-color:var(--ink);box-shadow:0 6px 26px rgba(0,0,0,.07);transform:translateY(-3px)}
+.h-stars{display:flex;gap:3px;margin-bottom:13px}
+.h-star-svg{width:11px;height:11px;background:var(--ink);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.h-rev-text{color:var(--ink3);font-size:.84rem;line-height:1.74;font-style:italic;margin-bottom:18px;font-weight:300}
+.h-reviewer{display:flex;align-items:center;gap:10px}
+.h-rev-av{width:36px;height:36px;background:var(--ink);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.88rem}
+.h-rev-name{font-size:.82rem;font-weight:600}
+.h-rev-role{font-size:.7rem;color:var(--muted)}
+
+.h-process{background:var(--surface);padding:96px 56px;border-bottom:1px solid var(--border)}
+.h-proc-head{text-align:center;margin-bottom:60px}
+.h-steps{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.h-step{padding:50px 30px;border-right:1px solid var(--border);text-align:center;background:var(--white);transition:all .22s}
+.h-step:last-child{border-right:none}
+.h-step:hover{background:var(--ink)}
+.h-step:hover .h-step-num{border-color:rgba(255,255,255,.2);color:white;background:rgba(255,255,255,.07)}
+.h-step:hover .h-step-h{color:white}
+.h-step:hover .h-step-p{color:rgba(255,255,255,.45)}
+.h-step-num{width:48px;height:48px;border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;transition:all .22s}
+.h-step-h{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:600;margin-bottom:7px;transition:all .22s}
+.h-step-p{font-size:.78rem;color:var(--muted);line-height:1.65;font-weight:300;transition:all .22s}
+.h-sec-h2{
+  font-size: 50px;
+   margin: 20px;;
+}
+.h-sm{
+  font-size: 18px;
+  margin:10px;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
   .header-content {
@@ -333,3 +384,10 @@
     padding: 36px 18px;
   }
 }
+
+.h-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.h-feat{padding:20px;border:1px solid var(--border);border-radius:14px;transition:all .2s;cursor:default}
+.h-feat:hover{border-color:var(--ink);box-shadow:0 4px 20px rgba(0,0,0,.06);transform:translateY(-2px)}
+.h-feat-ico{font-size:1.2rem;margin-bottom:10px}
+.h-feat h4{font-size:.85rem;font-weight:600;margin-bottom:4px;letter-spacing:-.1px; color:#ffffff;}
+.h-feat p{font-size:.75rem;color:var(--muted);line-height:1.55;font-weight:300}

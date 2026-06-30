@@ -14,7 +14,6 @@ function User({ user, onUserUpdate, goLogin }) {
       goLogin();
       return;
     }
-
     setName(user.name);
     setImage(user.image || "");
   }, [user, goLogin]);

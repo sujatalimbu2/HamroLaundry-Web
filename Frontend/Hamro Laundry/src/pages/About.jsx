@@ -1,14 +1,15 @@
 import '../assets/CCS/About.css';
 import Footer from '../component/Footer';
+import laundh from "../assets/laundh.png";
 
 const About = () => {
   return (
     <div className="about">
       <div className="about-hero">
         <div className="about-hero-content">
-          <div className="about-eyebrow">About Us</div>
-          <h1 className="about-title">Hamro Laundry</h1>
-          <p className="about-subtitle">Premium laundry and dry cleaning service for your wardrobe</p>
+          <h1 className="about-title">About Us</h1>
+           <div className="about-eyebrow">Service you will love</div>
+          <div className="about-subtitle">Premium laundry and dry cleaning service for your wardrobe</div>
         </div>
       </div>
       
@@ -18,39 +19,38 @@ const About = () => {
           <p>We believe in providing reliable, affordable, and convenient laundry services to our community. Your clothes deserve the best care, and we're committed to delivering excellence every single time.</p>
         </div>
 
-        <div className="about-section">
-          <h2>Why Choose Us?</h2>
-          <div className="about-features">
-            <div className="feature-item">
-              <div className="feature-icon">✓</div>
-              <div>
-                <h3>Expert Care</h3>
-                <p>Professional handling of all fabric types, from delicates to heavy materials.</p>
-              </div>
-            </div>
-            <div className="feature-item">
-              <div className="feature-icon">✓</div>
-              <div>
-                <h3>Convenient Booking</h3>
-                <p>Easy online booking with flexible drop-off and pickup times.</p>
-              </div>
-            </div>
-            <div className="feature-item">
-              <div className="feature-icon">✓</div>
-              <div>
-                <h3>Affordable Pricing</h3>
-                <p>Competitive rates without compromising on quality.</p>
-              </div>
-            </div>
-            <div className="feature-item">
-              <div className="feature-icon">✓</div>
-              <div>
-                <h3>Quick Turnaround</h3>
-                <p>Standard 48-hour service or express 24-hour delivery available.</p>
-              </div>
-            </div>
-          </div>
+         <div className="ab-story">
+        <div className="ab-imgbox">
+          <img src={laundh} alt="about-img" />
         </div>
+        <div className="ab-story-txt">
+          <span className="h-sm" style={{marginBottom:"12px",display:"block"}}>Our Story</span>
+          <h2>Started small.<br/>Built on trust.</h2>
+          <p className="ab-story-p">Hamro Laundry began in 2016 with one pressing machine and a commitment to treating every garment as if it were our own. Eight years on, word of mouth has made us one of Kathmandu's most trusted laundry services.</p>
+          <p className="ab-story-p">We don't do pickups or delivery — because the best results come from a face-to-face conversation, where we understand exactly what you need before we begin.</p>
+        </div>
+      </div>
+      <div className="ab-vals">
+        <div className="ab-vals-header">
+          <span className="h-sm" style={{marginBottom:"12px",display:"block"}}>Our Values</span>
+          <h2 className="h-sec-h2">What we stand for.</h2>
+        </div>
+        <div className="ab-vgrid">
+          {[
+            {ic:"🔬",t:"Fabric First",d:"Every fabric identified before treatment begins."},
+            {ic:"🌿",t:"Eco Conscious",d:"Biodegradable products, safe for your family."},
+            {ic:"🔒",t:"Guaranteed",d:"Not satisfied? Free re-clean, no questions."},
+            {ic:"📲",t:"Always in Touch",d:"SMS updates throughout your order."},
+          ].map(v=>(
+            <div className="ab-vcard" key={v.t}>
+              <div className="ab-vico">{v.ic}</div>
+              <h4>{v.t}</h4>
+              <p>{v.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
 
         <div className="about-section">
           <h2>Contact Us</h2>
