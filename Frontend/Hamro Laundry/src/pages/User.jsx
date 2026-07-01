@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/CCS/Auth.css";
+import axios from "axios";
 
 function User({ user, onUserUpdate, goLogin }) {
   const navigate = useNavigate();
@@ -8,6 +9,10 @@ function User({ user, onUserUpdate, goLogin }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
+  const [address, setAddress] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -16,43 +21,75 @@ function User({ user, onUserUpdate, goLogin }) {
     }
     setName(user.name);
     setImage(user.image || "");
+    setAddress(user.address || "");
   }, [user, goLogin]);
 
-  const handleImageChange = (event) => {
+const handleImageChange = (event) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setMessage("Please choose an image.");
-      return;
+        setMessage("Please choose an image.");
+        return;
     }
 
-    const reader = new FileReader();
+    setImage(file);
+};
 
-    reader.onload = () => {
-      setImage(reader.result);
-    };
+ const saveProfile = async (e) => {
+  e.preventDefault();
+  setMessage("");
 
-    reader.readAsDataURL(file);
-  };
+  if (name.trim().length < 3) {
+    setMessage("Name must be at least 3 characters.");
+    return;
+  }
 
-  const saveProfile = (e) => {
-    e.preventDefault();
+  if (password && password.length < 6) {
+  setMessage("Password must be at least 6 characters.");
+  return;
+}
 
-    if (name.trim().length < 3) {
-      setMessage("Name must be at least 3 characters.");
-      return;
+if (password !== confirmPassword) {
+  setMessage("Passwords do not match.");
+  return;
+}
+
+  try {
+    const formData = new FormData();
+
+    formData.append("name", name.trim());
+    formData.append("email", user.email);
+    formData.append("address", address.trim());
+
+    // Only send password if you're allowing users to change it
+  if (password) {
+  formData.append("password", password);
+  }
+
+    if (image instanceof File) {
+      formData.append("image", image);
     }
 
-    onUserUpdate({
-      ...user,
-      name: name.trim(),
-      image,
-    });
+    const response = await axios.put(
+      `http://localhost:5000/api/updateUser/${user.id}`,
+      formData
+    );
 
-    setMessage("Profile updated successfully.");
-  };
+    onUserUpdate(response.data.user);
+    setShowSuccess(true);
+
+setTimeout(() => {
+  navigate("/");
+}, 1500);
+
+  } catch (error) {
+    setMessage(
+      error.response?.data?.message || "Update failed."
+    );
+  }
+};
 
   if (!user) return null;
 
@@ -116,6 +153,38 @@ function User({ user, onUserUpdate, goLogin }) {
             </label>
 
             <label>
+              Address
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Enter your address"
+              />
+            </label>
+
+            <label>
+                  New Password
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Leave blank to keep current password"
+                  />
+                </label>
+
+                <label>
+                  Confirm Password
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                  />
+                </label>
+
+            
+
+            <label>
               Profile Picture
               <input
                 type="file"
@@ -139,6 +208,16 @@ function User({ user, onUserUpdate, goLogin }) {
         </div>
 
       </section>
+      {showSuccess && (
+  <div className="success-overlay">
+    <div className="success-popup">
+      <div className="success-icon">✔</div>
+      <h3>Profile Updated</h3>
+      <p>Your profile was updated successfully.</p>
+    </div>
+  </div>
+)}
+      
     </main>
   );
 }

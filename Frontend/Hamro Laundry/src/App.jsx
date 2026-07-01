@@ -13,10 +13,21 @@ import User from "./pages/User";
 
 function App() {
   const [basket, setBasket] = useState([]);
+
   const [user, setUser] = useState(() => {
+  try {
     const savedUser = localStorage.getItem("hamro_user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+
+    if (!savedUser || savedUser === "undefined") {
+      return null;
+    }
+
+    return JSON.parse(savedUser);
+  } catch  {
+    localStorage.removeItem("hamro_user");
+    return null;
+  }
+});
 
   const handleLogin = (userData) => {
     localStorage.setItem("hamro_user", JSON.stringify(userData));

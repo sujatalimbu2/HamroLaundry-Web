@@ -247,6 +247,23 @@
   margin-bottom: 27px;
   line-height: 1.1;
 }
+.laundry-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+.laundry-images{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+.laundry-images img{
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    margin-right: 69px;
+}
 
 .why-choose-text p {
   font-size: 20px;
@@ -256,8 +273,8 @@
 }
 .feedback-section{
     background:white;
-    padding:80px 8%;
-    margin-top:80px;
+    padding:30px 8%;
+    margin-top:10px;
 }
 
 .feedback-content{
@@ -267,18 +284,18 @@
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:40px;
+    gap:120px;
 }
 
 .feedback-text h2{
     color:#000000;
-    font-size:50px;
+    font-size:40px;
     font-weight:700;
     margin-bottom:18px;
 }
 
 .feedback-text p{
-    color:#8b8b8b;
+    color:#646363;
     font-size:20px;
     line-height:1.6;
     max-width:650px;
@@ -293,7 +310,7 @@
 
     padding:22px 42px;
 
-    font-size:16px;
+    font-size:15px;
     font-weight:600;
 
     cursor:pointer;

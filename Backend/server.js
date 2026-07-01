@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const pool = require("./database/db");
+const bookingRoute = require("./routes/bookingRoute");
 const userRoute = require("./routes/userRoute");
 dotenv.config();    // cause it's a file?
 
@@ -9,6 +10,8 @@ const app = express();  // connect to backend? db?
 
 app.use(cors());
 app.use(express.json());
+app.use("/api", userRoute);
+app.use("/api", bookingRoute);
 
 const PORT = process.env.PORT || 8000;
 

@@ -7,16 +7,26 @@ const JWT = require("jsonwebtoken");
 const addUser = async (req, res)=>{
     try {
         console.log(req.body) // debugging
-        const {name, email, password}= req.body;
-        const image = req.file ? req.file.filename: null; // 
-        if(!name || !email || !password) {
+        const {name, email, password, address}= req.body;
+        const image = req.file ? req.file.filename : null; // 
+        if(!name || !email || !password || !address) {
            return res.status(400).json({  // return to exit loop
                 message: "Field empty",
             });      
          }
 
-         const hashpassword = await bcrypt.hash(password, 10)//salt
-         const user = await createUser(name, email, hashpassword, image);
+          // Check if email already exists
+        const userExists = await existingUser(email);
+
+        if (userExists) {
+            return res.status(400).json({
+                message: "Email already registered",
+            });
+        }
+
+    
+        const hashpassword = await bcrypt.hash(password, 10);
+         const user = await createUser(name, email, hashpassword, address, image);
 
          if(user){
             res.status(201).json ({
@@ -26,6 +36,7 @@ const addUser = async (req, res)=>{
          }
 
     }  catch(e) {
+        console.error(e);
             res.status(500).json({
                 message: "Registration Unsccessful",
                 e: e.message,
@@ -92,8 +103,8 @@ const login = async (req, res) => {
         const { password, ...safeUser } = user;
         res.status(200).json ({
             message :"login successful",
-             user: user,
-             token
+             user: safeUser,
+             token,
         });           // conform token
     } catch(e) {
         res.status(500).json({
@@ -169,11 +180,16 @@ const deleteUserByIDDB = async (req, res) => {
 const updateUserIDBD = async (req, res) => {
     try {
         const id = req.params.id;
-        const { name, email, password } = req.body;
-        const image = req.file.filename;
-        
-         const hashpassword = await bcrypt.hash(password, 10)
-        const user = await updateUser(id, name, email, password, image);
+        const { name, email, password, address } = req.body;
+        const image = req.file ? req.file.filename : null;
+
+        let hashedPassword = null;
+         if (password && password.trim() !== "") {
+            hashedPassword = await bcrypt.hash(password, 10);
+        }
+
+
+        const user = await updateUser(id, name, email, hashedPassword, address, image);
 
         if (!user) {
             return res.status(404).json({

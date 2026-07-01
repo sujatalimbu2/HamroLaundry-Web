@@ -9,7 +9,6 @@ const About = () => {
         <div className="about-hero-content">
           <h1 className="about-title">About Us</h1>
            <div className="about-eyebrow">Service you will love</div>
-          <div className="about-subtitle">Premium laundry and dry cleaning service for your wardrobe</div>
         </div>
       </div>
       
@@ -61,6 +60,7 @@ const About = () => {
             <p><strong>Hours:</strong> Monday - Sunday, 9:00 AM - 6:00 PM</p>
           </div>
         </div>
+        <br></br>
       </div>
 
       <Footer />

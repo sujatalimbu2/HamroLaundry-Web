@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../assets/CCS/Book.css";
 import Footer from "../component/Footer";
+import axios from "axios";
 
 const genRef = () => "BK" + Date.now().toString(36).toUpperCase();
 
@@ -99,7 +100,7 @@ function Book({
     setSels((prev) => ({ ...prev, [item.id]: { option: undefined, qty: 1 } }));
   };
 
-  const confirm = () => {
+  const confirm = async() => {
     if (navBasket.length === 0) {
       alert("Add at least one service to your basket.");
       return;
@@ -115,9 +116,31 @@ function Book({
       alert("Please select a date and time slot.");
       return;
     }
+    try {
+        const response = await axios.post(
+          "http://localhost:5000/api/booking/create",
+          {
+            user_id: JSON.parse(localStorage.getItem("hamro_user")).id,
+            basket: navBasket,
+            date,
+            time,
+            mode,
+          }
+        );
 
-    setRef(genRef());
-    setDone(true);
+        setRef(response.data.booking.id || genRef());
+
+        setDone(true);
+
+        setBasket([]);
+
+      } catch (error) {
+
+        alert(
+          error.response?.data?.message || "Booking failed."
+        );
+
+      }
   };
 
   if (done) {

@@ -40,7 +40,7 @@
 }
 
 .about-eyebrow {
-  font-size: 1px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 2.5px;
   color: rgba(19, 14, 14, 0.33);
@@ -70,18 +70,9 @@
   }
 }
 
-.about-subtitle {
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 0.9rem;
-  font-weight: 300;
-  line-height: 1.76;
-  margin: 0;
-}
-
 .about-body {
-  padding: 44px 56px 72px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 0 40px;
+  max-width: none;
 }
 
 @media (max-width: 768px) {
@@ -94,6 +85,10 @@
   .about-body {
     padding: 20px 16px 32px;
   }
+}
+
+.about-section{
+  font-size:25px;
 }
 
 
@@ -124,7 +119,7 @@
   font-size: 20px;
 }
 
-.ab-story{padding:92px 56px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;border-bottom:1px solid var(--border)}
+.ab-story{padding:92px 20px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;border-bottom:1px solid var(--border)}
 .ab-story-txt h2{font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;line-height:1.06;letter-spacing:-.5px;margin-bottom:16px}
 .ab-story-p{color:var(--muted);font-size:.88rem;line-height:1.82;font-weight:300;margin-bottom:12px}
 .ab-vals{padding:92px 56px;border-bottom:1px solid var(--border)}
@@ -139,8 +134,8 @@
   gap: 50px;
 }
 .ab-imgbox img{
-    width:105%;
-    height:auto;
+    width: 500px;;
+    height: 390px;
     border-radius: 5%;
     object-fit: cover;
 }
