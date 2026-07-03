@@ -108,9 +108,16 @@ setTimeout(() => {
 
           <div className="auth-avatar">
             {image ? (
-              <img src={image} alt={name} />
+              <img
+                src={
+                  image instanceof File
+                    ? URL.createObjectURL(image)
+                    : `http://localhost:5000/uploads/${image}`
+                }
+                alt={name}
+              />
             ) : (
-             name ? name.charAt(0).toUpperCase() : "U"
+              name ? name.charAt(0).toUpperCase() : "U"
             )}
           </div>
 

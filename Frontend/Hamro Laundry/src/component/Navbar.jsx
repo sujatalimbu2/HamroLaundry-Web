@@ -24,7 +24,16 @@ const location = useLocation();
               state={{ backgroundLocation: location }}
             >
               {user.image ? (
-                <img className="profile-thumb" src={user.image} alt={user.name} />
+                <img
+                className="profile-thumb"
+                src={
+                  user.image
+                    ? `http://localhost:5000/uploads/${user.image}`
+                    : "/default-profile.png"
+                }
+                alt={user.name}
+              />
+               
               ) : (
                 <span className="profile-thumb profile-initial">
                   {user.name?.charAt(0) || "U"}
