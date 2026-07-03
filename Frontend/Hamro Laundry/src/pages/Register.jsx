@@ -2,6 +2,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import "../assets/CCS/Auth.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 function Register() {
   const location = useLocation();
@@ -12,6 +14,10 @@ function Register() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [address, setAddress] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+const [showSuccess, setShowSuccess] = useState(false);
 
   const register = async (event) => {
     event.preventDefault();
@@ -38,7 +44,7 @@ function Register() {
     }
 
     try {
-      const response = await axios.post(
+            await axios.post(
         "http://localhost:5000/api/create",
         {
           name: cleanName,
@@ -47,16 +53,8 @@ function Register() {
           address,
         }
       );
-
-      alert(response.data.message);
-
-      navigate("/login", {
-        state: {
-          backgroundLocation:
-            location.state?.backgroundLocation || location,
-        },
-      });
-
+      
+      setShowSuccess(true);
     } catch (error) {
       setMessage(
         error.response?.data?.message || "Registration failed"
@@ -123,15 +121,50 @@ function Register() {
             </label>
 
             <label>
-              Password
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
-                required
-              />
-            </label>
+                Password
+                <div className="password-wrapper">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="At least 6 characters"
+                    required
+                  />
+
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ?  <FaEye /> : <FaEyeSlash /> }
+                  </button>
+                </div>
+              </label>
+
+              <label>
+                  Confirm Password
+                  <div className="password-wrapper">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm password"
+                      required
+                    />
+
+                    <button
+                      type="button"
+                      className="password-toggle"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                    </button>
+                  </div>
+                </label>
+
+            
 
             <label>
               Address
@@ -172,6 +205,38 @@ function Register() {
         </div>
 
       </section>
+      {showSuccess && (
+  <div className="success-overlay">
+    <div className="success-modal">
+
+      <div className="success-check">✓</div>
+
+      <h2>Registration Successful</h2>
+
+      <p>
+        Your account has been created successfully.
+        You can now sign in and book your laundry service.
+      </p>
+
+      <button
+        className="success-btn"
+        onClick={() => {
+          setShowSuccess(false);
+          navigate("/login", {
+            state: {
+              backgroundLocation:
+                location.state?.backgroundLocation || location,
+            },
+          });
+        }}
+      >
+        Continue
+      </button>
+
+    </div>
+  </div>
+)}
+      
     </main>
   );
 }

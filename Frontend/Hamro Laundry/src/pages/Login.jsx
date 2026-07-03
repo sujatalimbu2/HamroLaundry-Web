@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import "../assets/CCS/Auth.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login({ onLogin }) {
   const location = useLocation();
@@ -10,6 +11,13 @@ function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [showLoginSuccess, setShowLoginSuccess] = useState(false);
+  const [userRole, setUserRole] = useState("");
+
+  
+  
 
   const login = async (event) => {
     event.preventDefault();
@@ -31,8 +39,10 @@ function Login({ onLogin }) {
       if (onLogin) {
         onLogin(response.data.user);
       }
+          setUserRole(response.data.user.role);
 
-      navigate("/book");
+        // Show success popup
+        setShowLoginSuccess(true);
 
     } catch (error) {
       setMessage(
@@ -78,16 +88,22 @@ function Login({ onLogin }) {
               />
             </label>
 
-            <label>
-              Password
+           <div className="password-wrapper">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                required
               />
-            </label>
+
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
+              </button>
+            </div>
 
             {message && (
               <div className="auth-error">
@@ -114,7 +130,37 @@ function Login({ onLogin }) {
           </div>
         </div>
       </section>
+      {showLoginSuccess && (
+        <div className="success-overlay">
+          <div className="success-modal">
+
+            <div className="success-check">✓</div>
+
+            <h2>Welcome Back!</h2>
+
+            <p>
+              You have successfully logged in.
+            </p>
+                      <button
+            className="success-btn"
+            onClick={() => {
+              setShowLoginSuccess(false);
+
+              if (userRole === "admin") {
+                navigate("/admin");
+              } else {
+                navigate("/book");
+              }
+            }}
+          >
+            Continue
+          </button>
+          </div>
+        </div>
+      )}
+      
     </main>
+    
   );
 }
 

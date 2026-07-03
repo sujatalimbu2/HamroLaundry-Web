@@ -100,12 +100,20 @@ const login = async (req, res) => {
                  expiresIn:"1d"
            },
         );
-        const { password, ...safeUser } = user;
-        res.status(200).json ({
-            message :"login successful",
-             user: safeUser,
-             token,
-        });           // conform token
+
+          res.json({
+                  message: "Login successful",
+                  token,
+                  user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    address: user.address,
+                    image: user.image
+                    }
+                 });
+       // conform token
     } catch(e) {
         res.status(500).json({
           message: "not succesful",

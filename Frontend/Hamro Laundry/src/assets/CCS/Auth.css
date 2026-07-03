@@ -130,7 +130,7 @@
 }
 
 .auth-panel-body {
-  padding: 24px 24px 22px;
+  padding: 18px 24px 22px;
 }
 
 .auth-eyebrow {
@@ -185,7 +185,7 @@
   border-color: #111;
 }
 
-.auth-form button {
+.auth-form button[type="submit"] {
   border: none;
   border-radius: 8px;
   padding: 13px;
@@ -230,7 +230,7 @@
 
 @media (max-width: 520px) {
   .auth-page {
-    padding: 84px 14px 32px;
+    padding: 70px 14px 32px;
   }
 
   .auth-panel-head {
@@ -276,4 +276,197 @@
 .register-card::-webkit-scrollbar-thumb {
   background: #444;
   border-radius: 10px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  background: transparent;   /* Remove black background */
+  border: none;              /* Remove border */
+  outline: none;
+  box-shadow: none;
+
+  cursor: pointer;
+
+  color: #666;               /* Eye icon color */
+  font-size: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+}
+
+.password-toggle:hover {
+  background: transparent;
+  color: #000;
+}
+
+.password-toggle:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 50px; /* space for eye icon */
+}
+/* Overlay */
+.success-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn .3s ease;
+}
+
+/* Popup Card */
+.success-modal {
+    width: 380px;
+    max-width: 90%;
+    background: #fff;
+    border-radius: 20px;
+    padding: 35px 30px;
+    text-align: center;
+
+    /* Remove black border */
+    border: none;
+
+    /* Smooth shadow */
+    box-shadow: 0 15px 40px rgba(0,0,0,.18);
+
+    animation: popup .3s ease;
+}
+
+/* Check Icon */
+.success-check {
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 38px;
+    font-weight: bold;
+}
+
+/* Heading */
+.success-modal h2 {
+    margin: 0;
+    font-size: 32px;
+    color: #111;
+    font-weight: 700;
+}
+
+/* Text */
+.success-modal p {
+    margin: 18px 0 28px;
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Button */
+.success-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #111;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.success-btn:hover {
+    background: #333;
+}
+
+/* Animation */
+@keyframes popup {
+    from {
+        transform: scale(.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+.success-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn .3s ease;
+}
+
+.success-modal{
+    width: 300px;          /* was 420px */
+    max-width: 40%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px 25px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,.25);
+}
+.success-check {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    margin: 0 auto 16px;
+}
+
+.success-modal h2{
+    font-size: 24px;
+    margin: 10px 0;
+}
+.success-modal p{
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+.success-btn{
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: white;
+    border-radius: 10px;
+    background-color:#000;
 }

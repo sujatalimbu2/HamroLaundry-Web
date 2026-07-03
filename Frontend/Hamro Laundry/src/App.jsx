@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate,  Navigate, } from "react-router-dom";
 import { useState } from "react";
 
 import Navbar from "./component/Navbar";
@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import User from "./pages/User";
+import Admin from "./pages/Admin";
 
 
 function App() {
@@ -123,6 +124,16 @@ function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) 
         />
         <Route path="/price" element={<Price basket={basket} setBasket={setBasket} />} />
         <Route path="/about" element={<About basket={basket} setBasket={setBasket} />} />
+        <Route
+            path="/admin"
+            element={
+              user?.role === "admin" ? (
+                <Admin onAdminLogout={onLogout} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
       </Routes>
 
       {isModalRoute && (
