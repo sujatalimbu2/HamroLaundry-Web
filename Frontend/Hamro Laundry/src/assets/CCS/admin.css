@@ -508,3 +508,49 @@
   .adm-nav { flex-direction: row; overflow-x: auto; }
   .adm-stats { grid-template-columns: repeat(2, 1fr); }
 }
+
+.adm-modal-overlay{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,.45);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.adm-modal{
+
+width:420px;
+
+background:#fff;
+
+padding:30px;
+
+border-radius:12px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+
+}
+
+.adm-modal input,
+.adm-modal select{
+
+padding:10px;
+
+border:1px solid #ddd;
+
+border-radius:8px;
+
+width:100%;
+
+}

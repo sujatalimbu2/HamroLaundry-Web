@@ -7,9 +7,9 @@ const JWT = require("jsonwebtoken");
 const addUser = async (req, res)=>{
     try {
         console.log(req.body) // debugging
-        const {name, email, password, address}= req.body;
+        const {name, email, password, address, contact}= req.body;
         const image = req.file ? req.file.filename : null; // 
-        if(!name || !email || !password || !address) {
+        if(!name || !email || !password || !address || !contact) {
            return res.status(400).json({  // return to exit loop
                 message: "Field empty",
             });      
@@ -26,7 +26,7 @@ const addUser = async (req, res)=>{
 
     
         const hashpassword = await bcrypt.hash(password, 10);
-         const user = await createUser(name, email, hashpassword, address, image);
+         const user = await createUser(name, email, hashpassword, address, contact, image);
 
          if(user){
             res.status(201).json ({
@@ -188,7 +188,7 @@ const deleteUserByIDDB = async (req, res) => {
 const updateUserIDBD = async (req, res) => {
     try {
         const id = req.params.id;
-        const { name, email, password, address } = req.body;
+        const { name, email, password, address, contact } = req.body;
         const image = req.file ? req.file.filename : null;
 
         let hashedPassword = null;
@@ -197,7 +197,7 @@ const updateUserIDBD = async (req, res) => {
         }
 
 
-        const user = await updateUser(id, name, email, hashedPassword, address, image);
+        const user = await updateUser(id, name, email, hashedPassword, address, contact, image);
 
         if (!user) {
             return res.status(404).json({

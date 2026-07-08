@@ -1,46 +1,101 @@
-import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import "../assets/CCS/Admin.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
  
-/* ── Sample data — replace with real API data in production ── */
-const adminBookings = [
-  { ref: "FF-A3XP2", customer: "Priya M.", phone: "+977 98XXXXXX21", date: "28 May 2026", time: "10:00 AM – 11:00 AM", items: ["Dry Cleaning ×2", "Ironing ×3"], mode: "Express", status: "r", lbl: "Ready to Collect", total: "NPR 750" },
-  { ref: "FF-B9QT7", customer: "Rajesh K.", phone: "+977 98XXXXXX45", date: "27 May 2026", time: "2:00 PM – 3:00 PM", items: ["Wash & Fold ×1", "Bedding ×1"], mode: "Regular", status: "p", lbl: "In Progress", total: "NPR 900" },
-  { ref: "FF-C1LK4", customer: "Anita S.", phone: "+977 98XXXXXX09", date: "25 May 2026", time: "9:00 AM – 10:00 AM", items: ["Suit Jacket", "Shirt ×2"], mode: "Regular", status: "c", lbl: "Collected", total: "NPR 700" },
-  { ref: "FF-D8MN3", customer: "Bikash T.", phone: "+977 98XXXXXX77", date: "24 May 2026", time: "11:00 AM – 12:00 PM", items: ["Leather Jacket ×1"], mode: "Express", status: "p", lbl: "In Progress", total: "NPR 2,000" },
-  { ref: "FF-E5QW8", customer: "Sunita R.", phone: "+977 98XXXXXX33", date: "22 May 2026", time: "4:00 PM – 5:00 PM", items: ["Curtains ×6"], mode: "Regular", status: "c", lbl: "Collected", total: "NPR 270" },
-];
- 
-const adminCustomers = [
-  { name: "Priya M.", phone: "+977 98XXXXXX21", email: "priya@example.com", orders: 14, spent: "NPR 9,450", joined: "Jan 2025" },
-  { name: "Rajesh K.", phone: "+977 98XXXXXX45", email: "rajesh@example.com", orders: 8, spent: "NPR 6,200", joined: "Mar 2025" },
-  { name: "Anita S.", phone: "+977 98XXXXXX09", email: "anita@example.com", orders: 21, spent: "NPR 18,300", joined: "Aug 2024" },
-  { name: "Bikash T.", phone: "+977 98XXXXXX77", email: "bikash@example.com", orders: 3, spent: "NPR 4,100", joined: "May 2026" },
-  { name: "Sunita R.", phone: "+977 98XXXXXX33", email: "sunita@example.com", orders: 11, spent: "NPR 7,650", joined: "Nov 2025" },
-];
+
+
  
 export default function AdminDashboard({ onAdminLogout }) {
   const navigate = useNavigate();
   const [view, setView] = useState("overview");
   const [search, setSearch] = useState("");
+  const [bookings, setBookings] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [showView, setShowView] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editBooking, setEditBooking] = useState(null);
+  const [customers, setCustomers] = useState([]);
+
+      useEffect(() => {
+        getBookings();
+        getCustomers();
+      }, []);
+      
+
+      const updateBooking = async () => {
+
+    try {
+
+        await axios.put(
+            `http://localhost:5000/api/booking/${editBooking.id}`,
+            editBooking
+        );
+
+        getBookings();
+
+        setShowEdit(false);
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+};
+    const getBookings = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/booking");
+            setBookings(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const updateStatus = async (id, status) => {
+      try {
+        await axios.put(`http://localhost:5000/api/booking/${id}`, {
+          status,
+        });
+
+        getBookings(); // refresh table
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const getCustomers = async () => {
+    try {
+        const res = await axios.get("http://localhost:5000/api/users");
+
+        console.log(res.data)
+        setCustomers(res.data.user);
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+    const filteredBookings = bookings.filter((b) =>
+      b.name.toLowerCase().includes(search.toLowerCase())
+    );
  
-  const filteredBookings = adminBookings.filter(
-    (b) =>
-      b.customer.toLowerCase().includes(search.toLowerCase()) ||
-      b.ref.toLowerCase().includes(search.toLowerCase())
-  );
-  const filteredCustomers = adminCustomers.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredCustomers = customers.filter(
+      (c) =>
+        c.name?.toLowerCase().includes(search.toLowerCase()) ||
+        c.email?.toLowerCase().includes(search.toLowerCase())
+    );
  
-  const totalRevenue = adminBookings.reduce(
-    (s, b) => s + (parseInt(b.total.replace(/[^0-9]/g, "")) || 0),
-    0
-  );
-  const activeCount = adminBookings.filter((b) => b.status === "p").length;
-  const readyCount = adminBookings.filter((b) => b.status === "r").length;
+  const totalRevenue = 0;
+  const activeCount = bookings.filter(
+      (b) => b.status === "Pending"
+    ).length;
+
+    const readyCount = bookings.filter(
+      (b) => b.status === "Ready"
+    ).length;
+
  
   const navItems = [
     { id: "overview", label: "Overview", icon: "📊" },
@@ -59,7 +114,7 @@ export default function AdminDashboard({ onAdminLogout }) {
       <aside className="adm-side">
         <div className="adm-side-head">
           <div className="adm-side-logo">
-            <div className="adm-side-mark">FF</div>FreshFold
+            <div className="adm-side-mark">HL</div>Hamro Laundry
           </div>
           <div className="adm-side-tag">Admin Panel</div>
         </div>
@@ -117,7 +172,7 @@ export default function AdminDashboard({ onAdminLogout }) {
                     <div className="adm-stat-ico">📅</div>
                     <span className="adm-stat-delta">+5%</span>
                   </div>
-                  <div className="adm-stat-num">{adminBookings.length}</div>
+                  <div className="adm-stat-num">{bookings.length}</div>
                   <div className="adm-stat-lbl">Total Bookings</div>
                 </div>
                 <div className="adm-stat">
@@ -144,23 +199,27 @@ export default function AdminDashboard({ onAdminLogout }) {
                   <table className="adm-table">
                     <thead>
                       <tr>
-                        <th>Ref</th>
+                        <th>ID</th>
                         <th>Customer</th>
                         <th>Date</th>
                         <th>Mode</th>
                         <th>Status</th>
                         <th>Total</th>
+                        <th>Items</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {adminBookings.slice(0, 4).map((b) => (
-                        <tr key={b.ref}>
-                          <td className="adm-ref">{b.ref}</td>
-                          <td>{b.customer}</td>
-                          <td>{b.date}</td>
-                          <td><span className="adm-mode-tag">{b.mode}</span></td>
-                          <td><span className={`adm-pill ${b.status}`}>{b.lbl}</span></td>
-                          <td>{b.total}</td>
+                      {bookings.slice(0, 4).map((b) => (
+                        <tr key={b.id}>
+                          <td className="adm-ref">{b.id}</td>
+                          <td>{b.name}</td>
+                          <td>{b.booking_date}</td>
+                          <td>{b.items || "-"}</td>
+                          <td><span className="adm-mode-tag">{b.service_mode}</span></td>
+                          <td><span className="adm-pill">
+                                {b.status}
+                            </span></td>
+                      <td>{b.items || "-"}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -177,7 +236,7 @@ export default function AdminDashboard({ onAdminLogout }) {
                 <h3>All Bookings</h3>
                 <input
                   className="adm-search"
-                  placeholder="Search by name or ref…"
+                  placeholder="Search by customer name…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -186,7 +245,7 @@ export default function AdminDashboard({ onAdminLogout }) {
                 <table className="adm-table">
                   <thead>
                     <tr>
-                      <th>Ref</th>
+                      <th>ID</th>
                       <th>Customer</th>
                       <th>Phone</th>
                       <th>Date</th>
@@ -203,20 +262,39 @@ export default function AdminDashboard({ onAdminLogout }) {
                       <tr><td colSpan="10" className="adm-empty-row">No bookings found.</td></tr>
                     ) : (
                       filteredBookings.map((b) => (
-                        <tr key={b.ref}>
-                          <td className="adm-ref">{b.ref}</td>
-                          <td>{b.customer}</td>
-                          <td>{b.phone}</td>
-                          <td>{b.date}</td>
-                          <td>{b.time}</td>
-                          <td>{b.items.join(", ")}</td>
-                          <td><span className="adm-mode-tag">{b.mode}</span></td>
-                          <td><span className={`adm-pill ${b.status}`}>{b.lbl}</span></td>
-                          <td>{b.total}</td>
+                        <tr key={b.id}>
+                          <td className="adm-ref">{b.id}</td>
+                          <td>{b.name}</td>
+                          <td>{b.contact}</td>
+                          <td>{b.booking_date}</td>
+                          <td>{b.booking_time}</td>
+                          <td>{b.items || "-"}</td>
+                          <td><span className="adm-mode-tag">{b.service_mode}</span></td>
+                          <td> <span className="adm-pill">
+                                {b.status}
+                            </span></td>
+                          <td>-</td>
                           <td>
                             <div className="adm-row-actions">
-                              <button className="adm-act-btn">View</button>
-                              <button className="adm-act-btn">Update</button>
+                              <button
+                                  className="adm-act-btn"
+                                  onClick={() => {
+                                    setSelectedBooking(b);
+                                    setShowView(true);
+                                  }}
+                                >
+                                  View
+                                </button>
+                                <button
+                                      className="adm-act-btn"
+                                      onClick={() => {
+                                          setEditBooking({...b});
+                                          setShowEdit(true);
+                                      }}
+                                  >
+                                      Update
+                                  </button>
+                             
                             </div>
                           </td>
                         </tr>
@@ -238,7 +316,7 @@ export default function AdminDashboard({ onAdminLogout }) {
                 <table className="adm-table">
                   <thead>
                     <tr>
-                      <th>Ref</th>
+                      <th>ID</th>
                       <th>Customer</th>
                       <th>Items</th>
                       <th>Status</th>
@@ -246,17 +324,34 @@ export default function AdminDashboard({ onAdminLogout }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {adminBookings.map((b) => (
-                      <tr key={b.ref}>
-                        <td className="adm-ref">{b.ref}</td>
-                        <td>{b.customer}</td>
-                        <td>{b.items.join(", ")}</td>
-                        <td><span className={`adm-pill ${b.status}`}>{b.lbl}</span></td>
+                    {bookings.map((b) => (
+                      <tr key={b.id}>
+                        <td className="adm-ref">{b.id}</td>
+                        <td>{b.name}</td>
+                        <td>{b.items || "-"}</td>
+                        <td><span className="adm-pill">{b.status}</span></td>
                         <td>
                           <div className="adm-row-actions">
-                            <button className="adm-act-btn">In Progress</button>
-                            <button className="adm-act-btn">Ready</button>
-                            <button className="adm-act-btn">Collected</button>
+                            <button
+                              className="adm-act-btn"
+                              onClick={() => updateStatus(b.id, "In Progress")}
+                            >
+                              In Progress
+                            </button>
+
+                            <button
+                              className="adm-act-btn"
+                              onClick={() => updateStatus(b.id, "Ready")}
+                            >
+                              Ready
+                            </button>
+
+                            <button
+                              className="adm-act-btn"
+                              onClick={() => updateStatus(b.id, "Collected")}
+                            >
+                              Collected
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -283,16 +378,14 @@ export default function AdminDashboard({ onAdminLogout }) {
                 <table className="adm-table">
                   <thead>
                     <tr>
-                      <th>Customer</th>
-                      <th>Phone</th>
+                      <th>Name</th>
+                      <th>constact</th>
                       <th>Email</th>
-                      <th>Orders</th>
-                      <th>Total Spent</th>
-                      <th>Joined</th>
+                  
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCustomers.length === 0 ? (
+                    {filteredCustomers.length === 12? (
                       <tr><td colSpan="6" className="adm-empty-row">No customers found.</td></tr>
                     ) : (
                       filteredCustomers.map((c) => (
@@ -305,9 +398,7 @@ export default function AdminDashboard({ onAdminLogout }) {
                           </td>
                           <td>{c.phone}</td>
                           <td>{c.email}</td>
-                          <td>{c.orders}</td>
-                          <td>{c.spent}</td>
-                          <td>{c.joined}</td>
+                         
                         </tr>
                       ))
                     )}
@@ -318,6 +409,142 @@ export default function AdminDashboard({ onAdminLogout }) {
           )}
         </div>
       </div>
+
+          {showView && selectedBooking && (
+      <div className="adm-modal-overlay">
+        <div className="adm-modal">
+
+          <h2>Booking Details</h2>
+
+          <p><strong>ID:</strong> {selectedBooking.id}</p>
+
+          <p><strong>Name:</strong> {selectedBooking.name}</p>
+
+          <p><strong>Phone:</strong> {selectedBooking.contact}</p>
+
+          <p><strong>Email:</strong> {selectedBooking.email}</p>
+
+          <p><strong>Date:</strong> {selectedBooking.booking_date}</p>
+
+          <p><strong>Time:</strong> {selectedBooking.booking_time}</p>
+
+          <p><strong>Mode:</strong> {selectedBooking.service_mode}</p>
+
+          <p><strong>Items:</strong> {selectedBooking.items}</p>
+
+          <p><strong>Status:</strong> {selectedBooking.status}</p>
+
+          <button
+            className="adm-act-btn"
+            onClick={() => setShowView(false)}
+          >
+            Close
+          </button>
+
+        </div>
+      </div>
+    )}
+
+              {showEdit && editBooking && (
+
+          <div className="adm-modal-overlay">
+
+          <div className="adm-modal">
+
+          <h2>Edit Booking</h2>
+
+          <label>Date</label>
+
+          <input
+          type="date"
+          value={editBooking.booking_date?.split("T")[0]}
+          onChange={(e)=>
+          setEditBooking({
+          ...editBooking,
+          booking_date:e.target.value
+          })
+          }
+          />
+
+          <label>Time</label>
+
+          <input
+          value={editBooking.booking_time}
+          onChange={(e)=>
+          setEditBooking({
+          ...editBooking,
+          booking_time:e.target.value
+          })
+          }
+          />
+
+          <label>Service Mode</label>
+
+          <select
+          value={editBooking.service_mode}
+          onChange={(e)=>
+          setEditBooking({
+          ...editBooking,
+          service_mode:e.target.value
+          })
+          }
+          >
+
+          <option value="Regular">Regular</option>
+
+          <option value="Express">Express</option>
+
+          </select>
+
+          <label>Status</label>
+
+          <select
+          value={editBooking.status}
+          onChange={(e)=>
+          setEditBooking({
+          ...editBooking,
+          status:e.target.value
+          })
+          }
+          >
+
+          <option>Pending</option>
+
+          <option>In Progress</option>
+
+          <option>Ready</option>
+
+          <option>Collected</option>
+
+          </select>
+
+          <div style={{marginTop:"20px"}}>
+
+          <button
+          className="adm-act-btn"
+          onClick={updateBooking}
+          >
+
+          Save
+
+          </button>
+
+          <button
+          className="adm-act-btn"
+          onClick={()=>setShowEdit(false)}
+          >
+
+          Cancel
+
+          </button>
+
+          </div>
+
+          </div>
+
+          </div>
+
+          )}
     </div>
   );
 }

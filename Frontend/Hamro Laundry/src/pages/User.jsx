@@ -107,19 +107,19 @@ setTimeout(() => {
         <div className="auth-panel-head">
 
           <div className="auth-avatar">
-            {image ? (
-              <img
-                src={
-                  image instanceof File
-                    ? URL.createObjectURL(image)
-                    : `http://localhost:5000/uploads/${image}`
-                }
-                alt={name}
-              />
-            ) : (
-              name ? name.charAt(0).toUpperCase() : "U"
-            )}
-          </div>
+          {image ? (
+            <img
+              src={
+                image instanceof File
+                  ? URL.createObjectURL(image)
+                  : `http://localhost:5000/uploads/${image}`
+              }
+              alt={name}
+            />
+          ) : (
+            name ? name.charAt(0).toUpperCase() : "U"
+          )}
+        </div>
 
           <div>
             <h1>{name}</h1>

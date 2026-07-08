@@ -1,9 +1,9 @@
 const pool =require("../database/db");
 
-const createUser = async(name, email, password, address, image)=>{
+const createUser = async(name, email, password, address, contact, image)=>{
     const result = await pool.query(
-        "insert into users(name, email, password, address, image) values ($1,$2,$3,$4,$5) returning *",
-        [name, email, password, address, image]
+        "insert into users(name, email, password, address, contact, image) values ($1,$2,$3,$4,$5,$6) returning *",
+        [name, email, password, address, contact, image]
     );
 
     return result.rows[0];
@@ -44,10 +44,10 @@ const deleteById = async(id) => {
     return result.rows;
 };
 
-const updateUser = async(id,name, email, password, address, image) => {
+const updateUser = async(id,name, email, password, address, contact, image) => {
     const result = await pool.query
-    ("Update users SET name = $1, email = $2, address = $3, image= $4 WHERE id = $5 RETURNING *",
-        [name, email, address, image, id]
+    ("Update users SET name = $1, email = $2, address = $3, contact = $4, image= $5 WHERE id = $6 RETURNING *",
+        [name, email, address, image, contact, id]
     );
     return result.rows[0];
 };

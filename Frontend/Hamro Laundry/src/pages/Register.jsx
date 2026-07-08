@@ -14,6 +14,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [address, setAddress] = useState("");
+  const [contact, setContact] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -43,6 +44,11 @@ const [showSuccess, setShowSuccess] = useState(false);
       return;
     }
 
+    if (!/^[0-9]{10}$/.test(contact)) {
+      setMessage("Contact number must be exactly 10 digits.");
+      return;
+    }
+
     try {
             await axios.post(
         "http://localhost:5000/api/create",
@@ -51,6 +57,7 @@ const [showSuccess, setShowSuccess] = useState(false);
           email: cleanEmail,
           password,
           address,
+          contact,
         }
       );
       
@@ -176,6 +183,21 @@ const [showSuccess, setShowSuccess] = useState(false);
                 required
               />
             </label>
+
+            <label>
+                Contact Number
+                <input
+                  type="tel"
+                  value={contact}
+                  onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      setContact(value);
+                    }}
+                  placeholder="98XXXXXXXX"
+                  maxLength={10}
+                  required
+                />
+              </label>
 
             {message && (
               <div className="auth-error">
