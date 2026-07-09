@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../assets/CCS/Book.css";
 import Footer from "../component/Footer";
 import axios from "axios";
 
 const genRef = () => "BK" + Date.now().toString(36).toUpperCase();
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
 
 function Book({
   addToBasket = () => {},
@@ -13,47 +21,92 @@ function Book({
   goLogin = () => {},
   isLoggedIn = false,
 }) {
-  const bookCats = [
-    {
-      id: "laundry",
-      label: "Laundry",
-      icon: "Shirt",
-      items: [
-        { id: "clothes", label: "Clothes", icon: "C", sub: "Shirts, trousers, dresses", opts: ["Wash & Fold", "Wash & Iron"] },
-        { id: "linens", label: "Linens", icon: "L", sub: "Sheets, towels, pillowcases", opts: ["Wash & Fold", "Wash & Iron"] },
-        { id: "delicates", label: "Delicates", icon: "D", sub: "Silk, lace, fine fabrics", opts: ["Gentle Wash", "Dry Clean"] },
-      ],
-    },
-    {
-      id: "blankets",
-      label: "Blankets",
-      icon: "Bed",
-      items: [
-        { id: "single_b", label: "Single Blanket", icon: "S", sub: "Up to single bed size", opts: ["Wash & Fold", "Dry Clean"] },
-        { id: "double_b", label: "Double Blanket", icon: "D", sub: "Double/queen size", opts: ["Wash & Fold", "Dry Clean"] },
-      ],
-    },
-    {
-      id: "carpets",
-      label: "Carpets",
-      icon: "Rug",
-      items: [
-        { id: "small_c", label: "Small Carpet", icon: "S", sub: "Under 4x6 ft", opts: ["Standard", "Deep Clean"] },
-        { id: "large_c", label: "Large Carpet", icon: "L", sub: "6x8 ft and above", opts: ["Standard", "Deep Clean"] },
-      ],
-    },
-  ];
-
-  const [cat, setCat] = useState("laundry");
+  const [cat, setCat] = useState("");
   const [mode, setMode] = useState("regular");
   const [sels, setSels] = useState({});
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [done, setDone] = useState(false);
   const [ref, setRef] = useState("");
+  const [services, setServices] = useState([]);
+  const [myBookings, setMyBookings] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+ const [showCancelModal, setShowCancelModal] = useState(false);
+ const [selectedBooking, setSelectedBooking] = useState(null);
+  
+      useEffect(() => {
+          getServices();
 
-  const catObj = bookCats.find((c) => c.id === cat);
-  const total = navBasket.reduce((sum, item) => sum + item.qty, 0);
+          if (isLoggedIn) {
+              getMyBookings();
+          }
+      }, [isLoggedIn]);
+    const getServices = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/services");
+            setServices(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const getMyBookings = async () => {
+        try {
+            const user = JSON.parse(localStorage.getItem("hamro_user"));
+            if (!user) return;
+            const res = await axios.get(
+                `http://localhost:5000/api/my-bookings/${user.id}` 
+            );
+            setMyBookings(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const activeBookings = myBookings.filter(
+      (booking) =>
+        booking.status !== "Completed" &&
+        booking.status !== "Cancelled"
+    );
+
+      const historyBookings = myBookings.filter(
+        (booking) =>
+          booking.status === "Completed" ||
+          booking.status === "Cancelled"
+      );
+
+        const cancelBooking = async (bookingId) => {
+          try {
+             await axios.put(
+                `http://localhost:5000/api/booking/cancel/${bookingId}`
+            );
+              alert("Booking cancelled successfully");
+              getMyBookings();
+          } catch(error){
+              console.log(error);
+              alert(
+                  error.response?.data?.message ||
+                  "Failed to cancel booking"
+              );
+          }
+      };
+
+    const groupedServices = services.reduce((acc, service) => {
+        if (!acc[service.category]) {
+            acc[service.category] = [];
+        }
+
+        acc[service.category].push(service);
+        return acc;
+    }, {});
+
+    const categories = Object.keys(groupedServices);
+    const catObj = groupedServices[cat] || [];
+    const total = navBasket.reduce((sum, item) => sum + item.qty, 0);
+
+    useEffect(() => {
+        if (categories.length > 0 && !cat) {
+            setCat(categories[0]);
+        }
+    }, [categories, cat]);
 
   const togOpt = (id, option) => {
     setSels((prev) => ({
@@ -88,11 +141,13 @@ function Book({
       alert("Select a service option.");
       return;
     }
+    
 
     addToBasket({
       id: item.id + "|" + selected.option + "|" + mode,
+      service_id: item.id,// send dervice id
       icon: item.icon,
-      name: item.label,
+      name: item.service_name, 
       option: selected.option,
       mode,
       qty: selected.qty || 1,
@@ -130,10 +185,9 @@ function Book({
 
         setRef(response.data.booking.id || genRef());
 
-        setDone(true);
-
+       await getMyBookings();
         setBasket([]);
-
+        setDone(true);
       } catch (error) {
 
         alert(
@@ -158,9 +212,12 @@ function Book({
           <div className="bp-ok">
             <div className="bp-ok-ico">OK</div>
             <h3>Booking Confirmed!</h3>
-            <p>Drop off your items on <strong>{date}</strong> at <strong>{time}</strong>. We'll SMS you when ready.</p>
+           <p>
+              Drop off your items on <strong>{formatDate(date)}</strong> at <strong>{time}</strong>.
+              We'll SMS you when ready.
+            </p>
             <div className="bp-ref">{ref}</div><br />
-            <button className="bp-again" onClick={() => { setDone(false); setDate(""); setTime(""); }}>+ New Booking</button>
+            <button className="bp-again" onClick={() => { getMyBookings(); setDone(false); setDate(""); setTime(""); }}>+ New Booking</button>
           </div>
         </div>
       </div>
@@ -194,9 +251,13 @@ function Book({
           <div>
             <span className="bp-lbl">Category</span>
             <div className="bp-cats">
-              {bookCats.map((category) => (
-                <button key={category.id} className={`bp-cpill${cat === category.id ? " on" : ""}`} onClick={() => setCat(category.id)}>
-                  {category.icon} {category.label}
+              {categories.map((category) => (
+                <button
+                    key={category}
+                    className={`bp-cpill${cat === category ? " on" : ""}`}
+                    onClick={() => setCat(category)}
+                >
+                    {category}
                 </button>
               ))}
             </div>
@@ -215,22 +276,22 @@ function Book({
           </div>
 
           <div>
-            <span className="bp-lbl">{catObj.label} - choose &amp; add</span>
+            <span className="bp-lbl">{cat} - Choose & Add</span>
             <div className="bp-cards">
-              {catObj.items.map((item) => {
+              {catObj.map((item) => {
                 const selected = sels[item.id] || {};
 
                 return (
                   <div className="bp-card" key={item.id}>
                     <div className="bp-ctop">
-                      <div className="bp-cico">{item.icon}</div>
+                    <div className="bp-cico">{item.icon || "👕"}</div>
                       <div>
-                        <div className="bp-cname">{item.label}</div>
-                        <div className="bp-csub">{item.sub}</div>
+                        <div className="bp-cname">{item.service_name}</div>
+                         <div className="bp-csub">Standard: NPR {item.standard_price}</div>
                       </div>
                     </div>
                     <div className="bp-copts">
-                      {item.opts.map((option) => (
+                     {["Wash & Fold", "Wash & Iron"].map((option) => (
                         <button key={option} className={`bp-copt${selected.option === option ? " on" : ""}`} onClick={() => togOpt(item.id, option)}>
                           {option}
                         </button>
@@ -253,6 +314,7 @@ function Book({
         </div>
 
         <div className="bp-right">
+          
           <div className="bp-panel">
             <span className="bp-peyebrow">Service Mode</span>
             <div className="bp-mode-info">
@@ -324,8 +386,132 @@ function Book({
               </>
             )}
           </div>
+          {isLoggedIn && (
+          <div className="bp-panel">
+             <div className="booking-header">
+              <span className="booking-title">My Bookings</span>
+                <button
+                className="history-btn"
+                      onClick={() => setShowHistory(true)}
+                  >
+                      View History <span>→</span>
+                  </button>
+                  </div>
+
+            {activeBookings.length === 0 ? (
+                <p>No bookings yet.</p>
+            ) : (
+                activeBookings.map((booking) => (
+                    <div className="booking-card" key={booking.id}>
+                        <div className="booking-top">
+                            <h4>Booking #{booking.id}</h4>
+                            <span className={`status ${booking.status.toLowerCase()}`}>
+                                {booking.status}
+                            </span>
+                        </div>
+                        <p>📅 <strong>Date:</strong> {formatDate(booking.booking_date)}</p>
+                        <p>🕒 <strong>Time:</strong> {booking.booking_time}</p>
+                        <p>🧺 <strong>Items:</strong> {booking.items}</p>
+                        <p>💰 <strong>Total:</strong> NPR {booking.total_price}</p>
+                        {booking.status === "Pending" && (
+                              <button
+                                    className="cancel-booking-btn"
+                                    onClick={() => {
+                                        setSelectedBooking(booking.id);
+                                        setShowCancelModal(true);
+                                    }}
+                                >
+                                    Cancel Booking
+                                </button>
+                          )}
+
+                    </div>
+                 ))
+            )}
+      
         </div>
+          )}
+        </div>
+        {showHistory && (
+  <div className="history-overlay">
+    <div className="history-modal">
+
+      <h2>Booking History</h2>
+
+      {historyBookings.length === 0 ? (
+        <p>No completed bookings yet.</p>
+      ) : (
+        historyBookings.map((booking) => (
+          <div className="booking-card" key={booking.id}>
+
+            <div className="booking-top">
+              <h4>Booking #{booking.id}</h4>
+
+              <span className={`status ${booking.status.toLowerCase()}`}>
+                {booking.status}
+              </span>
+            </div>
+
+           <p><strong>Date:</strong> {formatDate(booking.booking_date)}</p>
+            <p><strong>Time:</strong> {booking.booking_time}</p>
+            <p><strong>Items:</strong> {booking.items}</p>
+            <p><strong>Total:</strong> NPR {booking.total_price}</p>
+
+          </div>
+        ))
+      )}
+
+      <button
+        className="history-close"
+        onClick={() => setShowHistory(false)}
+      >
+        Close
+      </button>
+
+    </div>
+  </div>
+)}
       </div>
+      {showCancelModal && (
+        <div className="cancel-overlay">
+          <div className="cancel-modal">
+
+            <div className="cancel-icon">🧺</div>
+
+            <h2>Cancel Booking?</h2>
+
+            <p>
+              Are you sure you want to cancel this booking?
+            </p>
+
+            <p className="cancel-warning">
+              This action cannot be undone.
+            </p>
+
+            <div className="cancel-buttons">
+
+              <button
+                className="cancel-no"
+                onClick={() => setShowCancelModal(false)}
+              >
+                Keep Booking
+              </button>
+
+              <button
+                className="cancel-yes"
+                onClick={async () => {
+                  await cancelBooking(selectedBooking);
+                  setShowCancelModal(false);
+                }}
+              >
+                Yes, Cancel
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+      )}
       <Footer />
     </div>
   );

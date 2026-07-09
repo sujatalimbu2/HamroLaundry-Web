@@ -4,9 +4,6 @@ import "../assets/CCS/Admin.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
  
-
-
- 
 export default function AdminDashboard({ onAdminLogout }) {
   const navigate = useNavigate();
   const [view, setView] = useState("overview");
@@ -17,34 +14,62 @@ export default function AdminDashboard({ onAdminLogout }) {
   const [showView, setShowView] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [editBooking, setEditBooking] = useState(null);
-  const [customers, setCustomers] = useState([]);
+  const [services, setServices] = useState([]);
+  const [serviceSearch, setServiceSearch] = useState("");
+  const [showServiceEdit, setShowServiceEdit] = useState(false);
+  const [editService, setEditService] = useState(null);
 
-      useEffect(() => {
-        getBookings();
-        getCustomers();
+     useEffect(() => {
+          getBookings();
+          getCustomers();
+          getServices();
       }, []);
-      
+
+      const updateService = async () => {
+          try {
+
+              await axios.put(
+                  `http://localhost:5000/api/services/${editService.id}`,
+                  editService
+              );
+
+              getServices();
+
+              setShowServiceEdit(false);
+
+          } catch(err){
+              console.log(err);
+          }
+      };
 
       const updateBooking = async () => {
+          try {
+              await axios.put(
+                  `http://localhost:5000/api/booking/${editBooking.id}`,
+                  editBooking
+              );
 
-    try {
+              await getBookings();
 
-        await axios.put(
-            `http://localhost:5000/api/booking/${editBooking.id}`,
-            editBooking
-        );
+              setShowEdit(false);
 
-        getBookings();
+              setEditBooking(null);
 
-        setShowEdit(false);
+          } catch(err){
+              console.log(err);
+       }
+      };
+     
+      const getServices = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/services");
+            setServices(res.data);
+        } catch (err) {
+            console.log(err);
+          }
+      };
 
-    } catch (err) {
 
-        console.log(err);
-
-    }
-
-};
     const getBookings = async () => {
         try {
             const res = await axios.get("http://localhost:5000/api/booking");
@@ -68,14 +93,19 @@ export default function AdminDashboard({ onAdminLogout }) {
 
     const getCustomers = async () => {
     try {
-        const res = await axios.get("http://localhost:5000/api/users");
+        const res = await axios.get("http://localhost:5000/api/customers");
 
         console.log(res.data)
-        setCustomers(res.data.user);
+        setCustomers(res.data);
     } catch (err) {
         console.log(err);
     }
 };
+    const filteredServices = services.filter((s) =>
+      s.service_name
+        .toLowerCase()
+        .includes(serviceSearch.toLowerCase())
+    );
 
     const filteredBookings = bookings.filter((b) =>
       b.name.toLowerCase().includes(search.toLowerCase())
@@ -89,11 +119,11 @@ export default function AdminDashboard({ onAdminLogout }) {
  
   const totalRevenue = 0;
   const activeCount = bookings.filter(
-      (b) => b.status === "Pending"
+      (b) => b.status === "Processing"
     ).length;
 
     const readyCount = bookings.filter(
-      (b) => b.status === "Ready"
+      (b) => b.status === "Completed"
     ).length;
 
  
@@ -102,14 +132,16 @@ export default function AdminDashboard({ onAdminLogout }) {
     { id: "bookings", label: "Bookings", icon: "📅" },
     { id: "orders", label: "Orders", icon: "🧺" },
     { id: "customers", label: "Customers", icon: "👥" },
+     { id: "services", label: "Services", icon: "💲" }
   ];
  
   const handleLogout = () => {
     if (onAdminLogout) onAdminLogout();
     navigate("/");
   };
- 
-  return (
+
+
+ return (
     <div className="adm">
       <aside className="adm-side">
         <div className="adm-side-head">
@@ -204,7 +236,6 @@ export default function AdminDashboard({ onAdminLogout }) {
                         <th>Date</th>
                         <th>Mode</th>
                         <th>Status</th>
-                        <th>Total</th>
                         <th>Items</th>
                       </tr>
                     </thead>
@@ -214,7 +245,6 @@ export default function AdminDashboard({ onAdminLogout }) {
                           <td className="adm-ref">{b.id}</td>
                           <td>{b.name}</td>
                           <td>{b.booking_date}</td>
-                          <td>{b.items || "-"}</td>
                           <td><span className="adm-mode-tag">{b.service_mode}</span></td>
                           <td><span className="adm-pill">
                                 {b.status}
@@ -332,12 +362,12 @@ export default function AdminDashboard({ onAdminLogout }) {
                         <td><span className="adm-pill">{b.status}</span></td>
                         <td>
                           <div className="adm-row-actions">
-                            <button
+                           <button
                               className="adm-act-btn"
-                              onClick={() => updateStatus(b.id, "In Progress")}
-                            >
-                              In Progress
-                            </button>
+                              onClick={() => updateStatus(b.id, "Processing")}
+                              >
+                              Processing
+                              </button>
 
                             <button
                               className="adm-act-btn"
@@ -348,9 +378,9 @@ export default function AdminDashboard({ onAdminLogout }) {
 
                             <button
                               className="adm-act-btn"
-                              onClick={() => updateStatus(b.id, "Collected")}
+                              onClick={() => updateStatus(b.id, "Completed")}
                             >
-                              Collected
+                              Completed
                             </button>
                           </div>
                         </td>
@@ -379,13 +409,13 @@ export default function AdminDashboard({ onAdminLogout }) {
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>constact</th>
+                      <th>contact</th>
                       <th>Email</th>
                   
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCustomers.length === 12? (
+                    {filteredCustomers.length === 0? (
                       <tr><td colSpan="6" className="adm-empty-row">No customers found.</td></tr>
                     ) : (
                       filteredCustomers.map((c) => (
@@ -396,7 +426,7 @@ export default function AdminDashboard({ onAdminLogout }) {
                               {c.name}
                             </div>
                           </td>
-                          <td>{c.phone}</td>
+                          <td>{c.contact}</td>
                           <td>{c.email}</td>
                          
                         </tr>
@@ -407,8 +437,73 @@ export default function AdminDashboard({ onAdminLogout }) {
               </div>
             </div>
           )}
-        </div>
+       {/* service */}
+      {view === "services" && (
+      <div className="adm-panel">
+          <div className="adm-panel-head">
+              <h3>Manage Services</h3>
+              <input
+                  className="adm-search"
+                  placeholder="Search service..."
+                  value={serviceSearch}
+                  onChange={(e)=>setServiceSearch(e.target.value)}
+              />
+          </div>
+          <div className="adm-table-wrap">
+
+              <table className="adm-table">
+
+                  <thead>
+
+                      <tr>
+                          <th>Category</th>
+                          <th>Service</th>
+                          <th>Standard</th>
+                          <th>Express</th>
+                          <th>Actions</th>
+                      </tr>
+
+                  </thead>
+
+                  <tbody>
+
+                      {filteredServices.map(service=>(
+                          <tr key={service.id}>
+
+                              <td>{service.category}</td>
+
+                              <td>{service.service_name}</td>
+
+                              <td>NPR {service.standard_price}</td>
+
+                              <td>NPR {service.express_price}</td>
+
+                              <td>
+
+                                  <button
+                                      className="adm-act-btn"
+                                      onClick={()=>{
+                                          setEditService({...service});
+                                          setShowServiceEdit(true);
+                                      }}
+                                  >
+                                      Edit
+                                  </button>
+
+                              </td>
+
+                          </tr>
+                      ))}
+
+                  </tbody>
+
+              </table>
+          </div>
       </div>
+      )}
+
+    </div>   {/* adm-body */}
+  </div>     {/* adm-main */}
 
           {showView && selectedBooking && (
       <div className="adm-modal-overlay">
@@ -443,8 +538,80 @@ export default function AdminDashboard({ onAdminLogout }) {
 
         </div>
       </div>
-    )}
+    )}  
 
+              {showServiceEdit && editService && (
+            <div className="adm-modal-overlay">
+
+              <div className="adm-modal">
+
+                <h2>Edit Service</h2>
+
+                <label>Category</label>
+                <input
+                  value={editService.category}
+                  onChange={(e) =>
+                    setEditService({
+                      ...editService,
+                      category: e.target.value,
+                    })
+                  }
+                />
+
+                <label>Service</label>
+                <input
+                  value={editService.service_name}
+                  onChange={(e) =>
+                    setEditService({
+                      ...editService,
+                      service_name: e.target.value,
+                    })
+                  }
+                />
+
+                <label>Standard Price</label>
+                <input
+                  type="number"
+                  value={editService.standard_price}
+                  onChange={(e) =>
+                    setEditService({
+                      ...editService,
+                      standard_price: e.target.value,
+                    })
+                  }
+                />
+
+                <label>Express Price</label>
+                <input
+                  type="number"
+                  value={editService.express_price}
+                  onChange={(e) =>
+                    setEditService({
+                      ...editService,
+                      express_price: e.target.value,
+                    })
+                  }
+                />
+
+                <div className="adm-modal-actions">
+                  <button className="adm-act-btn" onClick={updateService}>
+                    Save
+                  </button>
+
+                  <button
+                    className="adm-act-btn"
+                    onClick={() => setShowServiceEdit(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          )} 
+
+               
               {showEdit && editBooking && (
 
           <div className="adm-modal-overlay">
@@ -457,7 +624,7 @@ export default function AdminDashboard({ onAdminLogout }) {
 
           <input
           type="date"
-          value={editBooking.booking_date?.split("T")[0]}
+          value={editBooking.booking_date}
           onChange={(e)=>
           setEditBooking({
           ...editBooking,
@@ -509,12 +676,10 @@ export default function AdminDashboard({ onAdminLogout }) {
           >
 
           <option>Pending</option>
-
-          <option>In Progress</option>
-
+          <option>Processing</option>
           <option>Ready</option>
-
-          <option>Collected</option>
+          <option>Completed</option>
+          <option>Cancelled</option>
 
           </select>
 
@@ -531,15 +696,16 @@ export default function AdminDashboard({ onAdminLogout }) {
 
           <button
           className="adm-act-btn"
-          onClick={()=>setShowEdit(false)}
-          >
+              onClick={()=>{
+              setShowEdit(false);
+              setEditBooking(null);
+          }}
+                >
 
           Cancel
 
           </button>
-
           </div>
-
           </div>
 
           </div>

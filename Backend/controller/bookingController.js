@@ -32,20 +32,53 @@ const addBooking = async (req, res) => {
             user_id,
             date,
             time,
-            mode
+            mode,
+            0
         );
 
-        // Save every basket item
+        let total = 0;
+
+         // Save every basket item
         for (const item of basket) {
 
+            // Save booking item
             await createBookingItem(
                 booking.id,
-                item.name,
+                item.service_id,
                 item.option,
                 item.qty
             );
 
+            // Get price from services table
+            const result = await pool.query(
+                `
+                SELECT standard_price, express_price
+                FROM services
+                WHERE id = $1
+                `,
+                [item.servcie_id]
+            );
+
+            if (result.rows.length > 0) {
+
+                const service = result.rows[0];
+
+                const price =
+                    mode === "express"
+                        ? service.express_price
+                        : service.standard_price;
+
+                total += price * item.qty;
+            }
         }
+        await pool.query(
+            `
+            UPDATE bookings
+            SET total_price = $1
+            WHERE id = $2
+            `,
+            [total, booking.id]
+        );
 
         res.status(201).json({
             message: "Booking created successfully",
@@ -72,43 +105,44 @@ const getBookings = async (req, res) => {
 
         const result = await pool.query(`
             SELECT
-    b.id,
-    u.name,
-    u.email,
-    u.contact,
-    b.booking_date,
-    b.booking_time,
-    b.service_mode,
-    b.status,
+                b.id,
+                u.name,
+                u.email,
+                u.contact,
+                b.booking_date,
+                b.booking_time,
+                b.service_mode,
+                b.status,
 
-    STRING_AGG(
-        bi.service_name || ' (' ||
-        bi.service_option || ') x' ||
-        bi.quantity,
-        ', '
-    ) AS items
+                STRING_AGG(
+                    s.service_name || ' (' ||
+                    bi.service_option || ') x' ||
+                    bi.quantity,
+                    ', '
+                ) AS items
 
-        FROM bookings b
+            FROM bookings b
 
-        JOIN users u
-        ON b.user_id = u.id
+            JOIN users u
+            ON b.user_id = u.id
 
-        LEFT JOIN booking_items bi
-        ON b.id = bi.booking_id
+            LEFT JOIN booking_items bi
+            ON b.id = bi.booking_id
 
-        GROUP BY
-            b.id,
-            u.name,
-            u.email,
-            u.contact,
-            b.booking_date,
-            b.booking_time,
-            b.service_mode,
-            b.status
+            LEFT JOIN services s
+            ON bi.service_id = s.id
 
-        ORDER BY b.id DESC
+            GROUP BY
+                b.id,
+                u.name,
+                u.email,
+                u.contact,
+                b.booking_date,
+                b.booking_time,
+                b.service_mode,
+                b.status
 
-           
+            ORDER BY b.id DESC
         `);
 
         res.json(result.rows);
@@ -174,9 +208,115 @@ const getCustomers = async (req, res) => {
   }
 };
 
+const getServices = async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT *
+            FROM services
+            ORDER BY category, service_name
+        `);
+
+        res.json(result.rows);
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+const getMyBookings = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const result = await pool.query(`
+            SELECT
+                b.id,
+                b.booking_date,
+                b.booking_time,
+                b.service_mode,
+                b.status,
+                b.total_price,
+
+                 STRING_AGG(
+                    s.service_name || ' (' ||
+                    bi.service_option || ') x' ||
+                    bi.quantity,
+                    ', '
+                ) AS items
+
+
+            FROM bookings b
+
+            LEFT JOIN booking_items bi
+            ON b.id = bi.booking_id
+
+            LEFT JOIN services s
+            ON bi.service_id = s.id
+
+        
+
+            WHERE b.user_id = $1
+
+            GROUP BY
+                b.id,
+                b.booking_date,
+                b.booking_time,
+                b.service_mode,
+                b.status,
+                b.total_price
+
+            ORDER BY b.id DESC
+        `,[userId]);
+
+        res.json(result.rows);
+
+    } catch(err){
+        console.log(err);
+        res.status(500).json({
+            message:"Server Error"
+        });
+    }
+};
+
+const cancelBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      `
+      UPDATE bookings
+      SET status='Cancelled'
+      WHERE id=$1
+      AND status='Pending'
+      RETURNING *
+      `,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({
+        message: "Only pending bookings can be cancelled",
+      });
+    }
+
+    res.json({
+      message: "Booking cancelled",
+      booking: result.rows[0],
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
+
 module.exports = {
-    addBooking,
-     getBookings,
-    updateBooking,
-     getCustomers
+  addBooking,
+  getBookings,
+  updateBooking,
+  getCustomers,
+  getServices,
+  getMyBookings,
+  cancelBooking,
 };

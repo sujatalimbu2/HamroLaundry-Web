@@ -5,7 +5,10 @@ const {
     addBooking,
     getBookings,
     updateBooking,
-    getCustomers
+    getCustomers,
+    getServices,
+    getMyBookings,
+    cancelBooking,
 } = require("../controller/bookingController");
 
 router.post("/booking/create", addBooking);
@@ -17,5 +20,8 @@ router.get("/booking", getBookings);
 router.put("/booking/:id", updateBooking);
 
 router.get("/customers", getCustomers);
+router.get("/services", getServices);
+router.get("/my-bookings/:userId", getMyBookings);
+router.put("/booking/cancel/:id", cancelBooking);
 
 module.exports = router;

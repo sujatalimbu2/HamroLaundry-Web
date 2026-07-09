@@ -72,6 +72,7 @@ function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) 
   const isModalRoute = modalRoutes.includes(location.pathname);
   const backgroundLocation = location.state?.backgroundLocation;
  const pageLocation = backgroundLocation || location;
+ const isAdminPage = location.pathname === "/admin";
 
   const addToBasket = (item) => {
     setBasket((prev) => {
@@ -101,7 +102,13 @@ function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) 
     <>
 
       {/* ✅ NAVBAR ALWAYS SHOWS */}
-      <Navbar user={user} onLogout={onLogout} />
+      {!isAdminPage && (
+        <Navbar
+          user={user}
+          onLogout={onLogout}
+        />
+      )}
+      
 
       {/* PAGE CONTENT CHANGES */}
       <Routes location={pageLocation}>
