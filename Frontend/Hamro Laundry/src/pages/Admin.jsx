@@ -1,9 +1,17 @@
-
 import { useNavigate } from "react-router-dom";
 import "../assets/CCS/Admin.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
- 
+
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 export default function AdminDashboard({ onAdminLogout }) {
   const navigate = useNavigate();
   const [view, setView] = useState("overview");
@@ -19,129 +27,144 @@ export default function AdminDashboard({ onAdminLogout }) {
   const [showServiceEdit, setShowServiceEdit] = useState(false);
   const [editService, setEditService] = useState(null);
 
-     useEffect(() => {
-          getBookings();
-          getCustomers();
-          getServices();
-      }, []);
+  const COLORS = ["#fbbf24", "#3b82f6", "#8b5cf6", "#22c55e", "#ef4444"];
 
-      const updateService = async () => {
-          try {
-
-              await axios.put(
-                  `http://localhost:5000/api/services/${editService.id}`,
-                  editService
-              );
-
-              getServices();
-
-              setShowServiceEdit(false);
-
-          } catch(err){
-              console.log(err);
-          }
-      };
-
-      const updateBooking = async () => {
-          try {
-              await axios.put(
-                  `http://localhost:5000/api/booking/${editBooking.id}`,
-                  editBooking
-              );
-
-              await getBookings();
-
-              setShowEdit(false);
-
-              setEditBooking(null);
-
-          } catch(err){
-              console.log(err);
-       }
-      };
-     
-      const getServices = async () => {
-        try {
-            const res = await axios.get("http://localhost:5000/api/services");
-            setServices(res.data);
-        } catch (err) {
-            console.log(err);
-          }
-      };
-
-
-    const getBookings = async () => {
-        try {
-            const res = await axios.get("http://localhost:5000/api/booking");
-            setBookings(res.data);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const updateStatus = async (id, status) => {
-      try {
-        await axios.put(`http://localhost:5000/api/booking/${id}`, {
-          status,
-        });
-
-        getBookings(); // refresh table
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    const getCustomers = async () => {
+  const updateService = async () => {
     try {
-        const res = await axios.get("http://localhost:5000/api/customers");
+      await axios.put(
+        `http://localhost:5000/api/services/${editService.id}`,
+        editService,
+      );
 
-        console.log(res.data)
-        setCustomers(res.data);
+      getServices();
+
+      setShowServiceEdit(false);
     } catch (err) {
-        console.log(err);
+      console.log(err);
     }
-};
-    const filteredServices = services.filter((s) =>
-      s.service_name
-        .toLowerCase()
-        .includes(serviceSearch.toLowerCase())
-    );
+  };
 
-    const filteredBookings = bookings.filter((b) =>
-      b.name.toLowerCase().includes(search.toLowerCase())
-    );
- 
+  const updateBooking = async () => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/booking/${editBooking.id}`,
+        editBooking,
+      );
+
+      await getBookings();
+
+      setShowEdit(false);
+
+      setEditBooking(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getBookings = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/booking");
+      setBookings(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getCustomers = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/customers");
+      console.log(res.data);
+      setCustomers(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getServices = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/services");
+      setServices(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      await Promise.all([getBookings(), getCustomers(), getServices()]);
+    };
+
+    fetchData();
+  }, []);
+
+  const updateStatus = async (id, status) => {
+    try {
+      await axios.put(`http://localhost:5000/api/booking/${id}`, {
+        status,
+      });
+
+      getBookings(); // refresh table
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const filteredServices = services.filter((s) =>
+    s.service_name.toLowerCase().includes(serviceSearch.toLowerCase()),
+  );
+
+  const filteredBookings = bookings.filter((b) =>
+    b.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
   const filteredCustomers = customers.filter(
-      (c) =>
-        c.name?.toLowerCase().includes(search.toLowerCase()) ||
-        c.email?.toLowerCase().includes(search.toLowerCase())
-    );
- 
-  const totalRevenue = 0;
-  const activeCount = bookings.filter(
-      (b) => b.status === "Processing"
-    ).length;
+    (c) =>
+      c.name?.toLowerCase().includes(search.toLowerCase()) ||
+      c.email?.toLowerCase().includes(search.toLowerCase()),
+  );
 
-    const readyCount = bookings.filter(
-      (b) => b.status === "Completed"
-    ).length;
+  const totalRevenue = bookings.reduce(
+    (sum, booking) => sum + Number(booking.total_price || 0),
+    0,
+  );
+  const statusData = [
+    {
+      name: "Pending",
+      value: bookings.filter((b) => b.status === "Pending").length,
+    },
+    {
+      name: "Processing",
+      value: bookings.filter((b) => b.status === "Processing").length,
+    },
+    {
+      name: "Ready",
+      value: bookings.filter((b) => b.status === "Ready").length,
+    },
+    {
+      name: "Completed",
+      value: bookings.filter((b) => b.status === "Completed").length,
+    },
+    {
+      name: "Cancelled",
+      value: bookings.filter((b) => b.status === "Cancelled").length,
+    },
+  ];
+  const activeCount = bookings.filter((b) => b.status === "Processing").length;
 
- 
+  const readyCount = bookings.filter((b) => b.status === "Completed").length;
+
   const navItems = [
     { id: "overview", label: "Overview", icon: "📊" },
     { id: "bookings", label: "Bookings", icon: "📅" },
     { id: "orders", label: "Orders", icon: "🧺" },
     { id: "customers", label: "Customers", icon: "👥" },
-     { id: "services", label: "Services", icon: "💲" }
+    { id: "services", label: "Services", icon: "💲" },
   ];
- 
+
   const handleLogout = () => {
     if (onAdminLogout) onAdminLogout();
     navigate("/");
   };
 
-
- return (
+  return (
     <div className="adm">
       <aside className="adm-side">
         <div className="adm-side-head">
@@ -168,7 +191,6 @@ export default function AdminDashboard({ onAdminLogout }) {
           </button>
         </div>
       </aside>
- 
       <div className="adm-main">
         <div className="adm-topbar">
           <div>
@@ -185,7 +207,6 @@ export default function AdminDashboard({ onAdminLogout }) {
             <span className="adm-admin-name">Admin</span>
           </div>
         </div>
- 
         <div className="adm-body">
           {/* OVERVIEW */}
           {view === "overview" && (
@@ -196,8 +217,10 @@ export default function AdminDashboard({ onAdminLogout }) {
                     <div className="adm-stat-ico">💰</div>
                     <span className="adm-stat-delta">+12%</span>
                   </div>
-                  <div className="adm-stat-num">NPR {totalRevenue.toLocaleString()}</div>
-                  <div className="adm-stat-lbl">Total Revenue (sample)</div>
+                  <div className="adm-stat-num">
+                    NPR {totalRevenue.toLocaleString()}
+                  </div>
+                  <div className="adm-stat-lbl">Total Revenue</div>
                 </div>
                 <div className="adm-stat">
                   <div className="adm-stat-top">
@@ -222,7 +245,36 @@ export default function AdminDashboard({ onAdminLogout }) {
                   <div className="adm-stat-lbl">Ready to Collect</div>
                 </div>
               </div>
- 
+              <div className="adm-panel">
+                <div className="adm-panel-head">
+                  <h3>Bokoing Distribution</h3>
+                </div>
+
+                <div style={{ width: "100%", height: 311 }}>
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie
+                        data={statusData}
+                        dataKey="value"
+                        nameKey="name"
+                        outerRadius={120}
+                        label
+                      >
+                        {statusData.map((entry, index) => (
+                          <Cell
+                            key={index}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
               <div className="adm-panel">
                 <div className="adm-panel-head">
                   <h3>Recent Bookings</h3>
@@ -244,12 +296,26 @@ export default function AdminDashboard({ onAdminLogout }) {
                         <tr key={b.id}>
                           <td className="adm-ref">{b.id}</td>
                           <td>{b.name}</td>
-                          <td>{b.booking_date}</td>
-                          <td><span className="adm-mode-tag">{b.service_mode}</span></td>
-                          <td><span className="adm-pill">
-                                {b.status}
-                            </span></td>
-                      <td>{b.items || "-"}</td>
+                          <td>
+                            {new Date(b.booking_date).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )}
+                          </td>
+                          <td>
+                            <span className="adm-mode-tag">
+                              {b.service_mode.charAt(0).toUpperCase() +
+                                b.service_mode.slice(1)}
+                            </span>
+                          </td>
+                          <td>
+                            <span className="adm-pill">{b.status}</span>
+                          </td>
+                          <td>{b.items || "-"}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -258,7 +324,7 @@ export default function AdminDashboard({ onAdminLogout }) {
               </div>
             </>
           )}
- 
+
           {/* BOOKINGS */}
           {view === "bookings" && (
             <div className="adm-panel">
@@ -289,42 +355,59 @@ export default function AdminDashboard({ onAdminLogout }) {
                   </thead>
                   <tbody>
                     {filteredBookings.length === 0 ? (
-                      <tr><td colSpan="10" className="adm-empty-row">No bookings found.</td></tr>
+                      <tr>
+                        <td colSpan="10" className="adm-empty-row">
+                          No bookings found.
+                        </td>
+                      </tr>
                     ) : (
                       filteredBookings.map((b) => (
                         <tr key={b.id}>
                           <td className="adm-ref">{b.id}</td>
                           <td>{b.name}</td>
                           <td>{b.contact}</td>
-                          <td>{b.booking_date}</td>
+                          <td>
+                            {new Date(b.booking_date).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )}
+                          </td>
                           <td>{b.booking_time}</td>
                           <td>{b.items || "-"}</td>
-                          <td><span className="adm-mode-tag">{b.service_mode}</span></td>
-                          <td> <span className="adm-pill">
-                                {b.status}
-                            </span></td>
-                          <td>-</td>
+                          <td>
+                            <span className="adm-mode-tag">
+                              {b.service_mode}
+                            </span>
+                          </td>
+                          <td>
+                            {" "}
+                            <span className="adm-pill">{b.status}</span>
+                          </td>
+                          <td>NPR {b.total_price}</td>
                           <td>
                             <div className="adm-row-actions">
                               <button
-                                  className="adm-act-btn"
-                                  onClick={() => {
-                                    setSelectedBooking(b);
-                                    setShowView(true);
-                                  }}
-                                >
-                                  View
-                                </button>
-                                <button
-                                      className="adm-act-btn"
-                                      onClick={() => {
-                                          setEditBooking({...b});
-                                          setShowEdit(true);
-                                      }}
-                                  >
-                                      Update
-                                  </button>
-                             
+                                className="adm-act-btn"
+                                onClick={() => {
+                                  setSelectedBooking(b);
+                                  setShowView(true);
+                                }}
+                              >
+                                View
+                              </button>
+                              <button
+                                className="adm-act-btn"
+                                onClick={() => {
+                                  setEditBooking({ ...b });
+                                  setShowEdit(true);
+                                }}
+                              >
+                                Update
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -335,7 +418,7 @@ export default function AdminDashboard({ onAdminLogout }) {
               </div>
             </div>
           )}
- 
+
           {/* ORDERS */}
           {view === "orders" && (
             <div className="adm-panel">
@@ -359,15 +442,17 @@ export default function AdminDashboard({ onAdminLogout }) {
                         <td className="adm-ref">{b.id}</td>
                         <td>{b.name}</td>
                         <td>{b.items || "-"}</td>
-                        <td><span className="adm-pill">{b.status}</span></td>
+                        <td>
+                          <span className="adm-pill">{b.status}</span>
+                        </td>
                         <td>
                           <div className="adm-row-actions">
-                           <button
+                            <button
                               className="adm-act-btn"
                               onClick={() => updateStatus(b.id, "Processing")}
-                              >
+                            >
                               Processing
-                              </button>
+                            </button>
 
                             <button
                               className="adm-act-btn"
@@ -391,7 +476,7 @@ export default function AdminDashboard({ onAdminLogout }) {
               </div>
             </div>
           )}
- 
+
           {/* CUSTOMERS */}
           {view === "customers" && (
             <div className="adm-panel">
@@ -411,24 +496,30 @@ export default function AdminDashboard({ onAdminLogout }) {
                       <th>Name</th>
                       <th>contact</th>
                       <th>Email</th>
-                  
+                      <th>Total Spent</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCustomers.length === 0? (
-                      <tr><td colSpan="6" className="adm-empty-row">No customers found.</td></tr>
+                    {filteredCustomers.length === 0 ? (
+                      <tr>
+                        <td colSpan="6" className="adm-empty-row">
+                          No customers found.
+                        </td>
+                      </tr>
                     ) : (
                       filteredCustomers.map((c) => (
                         <tr key={c.email}>
                           <td>
                             <div className="adm-cust-cell">
-                              <div className="adm-cust-av">{c.name.charAt(0)}</div>
+                              <div className="adm-cust-av">
+                                {c.name.charAt(0)}
+                              </div>
                               {c.name}
                             </div>
                           </td>
                           <td>{c.contact}</td>
                           <td>{c.email}</td>
-                         
+                          <td>NPR {c.total_spent}</td>
                         </tr>
                       ))
                     )}
@@ -437,281 +528,262 @@ export default function AdminDashboard({ onAdminLogout }) {
               </div>
             </div>
           )}
-       {/* service */}
-      {view === "services" && (
-      <div className="adm-panel">
-          <div className="adm-panel-head">
-              <h3>Manage Services</h3>
-              <input
+          {/* service */}
+          {view === "services" && (
+            <div className="adm-panel">
+              <div className="adm-panel-head">
+                <h3>Manage Services</h3>
+                <input
                   className="adm-search"
                   placeholder="Search service..."
                   value={serviceSearch}
-                  onChange={(e)=>setServiceSearch(e.target.value)}
-              />
-          </div>
-          <div className="adm-table-wrap">
-
-              <table className="adm-table">
-
+                  onChange={(e) => setServiceSearch(e.target.value)}
+                />
+              </div>
+              <div className="adm-table-wrap">
+                <table className="adm-table">
                   <thead>
-
-                      <tr>
-                          <th>Category</th>
-                          <th>Service</th>
-                          <th>Standard</th>
-                          <th>Express</th>
-                          <th>Actions</th>
-                      </tr>
-
+                    <tr>
+                      <th>Category</th>
+                      <th>Service</th>
+                      <th>Standard</th>
+                      <th>Express</th>
+                      <th>Actions</th>
+                    </tr>
                   </thead>
 
                   <tbody>
+                    {filteredServices.map((service) => (
+                      <tr key={service.id}>
+                        <td>{service.category}</td>
 
-                      {filteredServices.map(service=>(
-                          <tr key={service.id}>
+                        <td>{service.service_name}</td>
 
-                              <td>{service.category}</td>
+                        <td>NPR {service.standard_price}</td>
 
-                              <td>{service.service_name}</td>
+                        <td>NPR {service.express_price}</td>
 
-                              <td>NPR {service.standard_price}</td>
-
-                              <td>NPR {service.express_price}</td>
-
-                              <td>
-
-                                  <button
-                                      className="adm-act-btn"
-                                      onClick={()=>{
-                                          setEditService({...service});
-                                          setShowServiceEdit(true);
-                                      }}
-                                  >
-                                      Edit
-                                  </button>
-
-                              </td>
-
-                          </tr>
-                      ))}
-
+                        <td>
+                          <button
+                            className="adm-act-btn"
+                            onClick={() => {
+                              setEditService({ ...service });
+                              setShowServiceEdit(true);
+                            }}
+                          >
+                            Edit
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
-
-              </table>
-          </div>
-      </div>
-      )}
-
-    </div>   {/* adm-body */}
-  </div>     {/* adm-main */}
-
-          {showView && selectedBooking && (
-      <div className="adm-modal-overlay">
-        <div className="adm-modal">
-
-          <h2>Booking Details</h2>
-
-          <p><strong>ID:</strong> {selectedBooking.id}</p>
-
-          <p><strong>Name:</strong> {selectedBooking.name}</p>
-
-          <p><strong>Phone:</strong> {selectedBooking.contact}</p>
-
-          <p><strong>Email:</strong> {selectedBooking.email}</p>
-
-          <p><strong>Date:</strong> {selectedBooking.booking_date}</p>
-
-          <p><strong>Time:</strong> {selectedBooking.booking_time}</p>
-
-          <p><strong>Mode:</strong> {selectedBooking.service_mode}</p>
-
-          <p><strong>Items:</strong> {selectedBooking.items}</p>
-
-          <p><strong>Status:</strong> {selectedBooking.status}</p>
-
-          <button
-            className="adm-act-btn"
-            onClick={() => setShowView(false)}
-          >
-            Close
-          </button>
-
-        </div>
-      </div>
-    )}  
-
-              {showServiceEdit && editService && (
-            <div className="adm-modal-overlay">
-
-              <div className="adm-modal">
-
-                <h2>Edit Service</h2>
-
-                <label>Category</label>
-                <input
-                  value={editService.category}
-                  onChange={(e) =>
-                    setEditService({
-                      ...editService,
-                      category: e.target.value,
-                    })
-                  }
-                />
-
-                <label>Service</label>
-                <input
-                  value={editService.service_name}
-                  onChange={(e) =>
-                    setEditService({
-                      ...editService,
-                      service_name: e.target.value,
-                    })
-                  }
-                />
-
-                <label>Standard Price</label>
-                <input
-                  type="number"
-                  value={editService.standard_price}
-                  onChange={(e) =>
-                    setEditService({
-                      ...editService,
-                      standard_price: e.target.value,
-                    })
-                  }
-                />
-
-                <label>Express Price</label>
-                <input
-                  type="number"
-                  value={editService.express_price}
-                  onChange={(e) =>
-                    setEditService({
-                      ...editService,
-                      express_price: e.target.value,
-                    })
-                  }
-                />
-
-                <div className="adm-modal-actions">
-                  <button className="adm-act-btn" onClick={updateService}>
-                    Save
-                  </button>
-
-                  <button
-                    className="adm-act-btn"
-                    onClick={() => setShowServiceEdit(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-
+                </table>
               </div>
-
             </div>
-          )} 
-
-               
-              {showEdit && editBooking && (
-
-          <div className="adm-modal-overlay">
-
-          <div className="adm-modal">
-
-          <h2>Edit Booking</h2>
-
-          <label>Date</label>
-
-          <input
-          type="date"
-          value={editBooking.booking_date}
-          onChange={(e)=>
-          setEditBooking({
-          ...editBooking,
-          booking_date:e.target.value
-          })
-          }
-          />
-
-          <label>Time</label>
-
-          <input
-          value={editBooking.booking_time}
-          onChange={(e)=>
-          setEditBooking({
-          ...editBooking,
-          booking_time:e.target.value
-          })
-          }
-          />
-
-          <label>Service Mode</label>
-
-          <select
-          value={editBooking.service_mode}
-          onChange={(e)=>
-          setEditBooking({
-          ...editBooking,
-          service_mode:e.target.value
-          })
-          }
-          >
-
-          <option value="Regular">Regular</option>
-
-          <option value="Express">Express</option>
-
-          </select>
-
-          <label>Status</label>
-
-          <select
-          value={editBooking.status}
-          onChange={(e)=>
-          setEditBooking({
-          ...editBooking,
-          status:e.target.value
-          })
-          }
-          >
-
-          <option>Pending</option>
-          <option>Processing</option>
-          <option>Ready</option>
-          <option>Completed</option>
-          <option>Cancelled</option>
-
-          </select>
-
-          <div style={{marginTop:"20px"}}>
-
-          <button
-          className="adm-act-btn"
-          onClick={updateBooking}
-          >
-
-          Save
-
-          </button>
-
-          <button
-          className="adm-act-btn"
-              onClick={()=>{
-              setShowEdit(false);
-              setEditBooking(null);
-          }}
-                >
-
-          Cancel
-
-          </button>
-          </div>
-          </div>
-
-          </div>
-
           )}
+        </div>{" "}
+        {/* adm-body */}
+      </div>{" "}
+      {/* adm-main */}
+      {showView && selectedBooking && (
+        <div className="adm-modal-overlay">
+          <div className="adm-modal">
+            <h2>Booking Details</h2>
+
+            <p>
+              <strong>ID:</strong> {selectedBooking.id}
+            </p>
+
+            <p>
+              <strong>Name:</strong> {selectedBooking.name}
+            </p>
+
+            <p>
+              <strong>Phone:</strong> {selectedBooking.contact}
+            </p>
+
+            <p>
+              <strong>Email:</strong> {selectedBooking.email}
+            </p>
+
+            <p>
+              <strong>Date:</strong> {selectedBooking.booking_date}
+            </p>
+
+            <p>
+              <strong>Time:</strong> {selectedBooking.booking_time}
+            </p>
+
+            <p>
+              <strong>Mode:</strong> {selectedBooking.service_mode}
+            </p>
+
+            <p>
+              <strong>Items:</strong> {selectedBooking.items}
+            </p>
+
+            <p>
+              <strong>Total:</strong> NPR {selectedBooking.total_price}
+            </p>
+
+            <p>
+              <strong>Status:</strong> {selectedBooking.status}
+            </p>
+
+            <button className="adm-act-btn" onClick={() => setShowView(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {showServiceEdit && editService && (
+        <div className="adm-modal-overlay">
+          <div className="adm-modal">
+            <h2>Edit Service</h2>
+
+            <label>Category</label>
+            <input
+              value={editService.category}
+              onChange={(e) =>
+                setEditService({
+                  ...editService,
+                  category: e.target.value,
+                })
+              }
+            />
+
+            <label>Service</label>
+            <input
+              value={editService.service_name}
+              onChange={(e) =>
+                setEditService({
+                  ...editService,
+                  service_name: e.target.value,
+                })
+              }
+            />
+
+            <label>Standard Price</label>
+            <input
+              type="number"
+              value={editService.standard_price}
+              onChange={(e) =>
+                setEditService({
+                  ...editService,
+                  standard_price: e.target.value,
+                })
+              }
+            />
+
+            <label>Express Price</label>
+            <input
+              type="number"
+              value={editService.express_price}
+              onChange={(e) =>
+                setEditService({
+                  ...editService,
+                  express_price: e.target.value,
+                })
+              }
+            />
+
+            <div className="adm-modal-actions">
+              <button className="adm-act-btn" onClick={updateService}>
+                Save
+              </button>
+
+              <button
+                className="adm-act-btn"
+                onClick={() => setShowServiceEdit(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showEdit && editBooking && (
+        <div className="adm-modal-overlay">
+          <div className="adm-modal">
+            <h2>Edit Booking</h2>
+
+            <label>Date</label>
+
+            <input
+              type="date"
+              value={editBooking.booking_date}
+              onChange={(e) =>
+                setEditBooking({
+                  ...editBooking,
+                  booking_date: e.target.value,
+                })
+              }
+            />
+
+            <label>Time</label>
+
+            <input
+              value={editBooking.booking_time}
+              onChange={(e) =>
+                setEditBooking({
+                  ...editBooking,
+                  booking_time: e.target.value,
+                })
+              }
+            />
+
+            <label>Service Mode</label>
+
+            <select
+              value={editBooking.service_mode}
+              onChange={(e) =>
+                setEditBooking({
+                  ...editBooking,
+                  service_mode: e.target.value,
+                })
+              }
+            >
+              <option value="Regular">Regular</option>
+
+              <option value="Express">Express</option>
+            </select>
+
+            <label>Status</label>
+
+            <select
+              value={editBooking.status}
+              onChange={(e) =>
+                setEditBooking({
+                  ...editBooking,
+                  status: e.target.value,
+                })
+              }
+            >
+              <option>Pending</option>
+              <option>Processing</option>
+              <option>Ready</option>
+              <option>Completed</option>
+              <option>Cancelled</option>
+            </select>
+
+            <div style={{ marginTop: "20px" }}>
+              <button className="adm-act-btn" onClick={updateBooking}>
+                Save
+              </button>
+
+              <button
+                className="adm-act-btn"
+                onClick={() => {
+                  setShowEdit(false);
+                  setEditBooking(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
- 

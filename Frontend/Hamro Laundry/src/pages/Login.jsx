@@ -16,21 +16,15 @@ function Login({ onLogin }) {
   const [showLoginSuccess, setShowLoginSuccess] = useState(false);
   const [userRole, setUserRole] = useState("");
 
-  
-  
-
   const login = async (event) => {
     event.preventDefault();
     setMessage("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/login",
-        {
-          email: email.trim().toLowerCase(),
-          password: password,
-        }
-      );
+      const response = await axios.post("http://localhost:5000/api/login", {
+        email: email.trim().toLowerCase(),
+        password: password,
+      });
 
       // Save JWT token
       localStorage.setItem("token", response.data.token);
@@ -39,15 +33,12 @@ function Login({ onLogin }) {
       if (onLogin) {
         onLogin(response.data.user);
       }
-          setUserRole(response.data.user.role);
+      setUserRole(response.data.user.role);
 
-        // Show success popup
-        setShowLoginSuccess(true);
-
+      // Show success popup
+      setShowLoginSuccess(true);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Login failed"
-      );
+      setMessage(error.response?.data?.message || "Login failed");
     }
   };
 
@@ -88,7 +79,7 @@ function Login({ onLogin }) {
               />
             </label>
 
-           <div className="password-wrapper">
+            <div className="password-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -105,15 +96,9 @@ function Login({ onLogin }) {
               </button>
             </div>
 
-            {message && (
-              <div className="auth-error">
-                {message}
-              </div>
-            )}
+            {message && <div className="auth-error">{message}</div>}
 
-            <button type="submit">
-              Sign In
-            </button>
+            <button type="submit">Sign In</button>
           </form>
 
           <div className="auth-switch">
@@ -133,34 +118,29 @@ function Login({ onLogin }) {
       {showLoginSuccess && (
         <div className="success-overlay">
           <div className="success-modal">
-
             <div className="success-check">✓</div>
 
             <h2>Welcome Back!</h2>
 
-            <p>
-              You have successfully logged in.
-            </p>
-                      <button
-            className="success-btn"
-            onClick={() => {
-              setShowLoginSuccess(false);
+            <p>You have successfully logged in.</p>
+            <button
+              className="success-btn"
+              onClick={() => {
+                setShowLoginSuccess(false);
 
-              if (userRole === "admin") {
-                navigate("/admin");
-              } else {
-                navigate("/book");
-              }
-            }}
-          >
-            Continue
-          </button>
+                if (userRole === "admin") {
+                  navigate("/admin");
+                } else {
+                  navigate("/book");
+                }
+              }}
+            >
+              Continue
+            </button>
           </div>
         </div>
       )}
-      
     </main>
-    
   );
 }
 

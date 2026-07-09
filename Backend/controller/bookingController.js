@@ -4,9 +4,7 @@ const {
 } = require("../model/bookingModel");
 
 const addBooking = async (req, res) => {
-
     try {
-
         const {
             user_id,
             basket,
@@ -49,6 +47,7 @@ const addBooking = async (req, res) => {
                 item.qty
             );
 
+            console.log("Basket item:", item);
             // Get price from services table
             const result = await pool.query(
                 `
@@ -56,21 +55,22 @@ const addBooking = async (req, res) => {
                 FROM services
                 WHERE id = $1
                 `,
-                [item.servcie_id]
+                [item.service_id]
             );
-
+            console.log("Query result:", result.rows);
             if (result.rows.length > 0) {
 
                 const service = result.rows[0];
 
                 const price =
-                    mode === "express"
+                    item.mode === "express"
                         ? service.express_price
                         : service.standard_price;
 
                 total += price * item.qty;
             }
         }
+       console.log("Final Total:", total);
         await pool.query(
             `
             UPDATE bookings
@@ -104,7 +104,7 @@ const getBookings = async (req, res) => {
     try {
 
         const result = await pool.query(`
-            SELECT
+                SELECT
                 b.id,
                 u.name,
                 u.email,
@@ -113,25 +113,20 @@ const getBookings = async (req, res) => {
                 b.booking_time,
                 b.service_mode,
                 b.status,
-
+                b.total_price,
                 STRING_AGG(
                     s.service_name || ' (' ||
                     bi.service_option || ') x' ||
                     bi.quantity,
                     ', '
                 ) AS items
-
             FROM bookings b
-
             JOIN users u
-            ON b.user_id = u.id
-
+                ON b.user_id = u.id
             LEFT JOIN booking_items bi
-            ON b.id = bi.booking_id
-
+                ON b.id = bi.booking_id
             LEFT JOIN services s
-            ON bi.service_id = s.id
-
+                ON bi.service_id = s.id
             GROUP BY
                 b.id,
                 u.name,
@@ -140,9 +135,9 @@ const getBookings = async (req, res) => {
                 b.booking_date,
                 b.booking_time,
                 b.service_mode,
-                b.status
-
-            ORDER BY b.id DESC
+                b.status,
+                b.total_price
+            ORDER BY b.id DESC 
         `);
 
         res.json(result.rows);
@@ -191,20 +186,35 @@ const getCustomers = async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT
-        id,
-        name,
-        email,
-        contact
-      FROM users
-      WHERE role = 'user'
-      ORDER BY id DESC
+        u.id,
+        u.name,
+        u.email,
+        u.contact,
+        COALESCE(SUM(b.total_price), 0) AS total_spent
+      FROM users u
+
+      LEFT JOIN bookings b
+      ON u.id = b.user_id
+      AND b.status <> 'Cancelled'
+
+      WHERE u.role = 'user'
+
+      GROUP BY
+        u.id,
+        u.name,
+        u.email,
+        u.contact
+
+      ORDER BY u.id DESC
     `);
 
     res.json(result.rows);
 
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({
+      message: "Server Error"
+    });
   }
 };
 

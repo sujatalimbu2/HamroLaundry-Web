@@ -47,7 +47,7 @@ const deleteById = async(id) => {
 const updateUser = async(id,name, email, password, address, contact, image) => {
     const result = await pool.query
     ("Update users SET name = $1, email = $2, address = $3, contact = $4, image= $5 WHERE id = $6 RETURNING *",
-        [name, email, address, image, contact, id]
+        [name, email, address, contact, image, id]
     );
     return result.rows[0];
 };

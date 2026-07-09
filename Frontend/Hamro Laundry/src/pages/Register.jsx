@@ -4,7 +4,6 @@ import axios from "axios";
 import "../assets/CCS/Auth.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-
 function Register() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,8 +16,8 @@ function Register() {
   const [contact, setContact] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-const [showSuccess, setShowSuccess] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const register = async (event) => {
     event.preventDefault();
@@ -50,29 +49,23 @@ const [showSuccess, setShowSuccess] = useState(false);
     }
 
     try {
-            await axios.post(
-        "http://localhost:5000/api/create",
-        {
-          name: cleanName,
-          email: cleanEmail,
-          password,
-          address,
-          contact,
-        }
-      );
-      
+      await axios.post("http://localhost:5000/api/create", {
+        name: cleanName,
+        email: cleanEmail,
+        password,
+        address,
+        contact,
+      });
+
       setShowSuccess(true);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Registration failed"
-      );
+      setMessage(error.response?.data?.message || "Registration failed");
     }
   };
 
   return (
     <main className="auth-page">
       <section className="auth-card register-card">
-
         <button
           className="auth-close"
           onClick={() =>
@@ -104,7 +97,6 @@ const [showSuccess, setShowSuccess] = useState(false);
           <p>Create an account before confirming your booking.</p>
 
           <form className="auth-form" onSubmit={register}>
-
             <label>
               Name
               <input
@@ -128,50 +120,46 @@ const [showSuccess, setShowSuccess] = useState(false);
             </label>
 
             <label>
-                Password
-                <div className="password-wrapper">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 6 characters"
-                    required
-                  />
+              Password
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 6 characters"
+                  required
+                />
 
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ?  <FaEye /> : <FaEyeSlash /> }
-                  </button>
-                </div>
-              </label>
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </button>
+              </div>
+            </label>
 
-              <label>
-                  Confirm Password
-                  <div className="password-wrapper">
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm password"
-                      required
-                    />
+            <label>
+              Confirm Password
+              <div className="password-wrapper">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm password"
+                  required
+                />
 
-                    <button
-                      type="button"
-                      className="password-toggle"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
-                    </button>
-                  </div>
-                </label>
-
-            
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                </button>
+              </div>
+            </label>
 
             <label>
               Address
@@ -185,30 +173,23 @@ const [showSuccess, setShowSuccess] = useState(false);
             </label>
 
             <label>
-                Contact Number
-                <input
-                  type="tel"
-                  value={contact}
-                  onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "");
-                      setContact(value);
-                    }}
-                  placeholder="98XXXXXXXX"
-                  maxLength={10}
-                  required
-                />
-              </label>
+              Contact Number
+              <input
+                type="tel"
+                value={contact}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  setContact(value);
+                }}
+                placeholder="98XXXXXXXX"
+                maxLength={10}
+                required
+              />
+            </label>
 
-            {message && (
-              <div className="auth-error">
-                {message}
-              </div>
-            )}
+            {message && <div className="auth-error">{message}</div>}
 
-            <button type="submit">
-              Register
-            </button>
-
+            <button type="submit">Register</button>
           </form>
 
           <div className="auth-switch">
@@ -223,42 +204,37 @@ const [showSuccess, setShowSuccess] = useState(false);
               Sign In
             </Link>
           </div>
-
         </div>
-
       </section>
       {showSuccess && (
-  <div className="success-overlay">
-    <div className="success-modal">
+        <div className="success-overlay">
+          <div className="success-modal">
+            <div className="success-check">✓</div>
 
-      <div className="success-check">✓</div>
+            <h2>Registration Successful</h2>
 
-      <h2>Registration Successful</h2>
+            <p>
+              Your account has been created successfully. You can now sign in
+              and book your laundry service.
+            </p>
 
-      <p>
-        Your account has been created successfully.
-        You can now sign in and book your laundry service.
-      </p>
-
-      <button
-        className="success-btn"
-        onClick={() => {
-          setShowSuccess(false);
-          navigate("/login", {
-            state: {
-              backgroundLocation:
-                location.state?.backgroundLocation || location,
-            },
-          });
-        }}
-      >
-        Continue
-      </button>
-
-    </div>
-  </div>
-)}
-      
+            <button
+              className="success-btn"
+              onClick={() => {
+                setShowSuccess(false);
+                navigate("/login", {
+                  state: {
+                    backgroundLocation:
+                      location.state?.backgroundLocation || location,
+                  },
+                });
+              }}
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -1,4 +1,11 @@
-import { BrowserRouter, Routes, Route, useLocation, useNavigate,  Navigate, } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import { useState } from "react";
 
 import Navbar from "./component/Navbar";
@@ -11,24 +18,23 @@ import Register from "./pages/Register";
 import User from "./pages/User";
 import Admin from "./pages/Admin";
 
-
 function App() {
   const [basket, setBasket] = useState([]);
 
   const [user, setUser] = useState(() => {
-  try {
-    const savedUser = localStorage.getItem("hamro_user");
+    try {
+      const savedUser = localStorage.getItem("hamro_user");
 
-    if (!savedUser || savedUser === "undefined") {
+      if (!savedUser || savedUser === "undefined") {
+        return null;
+      }
+
+      return JSON.parse(savedUser);
+    } catch {
+      localStorage.removeItem("hamro_user");
       return null;
     }
-
-    return JSON.parse(savedUser);
-  } catch  {
-    localStorage.removeItem("hamro_user");
-    return null;
-  }
-});
+  });
 
   const handleLogin = (userData) => {
     localStorage.setItem("hamro_user", JSON.stringify(userData));
@@ -38,7 +44,9 @@ function App() {
   const handleUserUpdate = (userData) => {
     const users = JSON.parse(localStorage.getItem("hamro_users") || "[]");
     const updatedUsers = users.map((savedUser) =>
-      savedUser.email === userData.email ? { ...savedUser, ...userData } : savedUser
+      savedUser.email === userData.email
+        ? { ...savedUser, ...userData }
+        : savedUser,
     );
 
     localStorage.setItem("hamro_users", JSON.stringify(updatedUsers));
@@ -65,14 +73,21 @@ function App() {
   );
 }
 
-function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) {
+function AppShell({
+  basket,
+  setBasket,
+  user,
+  onLogin,
+  onLogout,
+  onUserUpdate,
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const modalRoutes = ["/login", "/register", "/profile"];
   const isModalRoute = modalRoutes.includes(location.pathname);
   const backgroundLocation = location.state?.backgroundLocation;
- const pageLocation = backgroundLocation || location;
- const isAdminPage = location.pathname === "/admin";
+  const pageLocation = backgroundLocation || location;
+  const isAdminPage = location.pathname === "/admin";
 
   const addToBasket = (item) => {
     setBasket((prev) => {
@@ -85,7 +100,7 @@ function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) 
       return prev.map((basketItem) =>
         basketItem.id === item.id
           ? { ...basketItem, qty: basketItem.qty + item.qty }
-          : basketItem
+          : basketItem,
       );
     });
   };
@@ -100,15 +115,8 @@ function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) 
 
   return (
     <>
-
       {/* ✅ NAVBAR ALWAYS SHOWS */}
-      {!isAdminPage && (
-        <Navbar
-          user={user}
-          onLogout={onLogout}
-        />
-      )}
-      
+      {!isAdminPage && <Navbar user={user} onLogout={onLogout} />}
 
       {/* PAGE CONTENT CHANGES */}
       <Routes location={pageLocation}>
@@ -129,28 +137,36 @@ function AppShell({ basket, setBasket, user, onLogin, onLogout, onUserUpdate }) 
             />
           }
         />
-        <Route path="/price" element={<Price basket={basket} setBasket={setBasket} />} />
-        <Route path="/about" element={<About basket={basket} setBasket={setBasket} />} />
         <Route
-            path="/admin"
-            element={
-              user?.role === "admin" ? (
-                <Admin onAdminLogout={onLogout} />
-              ) : (
-                <Navigate to="/" replace />
-              )
-            }
-          />
+          path="/price"
+          element={<Price basket={basket} setBasket={setBasket} />}
+        />
+        <Route
+          path="/about"
+          element={<About basket={basket} setBasket={setBasket} />}
+        />
+        <Route
+          path="/admin"
+          element={
+            user?.role === "admin" ? (
+              <Admin onAdminLogout={onLogout} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
       </Routes>
 
       {isModalRoute && (
         <Routes>
-        <Route path="/login" element={<Login onLogin={onLogin} />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/profile"
-          element={<User user={user} onUserUpdate={onUserUpdate} goLogin={goLogin} />}
-        />
+          <Route path="/login" element={<Login onLogin={onLogin} />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/profile"
+            element={
+              <User user={user} onUserUpdate={onUserUpdate} goLogin={goLogin} />
+            }
+          />
         </Routes>
       )}
     </>

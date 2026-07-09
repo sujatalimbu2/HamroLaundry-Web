@@ -1,10 +1,9 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../assets/CCS/Navbar.css";
 
-
 const Navbar = ({ user, onLogout }) => {
   const navigate = useNavigate();
-const location = useLocation();
+  const location = useLocation();
   return (
     <header className="header">
       <div className="logo">Hamro Laundry</div>
@@ -18,29 +17,30 @@ const location = useLocation();
       <div className="auth-nav">
         {user ? (
           <>
-           <Link
+            <Link
               className="profile-link"
               to="/profile"
               state={{ backgroundLocation: location }}
             >
               {user.image ? (
                 <img
-                className="profile-thumb"
-                src={
-                  user.image
-                    ? `http://localhost:5000/uploads/${user.image}`
-                    : "/default-profile.png"
-                }
-                alt={user.name}
-              />
-               
+                  className="profile-thumb"
+                  src={
+                    user.image
+                      ? `http://localhost:5000/uploads/${user.image}`
+                      : "/default-profile.png"
+                  }
+                  alt={user.name}
+                />
               ) : (
                 <span className="profile-thumb profile-initial">
                   {user.name?.charAt(0) || "U"}
                 </span>
               )}
             </Link>
-            <button className="auth-link" onClick={onLogout}>Logout</button>
+            <button className="auth-link" onClick={onLogout}>
+              Logout
+            </button>
           </>
         ) : (
           <button
@@ -49,8 +49,11 @@ const location = useLocation();
               navigate("/login", {
                 state: { backgroundLocation: location },
               })
-            }> Login
-         </button>
+            }
+          >
+            {" "}
+            Login
+          </button>
         )}
       </div>
     </header>
