@@ -79,6 +79,7 @@ export default function AdminDashboard({ onAdminLogout }) {
       console.log(err);
     }
   };
+  
 
   const getServices = async () => {
     try {
@@ -109,10 +110,6 @@ export default function AdminDashboard({ onAdminLogout }) {
   };
   const filteredServices = services.filter((s) =>
     s.service_name.toLowerCase().includes(serviceSearch.toLowerCase()),
-  );
-
-  const filteredBookings = bookings.filter((b) =>
-    b.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const filteredCustomers = customers.filter(
@@ -149,7 +146,7 @@ export default function AdminDashboard({ onAdminLogout }) {
   ];
   const activeCount = bookings.filter((b) => b.status === "Processing").length;
 
-  const readyCount = bookings.filter((b) => b.status === "Completed").length;
+  const readyCount = bookings.filter((b) => b.status === "").length;
 
   const navItems = [
     { id: "overview", label: "Overview", icon: "📊" },
@@ -163,6 +160,21 @@ export default function AdminDashboard({ onAdminLogout }) {
     if (onAdminLogout) onAdminLogout();
     navigate("/");
   };
+
+  const filteredBookings = bookings.filter((b) =>
+    b.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  const activeOrders = bookings.filter(
+  (b) =>
+    b.name.toLowerCase().includes(search.toLowerCase()) &&
+    b.status !== "Completed" &&
+    b.status !== "Cancelled" &&
+    b.items &&
+    b.items !== "-" &&
+    b.items !== "[]" &&
+    b.items.trim() !== ""
+);
 
   return (
     <div className="adm">
@@ -437,7 +449,7 @@ export default function AdminDashboard({ onAdminLogout }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {bookings.map((b) => (
+                    {activeOrders.map((b) => (
                       <tr key={b.id}>
                         <td className="adm-ref">{b.id}</td>
                         <td>{b.name}</td>
@@ -447,26 +459,32 @@ export default function AdminDashboard({ onAdminLogout }) {
                         </td>
                         <td>
                           <div className="adm-row-actions">
-                            <button
-                              className="adm-act-btn"
-                              onClick={() => updateStatus(b.id, "Processing")}
-                            >
-                              Processing
-                            </button>
+                            {b.status === "Pending" && (
+                              <button
+                                className="adm-act-btn"
+                                onClick={() => updateStatus(b.id, "Processing")}
+                              >
+                                Processing
+                              </button>
+                            )}
 
-                            <button
-                              className="adm-act-btn"
-                              onClick={() => updateStatus(b.id, "Ready")}
-                            >
-                              Ready
-                            </button>
+                            {b.status === "Processing" && (
+                              <button
+                                className="adm-act-btn"
+                                onClick={() => updateStatus(b.id, "Ready")}
+                              >
+                                Ready
+                              </button>
+                            )}
 
-                            <button
-                              className="adm-act-btn"
-                              onClick={() => updateStatus(b.id, "Completed")}
-                            >
-                              Completed
-                            </button>
+                            {b.status === "Ready" && (
+                              <button
+                                className="adm-act-btn"
+                                onClick={() => updateStatus(b.id, "Completed")}
+                              >
+                                Completed
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -588,51 +606,97 @@ export default function AdminDashboard({ onAdminLogout }) {
       {showView && selectedBooking && (
         <div className="adm-modal-overlay">
           <div className="adm-modal">
-            <h2>Booking Details</h2>
+            <div className="adm-modal-header">
+              <h2>Booking #{selectedBooking.id}</h2>
+              <p>Customer Booking Details</p>
+            </div>
 
-            <p>
-              <strong>ID:</strong> {selectedBooking.id}
-            </p>
+            <div className="adm-modal-body">
+              <div className="adm-card">
+                <h3>Customer Information</h3>
 
-            <p>
-              <strong>Name:</strong> {selectedBooking.name}
-            </p>
+                <div className="adm-row">
+                  <span>Name</span>
+                  <strong>{selectedBooking.name}</strong>
+                </div>
 
-            <p>
-              <strong>Phone:</strong> {selectedBooking.contact}
-            </p>
+                <div className="adm-row">
+                  <span>Phone</span>
+                  <strong>{selectedBooking.contact}</strong>
+                </div>
 
-            <p>
-              <strong>Email:</strong> {selectedBooking.email}
-            </p>
+                <div className="adm-row">
+                  <span>Email</span>
+                  <strong>{selectedBooking.email}</strong>
+                </div>
+              </div>
 
-            <p>
-              <strong>Date:</strong> {selectedBooking.booking_date}
-            </p>
+              <div className="adm-card">
+                <h3>Booking Information</h3>
 
-            <p>
-              <strong>Time:</strong> {selectedBooking.booking_time}
-            </p>
+                <div className="adm-row">
+                  <span>Date</span>
 
-            <p>
-              <strong>Mode:</strong> {selectedBooking.service_mode}
-            </p>
+                  <strong>
+                    {new Date(selectedBooking.booking_date).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      },
+                    )}
+                  </strong>
+                </div>
 
-            <p>
-              <strong>Items:</strong> {selectedBooking.items}
-            </p>
+                <div className="adm-row">
+                  <span>Time</span>
+                  <strong>{selectedBooking.booking_time}</strong>
+                </div>
 
-            <p>
-              <strong>Total:</strong> NPR {selectedBooking.total_price}
-            </p>
+                <div className="adm-row">
+                  <span>Service</span>
+                  <strong>{selectedBooking.service_mode}</strong>
+                </div>
+              </div>
 
-            <p>
-              <strong>Status:</strong> {selectedBooking.status}
-            </p>
+              <div className="adm-card">
+                <h3>Laundry Items</h3>
 
-            <button className="adm-act-btn" onClick={() => setShowView(false)}>
-              Close
-            </button>
+                <div className="adm-items">
+                  {selectedBooking.items || "No items"}
+                </div>
+              </div>
+
+              <div className="adm-card">
+                <div className="adm-row">
+                  <span>Total Amount</span>
+
+                  <h2 className="adm-total">
+                    NPR {selectedBooking.total_price}
+                  </h2>
+                </div>
+
+                <div className="adm-row">
+                  <span>Status</span>
+
+                  <span
+                    className={`adm-status ${selectedBooking.status.toLowerCase()}`}
+                  >
+                    {selectedBooking.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="adm-modal-footer">
+              <button
+                className="adm-close-btn"
+                onClick={() => setShowView(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

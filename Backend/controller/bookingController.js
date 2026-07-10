@@ -1,109 +1,80 @@
-const {
-    createBooking,
-    createBookingItem,
-} = require("../model/bookingModel");
+const { createBooking, createBookingItem } = require("../model/bookingModel");
 
 const addBooking = async (req, res) => {
-    try {
-        const {
-            user_id,
-            basket,
-            date,
-            time,
-            mode,
-        } = req.body;
+  try {
+    const { user_id, basket, date, time, mode } = req.body;
 
-        if (
-            !user_id ||
-            !basket ||
-            basket.length === 0 ||
-            !date ||
-            !time
-        ) {
-            return res.status(400).json({
-                message: "Missing booking information"
-            });
-        }
+    if (!user_id || !basket || basket.length === 0 || !date || !time) {
+      return res.status(400).json({
+        message: "Missing booking information",
+      });
+    }
 
-        // Create booking
-        const booking = await createBooking(
-            user_id,
-            date,
-            time,
-            mode,
-            0
-        );
+    // Create booking
+    const booking = await createBooking(user_id, date, time, mode, 0);
 
-        let total = 0;
+    let total = 0;
 
-         // Save every basket item
-        for (const item of basket) {
+    // Save every basket item
+    for (const item of basket) {
+      // Save booking item
+      await createBookingItem(
+        booking.id,
+        item.service_id,
+        item.option,
+        item.qty,
+      );
 
-            // Save booking item
-            await createBookingItem(
-                booking.id,
-                item.service_id,
-                item.option,
-                item.qty
-            );
-
-            console.log("Basket item:", item);
-            // Get price from services table
-            const result = await pool.query(
-                `
+      console.log("Basket item:", item);
+      // Get price from services table
+      const result = await pool.query(
+        `
                 SELECT standard_price, express_price
                 FROM services
                 WHERE id = $1
                 `,
-                [item.service_id]
-            );
-            console.log("Query result:", result.rows);
-            if (result.rows.length > 0) {
+        [item.service_id],
+      );
+      console.log("Query result:", result.rows);
+      if (result.rows.length > 0) {
+        const service = result.rows[0];
 
-                const service = result.rows[0];
+        const price =
+          item.mode === "express"
+            ? service.express_price
+            : service.standard_price;
 
-                const price =
-                    item.mode === "express"
-                        ? service.express_price
-                        : service.standard_price;
-
-                total += price * item.qty;
-            }
-        }
-       console.log("Final Total:", total);
-        await pool.query(
-            `
+        total += price * item.qty;
+      }
+    }
+    console.log("Final Total:", total);
+    await pool.query(
+      `
             UPDATE bookings
             SET total_price = $1
             WHERE id = $2
             `,
-            [total, booking.id]
-        );
+      [total, booking.id],
+    );
 
-        res.status(201).json({
-            message: "Booking created successfully",
-            booking
-        });
+    res.status(201).json({
+      message: "Booking created successfully",
+      booking,
+    });
+  } catch (error) {
+    console.log(error);
 
-    } catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-            message: "Server Error"
-        });
-
-    }
-
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
 };
 
 const pool = require("../database/db");
 
 const getBookings = async (req, res) => {
-
-    try {
-
-        const result = await pool.query(`
+  try {
+    const result = await pool.query(`
                 SELECT
                 b.id,
                 u.name,
@@ -140,46 +111,40 @@ const getBookings = async (req, res) => {
             ORDER BY b.id DESC 
         `);
 
-        res.json(result.rows);
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
 
-    } catch (err) {
-
-        console.log(err);
-
-        res.status(500).json({
-            message: "Server Error"
-        });
-
-    }
-
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
 };
 
 const updateBooking = async (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body;
+  const { id } = req.params;
+  const { status } = req.body;
 
-    try {
-
-        const result = await pool.query(
-            `UPDATE bookings
+  try {
+    const result = await pool.query(
+      `UPDATE bookings
              SET status = $1
              WHERE id = $2
              RETURNING *`,
-            [status, id]
-        );
+      [status, id],
+    );
 
-        res.json({
-            message: "Booking Updated",
-            booking: result.rows[0]
-        });
+    res.json({
+      message: "Booking Updated",
+      booking: result.rows[0],
+    });
+  } catch (err) {
+    console.log(err);
 
-    } catch (err) {
-        console.log(err);
-
-        res.status(500).json({
-            message: "Server Error"
-        });
-    }
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
 };
 
 const getCustomers = async (req, res) => {
@@ -209,36 +174,35 @@ const getCustomers = async (req, res) => {
     `);
 
     res.json(result.rows);
-
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: "Server Error"
+      message: "Server Error",
     });
   }
 };
 
 const getServices = async (req, res) => {
-    try {
-        const result = await pool.query(`
+  try {
+    const result = await pool.query(`
             SELECT *
             FROM services
             ORDER BY category, service_name
         `);
 
-        res.json(result.rows);
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Server Error" });
-    }
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
 };
 
 const getMyBookings = async (req, res) => {
-    const { userId } = req.params;
+  const { userId } = req.params;
 
-    try {
-        const result = await pool.query(`
+  try {
+    const result = await pool.query(
+      `
             SELECT
                 b.id,
                 b.booking_date,
@@ -276,16 +240,17 @@ const getMyBookings = async (req, res) => {
                 b.total_price
 
             ORDER BY b.id DESC
-        `,[userId]);
+        `,
+      [userId],
+    );
 
-        res.json(result.rows);
-
-    } catch(err){
-        console.log(err);
-        res.status(500).json({
-            message:"Server Error"
-        });
-    }
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
 };
 
 const cancelBooking = async (req, res) => {
@@ -300,7 +265,7 @@ const cancelBooking = async (req, res) => {
       AND status='Pending'
       RETURNING *
       `,
-      [id]
+      [id],
     );
 
     if (result.rows.length === 0) {

@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    addBooking,
-    getBookings,
-    updateBooking,
-    getCustomers,
-    getServices,
-    getMyBookings,
-    cancelBooking,
+  addBooking,
+  getBookings,
+  updateBooking,
+  getCustomers,
+  getServices,
+  getMyBookings,
+  cancelBooking,
 } = require("../controller/bookingController");
 
 router.post("/booking/create", addBooking);
