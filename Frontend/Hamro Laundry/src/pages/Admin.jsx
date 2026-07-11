@@ -79,7 +79,6 @@ export default function AdminDashboard({ onAdminLogout }) {
       console.log(err);
     }
   };
-  
 
   const getServices = async () => {
     try {
@@ -161,20 +160,23 @@ export default function AdminDashboard({ onAdminLogout }) {
     navigate("/");
   };
 
-  const filteredBookings = bookings.filter((b) =>
-    b.name.toLowerCase().includes(search.toLowerCase()),
+  const filteredBookings = bookings.filter(
+    (b) =>
+      b.name.toLowerCase().includes(search.toLowerCase()) &&
+      b.items &&
+      b.items.trim() !== "",
   );
 
   const activeOrders = bookings.filter(
-  (b) =>
-    b.name.toLowerCase().includes(search.toLowerCase()) &&
-    b.status !== "Completed" &&
-    b.status !== "Cancelled" &&
-    b.items &&
-    b.items !== "-" &&
-    b.items !== "[]" &&
-    b.items.trim() !== ""
-);
+    (b) =>
+      b.name.toLowerCase().includes(search.toLowerCase()) &&
+      b.status !== "Completed" &&
+      b.status !== "Cancelled" &&
+      b.items &&
+      b.items !== "-" &&
+      b.items !== "[]" &&
+      b.items.trim() !== "",
+  );
 
   return (
     <div className="adm">
@@ -212,6 +214,7 @@ export default function AdminDashboard({ onAdminLogout }) {
               {view === "bookings" && "All customer drop-off bookings"}
               {view === "orders" && "Track order progress"}
               {view === "customers" && "Manage your customer base"}
+              {view === "services" && "Manage service categories and pricing"}
             </div>
           </div>
           <div className="adm-admin-chip">
@@ -605,7 +608,7 @@ export default function AdminDashboard({ onAdminLogout }) {
       {/* adm-main */}
       {showView && selectedBooking && (
         <div className="adm-modal-overlay">
-          <div className="adm-modal">
+          <div className="adm-modal adm-view-modal">
             <div className="adm-modal-header">
               <h2>Booking #{selectedBooking.id}</h2>
               <p>Customer Booking Details</p>
@@ -703,61 +706,78 @@ export default function AdminDashboard({ onAdminLogout }) {
       {showServiceEdit && editService && (
         <div className="adm-modal-overlay">
           <div className="adm-modal">
-            <h2>Edit Service</h2>
+            <div className="adm-modal-header">
+              <h2>Edit Service</h2>
+              <span>Update the pricing and details for this service.</span>
+            </div>
 
-            <label>Category</label>
-            <input
-              value={editService.category}
-              onChange={(e) =>
-                setEditService({
-                  ...editService,
-                  category: e.target.value,
-                })
-              }
-            />
+            <div className="adm-modal-body adm-form-stack">
+              <div className="adm-field-grid">
+                <div className="adm-field">
+                  <label>Category</label>
+                  <input
+                    value={editService.category}
+                    onChange={(e) =>
+                      setEditService({
+                        ...editService,
+                        category: e.target.value,
+                      })
+                    }
+                  />
+                </div>
 
-            <label>Service</label>
-            <input
-              value={editService.service_name}
-              onChange={(e) =>
-                setEditService({
-                  ...editService,
-                  service_name: e.target.value,
-                })
-              }
-            />
+                <div className="adm-field">
+                  <label>Service</label>
+                  <input
+                    value={editService.service_name}
+                    onChange={(e) =>
+                      setEditService({
+                        ...editService,
+                        service_name: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
 
-            <label>Standard Price</label>
-            <input
-              type="number"
-              value={editService.standard_price}
-              onChange={(e) =>
-                setEditService({
-                  ...editService,
-                  standard_price: e.target.value,
-                })
-              }
-            />
+              <div className="adm-field-grid">
+                <div className="adm-field">
+                  <label>Standard Price</label>
+                  <input
+                    type="number"
+                    value={editService.standard_price}
+                    onChange={(e) =>
+                      setEditService({
+                        ...editService,
+                        standard_price: e.target.value,
+                      })
+                    }
+                  />
+                </div>
 
-            <label>Express Price</label>
-            <input
-              type="number"
-              value={editService.express_price}
-              onChange={(e) =>
-                setEditService({
-                  ...editService,
-                  express_price: e.target.value,
-                })
-              }
-            />
+                <div className="adm-field">
+                  <label>Express Price</label>
+                  <input
+                    type="number"
+                    value={editService.express_price}
+                    onChange={(e) =>
+                      setEditService({
+                        ...editService,
+                        express_price: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
 
             <div className="adm-modal-actions">
-              <button className="adm-act-btn" onClick={updateService}>
-                Save
+              <button className="adm-primary-btn" onClick={updateService}>
+                Save Changes
               </button>
 
               <button
-                className="adm-act-btn"
+                className="adm-secondary-btn"
                 onClick={() => setShowServiceEdit(false)}
               >
                 Cancel
@@ -769,74 +789,97 @@ export default function AdminDashboard({ onAdminLogout }) {
       {showEdit && editBooking && (
         <div className="adm-modal-overlay">
           <div className="adm-modal">
-            <h2>Edit Booking</h2>
+            <div className="adm-modal-header">
+              <h2>Edit Booking</h2>
+              <span>
+                Adjust the booking schedule, service type, and status.
+              </span>
+            </div>
 
-            <label>Date</label>
+            <div className="adm-modal-body adm-form-stack">
+              <div className="adm-field-grid">
+                <div className="adm-field">
+                  <label>Date</label>
 
-            <input
-              type="date"
-              value={editBooking.booking_date}
-              onChange={(e) =>
-                setEditBooking({
-                  ...editBooking,
-                  booking_date: e.target.value,
-                })
-              }
-            />
+                  <input
+                    type="date"
+                    value={
+                      editBooking.booking_date
+                        ? editBooking.booking_date.slice(0, 10)
+                        : ""
+                    }
+                    onChange={(e) =>
+                      setEditBooking({
+                        ...editBooking,
+                        booking_date: e.target.value,
+                      })
+                    }
+                  />
+                </div>
 
-            <label>Time</label>
+                <div className="adm-field">
+                  <label>Time</label>
 
-            <input
-              value={editBooking.booking_time}
-              onChange={(e) =>
-                setEditBooking({
-                  ...editBooking,
-                  booking_time: e.target.value,
-                })
-              }
-            />
+                  <input
+                    value={editBooking.booking_time}
+                    onChange={(e) =>
+                      setEditBooking({
+                        ...editBooking,
+                        booking_time: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
 
-            <label>Service Mode</label>
+              <div className="adm-field-grid">
+                <div className="adm-field">
+                  <label>Service Mode</label>
 
-            <select
-              value={editBooking.service_mode}
-              onChange={(e) =>
-                setEditBooking({
-                  ...editBooking,
-                  service_mode: e.target.value,
-                })
-              }
-            >
-              <option value="Regular">Regular</option>
+                  <select
+                    value={editBooking.service_mode}
+                    onChange={(e) =>
+                      setEditBooking({
+                        ...editBooking,
+                        service_mode: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="Regular">Regular</option>
 
-              <option value="Express">Express</option>
-            </select>
+                    <option value="Express">Express</option>
+                  </select>
+                </div>
 
-            <label>Status</label>
+                <div className="adm-field">
+                  <label>Status</label>
 
-            <select
-              value={editBooking.status}
-              onChange={(e) =>
-                setEditBooking({
-                  ...editBooking,
-                  status: e.target.value,
-                })
-              }
-            >
-              <option>Pending</option>
-              <option>Processing</option>
-              <option>Ready</option>
-              <option>Completed</option>
-              <option>Cancelled</option>
-            </select>
+                  <select
+                    value={editBooking.status}
+                    onChange={(e) =>
+                      setEditBooking({
+                        ...editBooking,
+                        status: e.target.value,
+                      })
+                    }
+                  >
+                    <option>Pending</option>
+                    <option>Processing</option>
+                    <option>Ready</option>
+                    <option>Completed</option>
+                    <option>Cancelled</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
-            <div style={{ marginTop: "20px" }}>
-              <button className="adm-act-btn" onClick={updateBooking}>
-                Save
+            <div className="adm-modal-actions">
+              <button className="adm-primary-btn" onClick={updateBooking}>
+                Save Changes
               </button>
 
               <button
-                className="adm-act-btn"
+                className="adm-secondary-btn"
                 onClick={() => {
                   setShowEdit(false);
                   setEditBooking(null);

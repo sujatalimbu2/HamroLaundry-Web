@@ -1,6 +1,7 @@
 import "../assets/CCS/About.css";
 import Footer from "../component/Footer";
 import laundh from "../assets/laundh.png";
+import FeedbackSection from "../component/FeedbackSection";
 
 const About = () => {
   return (
@@ -27,12 +28,6 @@ const About = () => {
             <img src={laundh} alt="about-img" />
           </div>
           <div className="ab-story-txt">
-            <span
-              className="h-sm"
-              style={{ marginBottom: "12px", display: "block" }}
-            >
-              Our Story
-            </span>
             <h2>
               Started small.
               <br />
@@ -112,7 +107,7 @@ const About = () => {
         </div>
         <br></br>
       </div>
-
+      <FeedbackSection />
       <Footer />
     </div>
   );

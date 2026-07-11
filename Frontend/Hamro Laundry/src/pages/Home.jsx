@@ -1,38 +1,112 @@
-import { useState } from "react";
 import Footer from "../component/Footer";
 import "../assets/CCS/Home.css";
-import laundry from "../assets/laundry.png";
-import arrow from "../assets/arrow.png";
+import open from "../assets/open.png";
+import close from "../assets/close.png";
+import spin from "../assets/spin.png";
 import clothes from "../assets/clothes.png";
-import Feedback from "../component/Feedback";
+import hom1 from "../assets/hom1.png";
+import callIcon from "../assets/call.png";
+import washIcon from "../assets/Ga.png";
+import shirtIcon from "../assets/aff.png";
+import ironIcon from "../assets/app.png";
+import FeedbackSection from "../component/FeedbackSection";
+import { useNavigate } from "react-router-dom";
+import side from "../assets/side.png";
 
 const Home = () => {
-  const [showFeedback, setShowFeedback] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <div>
       <section className="laundry-section">
         <div className="laundry-content">
-          <div className="laundry-images">
-            <img src={laundry} alt="laundry" />
+          <div className="washing-animation">
+            <img
+              src={open}
+              alt="open washer"
+              className="washer-img washer-left"
+            />
+            <img
+              src={close}
+              alt="close washer"
+              className="washer-img washer-center"
+            />
+            <img
+              src={spin}
+              alt="spin washer"
+              className="washer-img washer-right"
+            />
           </div>
 
           <div className="laundry-text">
             <h1>Your laundry service</h1>
             <p>An online Laundry service where you can book.</p>
-            <button className="btn-primary">
-              Book Now
-              <img src={arrow} alt="arrow" />
-            </button>
+            <div className="hero-actions">
+              <button className="btn-primary" onClick={() => navigate("/book")}>
+                Book a Slot
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() => navigate("/price")}
+              >
+                View Pricing →
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="services-section">
-        <div className="services-header">
-          <h2>Services</h2>
-          <p>Services you will love</p>
+        <div className="services-hero">
+          <div className="services-hero-left">
+            <h2>
+              Services<br></br> you will love
+            </h2>
+            <br></br>
+            <span>We think ahead</span>
+          </div>
+
+          <div className="services-hero-center">
+            <img src={hom1} alt="hom1" />
+          </div>
+
+          <div className="services-hero-right">
+            <img src={callIcon} alt="Call now" className="services-call-ico" />
+            <div className="services-call-number">555-080-201</div>
+            <span>Call Now!</span>
+          </div>
+        </div>
+
+        <div className="services-features">
+          {[
+            {
+              title: "Guaranteed Services",
+              icon: washIcon,
+              alt: "Guaranteed services",
+            },
+            {
+              title: "Affordable Price",
+              icon: shirtIcon,
+              alt: "Affordable price",
+            },
+            {
+              title: "Pick Up & Delivery Free",
+              icon: ironIcon,
+              alt: "Pick up and delivery",
+            },
+          ].map((item) => (
+            <div className="services-feature" key={item.title}>
+              <div className="services-feature-ico">
+                <img src={item.icon} alt={item.alt} />
+              </div>
+              <h3>{item.title}</h3>
+            </div>
+          ))}
         </div>
       </section>
+      <br></br>
+      <br></br>
+      <br></br>
 
       <section className="why-choose-section">
         <div className="why-choose-content">
@@ -86,7 +160,13 @@ const Home = () => {
           </div>
         </div>
       </section>
-
+      <section>
+        <div>
+          <div className="side-left">
+            <img src={side} alt="side" />
+          </div>
+        </div>
+      </section>
       <section className="h-process">
         <div className="h-proc-head">
           <span className="h-sm">How It Works</span>
@@ -132,19 +212,16 @@ const Home = () => {
               name: "Priya M.",
               role: "Regular Customer",
               text: "I book online, drop off Monday, and collect Tuesday. Outstanding quality every time.",
-              e: "👩",
             },
             {
               name: "Rajesh K.",
               role: "Business Client",
               text: "My office shirts come back perfectly pressed. The booking takes 30 seconds.",
-              e: "👨",
             },
             {
               name: "Anita S.",
               role: "Home Customer",
               text: "They called to confirm the fabric before cleaning my lehenga. That care is rare.",
-              e: "👩‍🦱",
             },
           ].map((r) => (
             <div className="h-rev-card" key={r.name}>
@@ -155,7 +232,6 @@ const Home = () => {
               </div>
               <p className="h-rev-text">"{r.text}"</p>
               <div className="h-reviewer">
-                <div className="h-rev-av">{r.e}</div>
                 <div>
                   <div className="h-rev-name">{r.name}</div>
                   <div className="h-rev-role">{r.role}</div>
@@ -165,28 +241,7 @@ const Home = () => {
           ))}
         </div>
       </section>
-
-      <section className="feedback-section">
-        <div className="feedback-content">
-          <div className="feedback-text">
-            <h2>Visited us recently?</h2>
-            <p>
-              Share your experience — it helps us improve and helps others
-              choose.
-            </p>
-          </div>
-
-          <button
-            className="feedback-btn"
-            onClick={() => setShowFeedback(true)}
-          >
-            💬 Leave a Review
-          </button>
-        </div>
-      </section>
-
-      {showFeedback && <Feedback onClose={() => setShowFeedback(false)} />}
-
+      <FeedbackSection />
       <Footer />
     </div>
   );

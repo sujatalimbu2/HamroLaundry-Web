@@ -2,6 +2,7 @@ import "../assets/CCS/Price.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Footer from "../component/Footer";
+import FeedbackSection from "../component/FeedbackSection";
 
 function Price() {
   const [services, setServices] = useState([]);
@@ -32,9 +33,9 @@ function Price() {
         <span className="pp-eyebrow">Pricing Guide</span>
         <h1>
           Simple,
-          <br />
+         
           Transparent
-          <br />
+         <br></br>
           Pricing.
         </h1>
         <p className="pp-subp">
@@ -84,6 +85,7 @@ function Price() {
           </div>
         ))}
       </div>
+       <FeedbackSection />
       <Footer />
     </div>
   );

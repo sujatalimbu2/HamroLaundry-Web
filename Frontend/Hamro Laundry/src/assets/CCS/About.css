@@ -88,7 +88,7 @@
 }
 
 .about-section {
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .contact-info {
@@ -178,7 +178,7 @@
 }
 .ab-imgbox img {
   width: 500px;
-  height: 390px;
+  height: 320px;
   border-radius: 5%;
   object-fit: cover;
 }

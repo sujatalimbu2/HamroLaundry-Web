@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "../assets/CCS/Book.css";
 import Footer from "../component/Footer";
 import axios from "axios";
+import FeedbackSection from "../component/FeedbackSection";
 
 const genRef = () => "BK" + Date.now().toString(36).toUpperCase();
 const formatDate = (date) => {
@@ -244,10 +245,10 @@ function Book({
       <div className="bp-hero">
         <div className="bp-hi">
           <div>
-            <span className="bp-heyebrow">In-Store Drop-Off</span>
             <div className="bp-htitle">
-              Book your <em>services</em>
+              Book Your Services
             </div>
+            <span className="bp-heyebrow">In-Store Drop-Off</span>
           </div>
           <div className="bp-steps">
             {[
@@ -620,6 +621,7 @@ function Book({
           </div>
         </div>
       )}
+       <FeedbackSection />
       <Footer />
     </div>
   );

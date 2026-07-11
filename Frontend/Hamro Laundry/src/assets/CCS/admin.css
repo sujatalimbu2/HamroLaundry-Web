@@ -21,6 +21,78 @@
   overflow: hidden;
 }
 
+.adm-view-modal {
+  max-width: 430px;
+}
+
+.adm-view-modal .adm-modal-header {
+  padding: 16px 18px;
+}
+
+.adm-view-modal .adm-modal-header h2 {
+  font-size: 1.35rem;
+}
+
+.adm-view-modal .adm-modal-header p {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+
+.adm-view-modal .adm-modal-body {
+  padding: 14px 16px 0;
+}
+
+.adm-view-modal .adm-card {
+  margin: 0 0 12px;
+  padding: 14px;
+}
+
+.adm-view-modal .adm-card h3 {
+  font-size: 0.92rem;
+  margin-bottom: 10px;
+}
+
+.adm-view-modal .adm-row {
+  padding: 9px 0;
+  gap: 12px;
+}
+
+.adm-view-modal .adm-row span,
+.adm-view-modal .adm-row strong {
+  font-size: 0.8rem;
+}
+
+.adm-view-modal .adm-items {
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.adm-view-modal .adm-total {
+  font-size: 1.1rem;
+}
+
+.adm-view-modal .adm-modal-footer {
+  padding: 4px 16px 16px;
+}
+
+.adm-view-modal .adm-close-btn {
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.adm-view-modal .adm-status {
+  padding: 5px 12px;
+  font-size: 0.72rem;
+}
+
+.adm-view-modal .adm-modal-body .adm-field input,
+.adm-view-modal .adm-modal-body .adm-field select {
+  width: 100%;
+}
+
 .adl-deco {
   position: absolute;
   font-family: "Fraunces", serif;
@@ -160,17 +232,25 @@
 .adm {
   display: flex;
   min-height: 100vh;
-  background: var(--surface);
+  background:
+    radial-gradient(circle at top left, rgba(9, 9, 11, 0.05), transparent 28%),
+    radial-gradient(
+      circle at bottom right,
+      rgba(0, 0, 0, 0.04),
+      transparent 32%
+    ),
+    var(--surface);
   font-family: "Inter", sans-serif;
   color: var(--ink);
 }
 
 .adm-side {
   width: 230px;
-  background: var(--ink);
+  background: linear-gradient(180deg, #000000 0%, #111827 100%);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 
 .adm-side-head {
@@ -280,11 +360,27 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.adm-main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top right, rgba(9, 9, 11, 0.04), transparent 24%),
+    radial-gradient(circle at 20% 0%, rgba(59, 130, 246, 0.05), transparent 26%);
+  pointer-events: none;
 }
 
 .adm-topbar {
-  background: white;
-  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(228, 228, 231, 0.75);
   padding: 18px 32px;
   display: flex;
   align-items: center;
@@ -336,6 +432,8 @@
   flex: 1;
   padding: 28px 32px;
   overflow-y: auto;
+  position: relative;
+  z-index: 1;
 }
 
 /* stat cards */
@@ -347,10 +445,21 @@
 }
 
 .adm-stat {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #fcfcfd 100%);
+  border: 1px solid rgba(228, 228, 231, 0.8);
+  border-radius: 18px;
   padding: 20px;
+  box-shadow: 0 12px 30px rgba(9, 9, 11, 0.04);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.adm-stat:hover {
+  transform: translateY(-2px);
+  border-color: rgba(9, 9, 11, 0.14);
+  box-shadow: 0 18px 36px rgba(9, 9, 11, 0.08);
 }
 
 .adm-stat-top {
@@ -363,8 +472,9 @@
 .adm-stat-ico {
   width: 34px;
   height: 34px;
-  background: var(--surface);
-  border-radius: 9px;
+  background: linear-gradient(135deg, var(--surface) 0%, #fff 100%);
+  border: 1px solid var(--border);
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -395,11 +505,12 @@
 
 /* table panel */
 .adm-panel {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #fefefe 100%);
+  border: 1px solid rgba(228, 228, 231, 0.85);
+  border-radius: 20px;
   overflow: hidden;
   margin-bottom: 20px;
+  box-shadow: 0 14px 34px rgba(9, 9, 11, 0.05);
 }
 
 .adm-panel-head {
@@ -408,6 +519,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .adm-panel-head h3 {
@@ -419,17 +531,21 @@
 
 .adm-search {
   border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 7px 13px;
+  border-radius: 12px;
+  padding: 9px 14px;
   font-family: "Inter", sans-serif;
   font-size: 0.8rem;
   outline: none;
   width: 220px;
-  transition: border-color 0.14s;
+  background: #fff;
+  transition:
+    border-color 0.14s,
+    box-shadow 0.14s;
 }
 
 .adm-search:focus {
   border-color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(9, 9, 11, 0.06);
 }
 
 .adm-table-wrap {
@@ -448,14 +564,14 @@
   text-transform: uppercase;
   letter-spacing: 0.6px;
   color: var(--muted);
-  padding: 10px 22px;
-  background: var(--surface);
+  padding: 12px 22px;
+  background: linear-gradient(180deg, var(--surface) 0%, #f8fafc 100%);
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
 .adm-table tbody td {
-  padding: 13px 22px;
+  padding: 15px 22px;
   font-size: 0.82rem;
   border-bottom: 1px solid #f4f4f5;
   white-space: nowrap;
@@ -465,7 +581,7 @@
   border-bottom: none;
 }
 .adm-table tbody tr:hover {
-  background: var(--surface);
+  background: rgba(250, 250, 250, 0.92);
 }
 
 .adm-ref {
@@ -513,13 +629,17 @@
 
 .adm-act-btn {
   border: 1px solid var(--border);
-  background: white;
-  border-radius: 7px;
-  padding: 5px 9px;
-  font-size: 0.7rem;
-  font-weight: 600;
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  border-radius: 10px;
+  padding: 7px 11px;
+  font-size: 0.72rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.14s;
+  transition:
+    transform 0.14s,
+    box-shadow 0.14s,
+    border-color 0.14s,
+    color 0.14s;
   color: var(--ink3);
 }
 
@@ -527,6 +647,31 @@
   border-color: var(--ink);
   color: var(--ink);
   background: var(--surface);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(9, 9, 11, 0.06);
+}
+
+.adm-logout,
+.adm-nav-item {
+  transition:
+    transform 0.14s ease,
+    background 0.14s ease,
+    color 0.14s ease,
+    box-shadow 0.14s ease;
+}
+
+.adm-nav-item.on {
+  box-shadow: 0 8px 18px rgba(255, 255, 255, 0.08);
+}
+
+.adm-pill,
+.adm-mode-tag {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+.adm-stat-num,
+.adm-topbar h1 {
+  letter-spacing: -0.02em;
 }
 
 .adm-empty-row {
@@ -564,10 +709,21 @@
     width: 100%;
     flex-direction: row;
     align-items: center;
+    overflow-x: auto;
   }
   .adm-nav {
     flex-direction: row;
     overflow-x: auto;
+  }
+  .adm-side-head,
+  .adm-side-foot {
+    border: none;
+    padding: 14px 16px;
+  }
+  .adm-topbar,
+  .adm-body {
+    padding-left: 16px;
+    padding-right: 16px;
   }
   .adm-stats {
     grid-template-columns: repeat(2, 1fr);
@@ -620,7 +776,7 @@
 }
 .adm-modal {
   width: 100%;
-  max-width: 650px;
+  max-width: 540px;
   max-height: 90vh;
   overflow-y: auto;
   background: #fff;
@@ -630,57 +786,237 @@
 .adm-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(9, 9, 11, 0.58);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  padding: 24px;
 }
 .adm-modal {
   width: 100%;
   max-width: 650px;
   max-height: 90vh;
   overflow-y: auto;
-  background: #fff;
-  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #fcfcfd 100%);
+  border: 1px solid rgba(228, 228, 231, 0.85);
+  border-radius: 22px;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE & Edge */
 
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 28px 80px rgba(9, 9, 11, 0.26);
 }
 .adm-modal::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
 .adm-modal-header {
-  background: #000000;
+  background: #000;
   color: #fff;
-  padding: 24px;
-  border-radius: 18px 18px 0 0;
+  padding: 18px 22px;
+  border-radius: 22px 22px 0 0;
 }
 
 .adm-modal-header h2 {
   margin: 0;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
 }
 
 .adm-modal-header span {
   color: #cbd5e1;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
+}
+
+.adm-modal-body {
+  padding: 18px 22px 0;
+}
+
+.adm-form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.adm-field-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.adm-field {
+  display: flex;
+  flex-direction: column;
 }
 
 .adm-modal label {
   display: block;
   margin-top: 12px;
   margin-bottom: 6px;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .adm-modal input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.adm-modal input:focus,
+.adm-modal select:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px rgba(9, 9, 11, 0.08);
+}
+
+.adm-modal > h2 {
+  margin: 0;
+  padding: 26px 28px 6px;
+  font-family: "Fraunces", serif;
+  font-size: 1.8rem;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.adm-modal > h2 + label {
+  margin-top: 8px;
+}
+
+.adm-modal > label,
+.adm-modal > input,
+.adm-modal > select,
+.adm-modal > .adm-modal-actions {
+  margin-left: 28px;
+  margin-right: 28px;
+}
+
+.adm-modal > input,
+.adm-modal > select {
+  width: calc(100% - 56px);
+}
+
+.adm-modal select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.adm-modal-actions {
+  display: flex;
+  gap: 10px;
+  padding: 18px 22px 22px;
+  justify-content: flex-end;
+}
+
+.adm-primary-btn,
+.adm-secondary-btn {
+  min-width: 100px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.adm-primary-btn {
+  background: var(--ink);
+  color: #fff;
+}
+
+.adm-primary-btn:hover {
+  background: var(--ink2);
+  transform: translateY(-1px);
+}
+
+.adm-secondary-btn {
+  background: #fff;
+  color: var(--ink3);
+}
+
+.adm-secondary-btn:hover {
+  background: var(--surface);
+  transform: translateY(-1px);
+}
+
+.adm-modal-actions .adm-primary-btn,
+.adm-modal-actions .adm-secondary-btn {
+  flex: 0 0 auto;
+}
+
+.adm-modal .adm-primary-btn,
+.adm-modal .adm-secondary-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.adm-modal .adm-primary-btn,
+.adm-modal .adm-secondary-btn {
+  min-width: 100px;
+}
+
+.adm-modal-body .adm-field input,
+.adm-modal-body .adm-field select {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
+.adm-modal-body .adm-field input,
+.adm-modal-body .adm-field select {
+  width: 100%;
+}
+
+.adm-modal-body .adm-field input::placeholder {
+  color: #a1a1aa;
+}
+
+@media (max-width: 720px) {
+  .adm-modal-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .adm-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .adm-primary-btn,
+  .adm-secondary-btn {
+    width: 100%;
+  }
 }
 
 .adm-card {
@@ -697,6 +1033,7 @@
   color: #111827;
   font-weight: 700;
 }
+
 .adm-row {
   display: flex;
   justify-content: space-between;
@@ -770,29 +1107,4 @@
 
 .adm-close-btn:hover {
   background: #1e3a8a;
-}
-
-.adm-modal input,
-.adm-modal select {
-  padding: 10px;
-
-  border: 1px solid #ddd;
-
-  border-radius: 8px;
-
-  width: 100%;
-}
-
-.adm-modal label {
-  display: block;
-  margin-top: 12px;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.adm-modal input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
 }

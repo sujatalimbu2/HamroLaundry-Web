@@ -271,8 +271,10 @@
   min-height: calc(100vh - 62px);
 }
 .bp-hero {
-  background: var(--ink);
+  background: #f8f8f8;
   padding: 52px 56px 40px;
+  color: #000;
+  height: 200px;
 }
 
 @media (max-width: 768px) {
@@ -290,8 +292,10 @@
   max-width: 1160px;
   margin: 0 auto;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 20px;
   flex-wrap: wrap;
 }
@@ -308,17 +312,17 @@
   font-weight: 700;
   letter-spacing: 2.8px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.33);
+  color: rgba(0, 0, 0, 0.33);
   display: block;
-  margin-bottom: 8px;
+  margin-top: 16px;
 }
 .bp-htitle {
   font-family: "Fraunces", serif;
-  font-size: 2.5rem;
+  font-size: 60px;
   font-weight: 700;
-  color: white;
-  line-height: 1;
-  letter-spacing: -0.5px;
+  line-height: 0.98;
+  letter-spacing: -1px;
+  margin: 30px 0 14px 0;
 }
 
 @media (max-width: 768px) {
@@ -332,13 +336,11 @@
     font-size: 1.5rem;
   }
 }
-.bp-htitle em {
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.36);
-}
+
 .bp-steps {
   display: flex;
-  align-items: center;
+  margin-top: 2px;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -354,16 +356,16 @@
   padding: 5px 11px;
   font-size: 0.7rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(0, 0, 0, 0.28);
 }
 .bp-sp.on {
-  color: white;
+  color: rgb(2, 2, 2);
 }
 .bp-sc {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border: 1.5px solid rgba(0, 0, 0, 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -372,9 +374,9 @@
   flex-shrink: 0;
 }
 .bp-sp.on .bp-sc {
-  border-color: white;
+  border-color: rgb(14, 13, 13);
   background: white;
-  color: var(--ink);
+  color: black;
 }
 .bp-sdiv {
   width: 18px;
