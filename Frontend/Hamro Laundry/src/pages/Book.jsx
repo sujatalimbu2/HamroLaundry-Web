@@ -3,6 +3,8 @@ import "../assets/CCS/Book.css";
 import Footer from "../component/Footer";
 import axios from "axios";
 import FeedbackSection from "../component/FeedbackSection";
+import AlertModal from "../component/AlertModal";
+import "../assets/CCS/AlertModal.css";
 
 const genRef = () => "BK" + Date.now().toString(36).toUpperCase();
 const formatDate = (date) => {
@@ -33,6 +35,12 @@ function Book({
   const [showHistory, setShowHistory] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+
+  const [alert, setAlert] = useState({
+    show: false,
+    title: "",
+    message: "",
+  });
 
   const getServices = async () => {
     try {
@@ -75,7 +83,11 @@ function Book({
   const cancelBooking = async (bookingId) => {
     try {
       await axios.put(`http://localhost:5000/api/booking/cancel/${bookingId}`);
-      alert("Booking cancelled successfully");
+      setAlert({
+        show: true,
+        title: "Success",
+        message: "Booking cancelled successfully.",
+      });
       getMyBookings();
     } catch (error) {
       console.log(error);
@@ -137,10 +149,13 @@ function Book({
     const selected = sels[item.id] || {};
 
     if (!selected.option) {
-      alert("Select a service option.");
+      setAlert({
+        show: true,
+        title: "Alert",
+        message: "Please select a service option.",
+      });
       return;
     }
-
     addToBasket({
       id: item.id + "|" + selected.option + "|" + mode,
       service_id: item.id, // send dervice id
@@ -155,18 +170,39 @@ function Book({
 
   const confirm = async () => {
     if (navBasket.length === 0) {
-      alert("Add at least one service to your basket.");
+      setAlert({
+        show: true,
+        title: "Alert",
+        message: "Add at least one service to your basket.",
+      });
       return;
     }
 
     if (!isLoggedIn) {
-      alert("Please login before confirming your booking.");
+      setAlert({
+        show: true,
+        title: "Login Required",
+        message: "Please login before confirming your booking.",
+      });
       goLogin();
       return;
     }
 
-    if (!date || !time) {
-      alert("Please select a date and time slot.");
+    if (!date) {
+      setAlert({
+        show: true,
+        title: "Date Required",
+        message: "Please select a booking date.",
+      });
+      return;
+    }
+
+    if (!time) {
+      setAlert({
+        show: true,
+        title: "Time Slot Required",
+        message: "Please select a time slot.",
+      });
       return;
     }
     try {
@@ -188,7 +224,12 @@ function Book({
       setBasket([]);
       setDone(true);
     } catch (error) {
-      alert(error.response?.data?.message || "Booking failed.");
+      console.log(error);
+      setAlert({
+        show: true,
+        title: "Booking Failed",
+        message: "Unable to complete your booking. Please try again.",
+      });
     }
   };
 
@@ -232,7 +273,7 @@ function Book({
                 setTime("");
               }}
             >
-              + New Booking
+             ⬅ Back To Booking
             </button>
           </div>
         </div>
@@ -245,9 +286,7 @@ function Book({
       <div className="bp-hero">
         <div className="bp-hi">
           <div>
-            <div className="bp-htitle">
-              Book Your Services
-            </div>
+            <div className="bp-htitle">Book Your Services</div>
             <span className="bp-heyebrow">In-Store Drop-Off</span>
           </div>
           <div className="bp-steps">
@@ -592,7 +631,7 @@ function Book({
       {showCancelModal && (
         <div className="cancel-overlay">
           <div className="cancel-modal">
-            <div className="cancel-icon">🧺</div>
+            <div className="cancel-icon">🤔</div>
 
             <h2>Cancel Booking?</h2>
 
@@ -621,7 +660,18 @@ function Book({
           </div>
         </div>
       )}
-       <FeedbackSection />
+      <AlertModal
+        show={alert.show}
+        title={alert.title}
+        message={alert.message}
+        onClose={() =>
+          setAlert({
+            ...alert,
+            show: false,
+          })
+        }
+      />
+      <FeedbackSection />
       <Footer />
     </div>
   );

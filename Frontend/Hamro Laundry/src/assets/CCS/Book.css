@@ -103,12 +103,13 @@
 }
 
 .history-modal {
-  width: 500px;
+  width: 450px;
   max-width: 90%;
   max-height: 75vh;
   overflow-y: auto;
   background: #fff;
   border-radius: 18px;
+   scrollbar-width: none;
   padding: 24px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
 }
@@ -190,7 +191,7 @@
 }
 
 .cancel-modal {
-  width: 350px;
+  width: 310px;
   background: #fff;
   border-radius: 18px;
   padding: 32px;
@@ -213,7 +214,7 @@
 
 .cancel-modal h2 {
   margin-top: 18px;
-  color: #1d3557;
+  color: #000000;
 }
 
 .cancel-modal p {

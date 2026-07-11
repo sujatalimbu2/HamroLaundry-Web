@@ -174,11 +174,41 @@
 .ab-story {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 75px;
 }
 .ab-imgbox img {
-  width: 500px;
-  height: 320px;
+  width: 513px;
+  height: 480px;
   border-radius: 5%;
   object-fit: cover;
+  margin-left:-50px;
+}
+.services1 {
+  display: flex;
+  align-items: flex-start; /* Keeps all cards aligned at the top */
+  gap: 20px;
+  width:10px;
+  margin-left:160px;
+
+}
+.service-card img {
+  width: 250px;
+  height: 180px;      /* Same height for all images */
+  object-fit: contain;
+  display: block;
+}
+.service-card1{
+  flex: 1;
+  text-align: left;
+}
+.service-card h3 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.service-card p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #666;
 }

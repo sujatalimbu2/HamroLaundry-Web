@@ -1,7 +1,10 @@
 import "../assets/CCS/About.css";
 import Footer from "../component/Footer";
-import laundh from "../assets/laundh.png";
+import hom2 from "../assets/hom2.png";
 import FeedbackSection from "../component/FeedbackSection";
+import iron from "../assets/iron.png";
+import fold from "../assets/fold.png";
+import shi from "../assets/shi.png";
 
 const About = () => {
   return (
@@ -25,7 +28,7 @@ const About = () => {
 
         <div className="ab-story">
           <div className="ab-imgbox">
-            <img src={laundh} alt="about-img" />
+            <img src={hom2} alt="about-img" />
           </div>
           <div className="ab-story-txt">
             <h2>
@@ -40,10 +43,25 @@ const About = () => {
               trusted laundry services.
             </p>
             <p className="ab-story-p">
-              We don't do pickups or delivery — because the best results come
-              from a face-to-face conversation, where we understand exactly what
-              you need before we begin.
+              Hamro Laundry began in 2016 with one pressing machine and a
+              commitment to treating every garment as if it were our own. Eight
+              years on, word of mouth has made us one of Kathmandu's most
+              trusted laundry services. We don't do pickups or delivery —
+              because the best results come from a face-to-face conversation,
+              where we understand exactly what you need before we begin.
             </p>
+            <p className="ab-story-p">
+              Our experienced team uses high-quality equipment and carefully
+              selected cleaning products to ensure every item receives the
+              attention it deserves. Whether it's your everyday clothes, office
+              wear, delicate fabrics, or special garments, we focus on
+              delivering outstanding cleanliness, freshness, and professional
+              care. At Hamro Laundry, our goal is simple: provide reliable,
+              affordable, and high-quality laundry services while building
+              lasting relationships with our customers through trust,
+              consistency, and exceptional service.
+            </p>
+      
           </div>
         </div>
         <div className="ab-vals">
@@ -87,6 +105,38 @@ const About = () => {
             ))}
           </div>
         </div>
+        <br></br>
+        <br></br>
+
+        <div className="services1">
+          <div className="service-card">
+            <img src={fold} alt="Guaranteed Services" />
+            <h3>Guaranteed Services</h3>
+            <p>
+              We provide professional laundry services with quality care and
+              attention to every garment.
+            </p>
+          </div>
+
+          <div className="service-card">
+            <img src={iron} alt="Always Open" />
+            <h3>Always Open</h3>
+            <p>
+              Book your laundry anytime. Our online service is available 24/7
+              for your convenience.
+            </p>
+          </div>
+
+          <div className="service-card">
+            <img src={shi} alt="Free Pickup" />
+            <h3>Affordable Prices</h3>
+            <p>
+              Enjoy high-quality laundry services at reasonable prices with no
+              hidden charges.
+            </p>
+          </div>
+        </div>
+        <br></br>
 
         <div className="about-section">
           <h2>Contact Us</h2>

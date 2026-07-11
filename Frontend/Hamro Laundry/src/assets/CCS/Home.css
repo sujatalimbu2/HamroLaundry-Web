@@ -240,6 +240,7 @@
 .services-section {
   background: white;
   padding: 40px 36px;
+
 }
 
 .services-hero {
@@ -273,7 +274,7 @@
 }
 
 .services-hero-left span {
-  font-size: 15px;
+  font-size: 18px;
   color: #9d9d9d;
 }
 
@@ -423,9 +424,12 @@
 }
 .side-left img{
   margin-top:-200px;
-  margin-left: 802px;
-  height:800px;
-
+  margin-left: 900px;
+  height:700px;
+  width:375px
+}
+.side-section{
+   height: 500px;
 }
 
 /* Why Choose Section */
@@ -452,9 +456,9 @@
 
 .clothes-img {
   margin-left: -34px;
-  margin-top: -170px;
-  width: 290px;
-  height: 580px;
+  margin-top: -131px;
+  width: 368px;
+  height: 676px;
 }
 
 .why-choose-text {
@@ -497,6 +501,40 @@
   padding: 30px 8%;
   margin-top: 10px;
 }
+.services {
+  display: flex;
+  align-items: flex-start; /* Keeps all cards aligned at the top */
+  gap: 15px;
+  margin-top:-612px;
+  width:10px;
+  margin-left:135px;
+
+}
+
+.service-card {
+  flex: 1;
+  text-align: left;
+}
+
+.service-card img {
+  width: 250px;
+  height: 200px;      /* Same height for all images */
+  object-fit: contain;
+  display: block;
+}
+
+.service-card h3 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.service-card p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #666;
+}
+
 
 .feedback-content {
   max-width: 1300px;
