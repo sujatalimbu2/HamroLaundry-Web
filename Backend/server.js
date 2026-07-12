@@ -15,7 +15,6 @@ app.use(express.json());
 app.use("/api", userRoute);
 app.use("/api", bookingRoute);
 app.use("/api/feedback", feedbackRoute);
-app.use(express.json());
 
 const PORT = process.env.PORT || 8000;
 

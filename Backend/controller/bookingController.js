@@ -1,4 +1,5 @@
 const { createBooking, createBookingItem } = require("../model/bookingModel");
+const sendBookingEmail = require("../utils/sendEmail");
 
 const addBooking = async (req, res) => {
   try {
@@ -47,16 +48,33 @@ const addBooking = async (req, res) => {
         total += price * item.qty;
       }
     }
-    console.log("Final Total:", total);
-    await pool.query(
-      `
-            UPDATE bookings
-            SET total_price = $1
-            WHERE id = $2
-            `,
-      [total, booking.id],
+    // Get user's name and email
+    const userResult = await pool.query(
+          `
+      SELECT name, email
+      FROM users
+      WHERE id = $1
+      `,
+      [user_id],
     );
 
+    const user = userResult.rows[0];
+
+    // Send confirmation email
+    try {
+      await sendBookingEmail({
+        to: user.email,
+        name: user.name,
+        bookingId: booking.id,
+        date,
+        time,
+        total,
+      });
+
+      console.log("Booking confirmation email sent.");
+    } catch (err) {
+      console.log("Failed to send email:", err.message);
+    }
     res.status(201).json({
       message: "Booking created successfully",
       booking,

@@ -177,38 +177,107 @@
   gap: 75px;
 }
 .ab-imgbox img {
-  width: 513px;
+  width: 516px;
   height: 480px;
   border-radius: 5%;
   object-fit: cover;
   margin-left:-50px;
 }
 .services1 {
+  background: #000000; /* Change to black if you want */
   display: flex;
-  align-items: flex-start; /* Keeps all cards aligned at the top */
-  gap: 20px;
-  width:10px;
-  margin-left:160px;
-
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 80px 60px;
+  width: 100%;
+  box-sizing: border-box;
 }
-.service-card img {
-  width: 250px;
-  height: 180px;      /* Same height for all images */
+.service-card1 img {
+  width: 240px;
+  height: 180px;
   object-fit: contain;
   display: block;
+  margin: 0 auto 30px;
 }
-.service-card1{
+.service-card1 {
   flex: 1;
-  text-align: left;
+  max-width: 340px;
+  text-align: center;
 }
-.service-card h3 {
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 15px;
+.service-card1 h3 {
+  color: white;
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  font-family: "Fraunces", serif;
 }
 
-.service-card p {
-  font-size: 14px;
+.service-card1 p {
+  color: rgba(255,255,255,.9);
+  font-size: 16px;
   line-height: 1.8;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.about-service {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  padding: 90px 70px;
+  background: #f8f8f8;
+}
+
+.about-service-img {
+  flex: 1;
+  text-align: center;
+}
+
+.about-service-img img {
+  width: 100%;
+  max-width: 600px;
+}
+
+.about-service-content {
+  flex: 1;
+  max-width: 520px;
+}
+
+.about-tag {
+  display: block;
+  font-size: 20px;
+  color: #777;
+  margin-bottom: 18px;
+}
+
+.about-service-content h2 {
+  font-family: "Fraunces", serif;
+  font-size: 64px;
+  line-height: 1.05;
+  margin-bottom: 25px;
+  color: #111;
+}
+
+.about-service-content p {
+  font-size: 17px;
+  line-height: 1.9;
   color: #666;
+}
+@media (max-width: 900px) {
+  .about-service {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 25px;
+    gap: 40px;
+  }
+
+  .about-service-content h2 {
+    font-size: 42px;
+  }
+
+  .about-service-img img {
+    max-width: 420px;
+  }
 }

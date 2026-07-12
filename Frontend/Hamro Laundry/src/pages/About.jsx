@@ -1,5 +1,6 @@
 import "../assets/CCS/About.css";
 import Footer from "../component/Footer";
+import hom1 from "../assets/hom1.png";
 import hom2 from "../assets/hom2.png";
 import FeedbackSection from "../component/FeedbackSection";
 import iron from "../assets/iron.png";
@@ -15,17 +16,55 @@ const About = () => {
           <div className="about-eyebrow">Service you will love</div>
         </div>
       </div>
+    <section className="about-service">
+  <div className="about-service-img">
+    <img src={hom1} alt="Laundry Service" />
+  </div>
 
-      <div className="about-body">
-        <div className="about-section">
-          <h2>Our Mission</h2>
+  <div className="about-service-content">
+    <h2>Services you love</h2>
+    <span className="about-tag">We think ahead</span>
+
+
+    <p>
+      At Hamro Laundry, we provide professional garment care with attention to
+      every detail. From everyday clothing to delicate fabrics, our experienced
+      team ensures every item is cleaned, pressed, and returned looking its
+      best.
+    </p>
+  </div>
+</section>
+      <br></br>
+      <div className="services1">
+        <div className="service-card1">
+          <img src={fold} alt="Quality Service" />
+          <h3>Quality Service</h3>
           <p>
-            We believe in providing reliable, affordable, and convenient laundry
-            services to our community. Your clothes deserve the best care, and
-            we're committed to delivering excellence every single time.
+            Every garment is cleaned with care using professional equipment and
+            quality products.
           </p>
         </div>
 
+        <div className="service-card1">
+          <img src={iron} alt="Professional Care" />
+          <h3>Professional Care</h3>
+          <p>
+            We carefully inspect every item to ensure the best cleaning and
+            finishing results.
+          </p>
+        </div>
+
+        <div className="service-card1">
+          <img src={shi} alt="Affordable Prices" />
+          <h3>Affordable Prices</h3>
+          <p>
+            Enjoy reliable laundry services at fair prices with no hidden
+            charges.
+          </p>
+        </div>
+      </div>
+
+      <div className="about-body">
         <div className="ab-story">
           <div className="ab-imgbox">
             <img src={hom2} alt="about-img" />
@@ -61,7 +100,6 @@ const About = () => {
               lasting relationships with our customers through trust,
               consistency, and exceptional service.
             </p>
-      
           </div>
         </div>
         <div className="ab-vals">
@@ -106,36 +144,6 @@ const About = () => {
           </div>
         </div>
         <br></br>
-        <br></br>
-
-        <div className="services1">
-          <div className="service-card">
-            <img src={fold} alt="Guaranteed Services" />
-            <h3>Guaranteed Services</h3>
-            <p>
-              We provide professional laundry services with quality care and
-              attention to every garment.
-            </p>
-          </div>
-
-          <div className="service-card">
-            <img src={iron} alt="Always Open" />
-            <h3>Always Open</h3>
-            <p>
-              Book your laundry anytime. Our online service is available 24/7
-              for your convenience.
-            </p>
-          </div>
-
-          <div className="service-card">
-            <img src={shi} alt="Free Pickup" />
-            <h3>Affordable Prices</h3>
-            <p>
-              Enjoy high-quality laundry services at reasonable prices with no
-              hidden charges.
-            </p>
-          </div>
-        </div>
         <br></br>
 
         <div className="about-section">

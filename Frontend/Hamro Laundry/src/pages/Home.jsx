@@ -11,7 +11,7 @@ import shirtIcon from "../assets/aff.png";
 import ironIcon from "../assets/app.png";
 import FeedbackSection from "../component/FeedbackSection";
 import { useNavigate } from "react-router-dom";
-import side from "../assets/side.png";
+import side from "../assets/hand.png";
 import iron from "../assets/iron.png";
 import fold from "../assets/fold.png";
 import shi from "../assets/shi.png";

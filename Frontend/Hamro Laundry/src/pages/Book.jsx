@@ -105,15 +105,15 @@ function Book({
   }, {});
 
   const categories = Object.keys(groupedServices);
-  const catObj = groupedServices[cat] || [];
+
+  const isAlterationCategory = cat === "Alterations & Repairs";
   const total = navBasket.reduce((sum, item) => sum + item.qty, 0);
-
+  const catObj = cat ? groupedServices[cat] || [] : services;
   useEffect(() => {
-    if (categories.length > 0 && !cat) {
-      setCat(categories[0]);
+    if (isAlterationCategory && mode === "express") {
+      setMode("regular");
     }
-  }, [categories, cat]);
-
+  }, [isAlterationCategory, mode]);
   const togOpt = (id, option) => {
     setSels((prev) => ({
       ...prev,
@@ -148,7 +148,11 @@ function Book({
   const add = (item) => {
     const selected = sels[item.id] || {};
 
-    if (!selected.option) {
+    const needsWashOption =
+      item.category === "Casual & Daily Wear" ||
+      item.category === "Formal & Business Wear";
+
+    if (needsWashOption && !selected.option) {
       setAlert({
         show: true,
         title: "Alert",
@@ -161,7 +165,7 @@ function Book({
       service_id: item.id, // send dervice id
       icon: item.icon,
       name: item.service_name,
-      option: selected.option,
+      option: item.service_type === "Laundry" ? selected.option : "",
       mode,
       qty: selected.qty || 1,
     });
@@ -273,7 +277,7 @@ function Book({
                 setTime("");
               }}
             >
-             ⬅ Back To Booking
+              ⬅ Back To Booking
             </button>
           </div>
         </div>
@@ -309,19 +313,22 @@ function Book({
 
       <div className="bp-body">
         <div className="bp-left">
-          <div>
-            <span className="bp-lbl">Category</span>
-            <div className="bp-cats">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  className={`bp-cpill${cat === category ? " on" : ""}`}
-                  onClick={() => setCat(category)}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
+          <div className="bp-cats">
+            <button
+              className={`bp-cpill${cat === "" ? " on" : ""}`}
+              onClick={() => setCat("")}
+            >
+              All Services
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`bp-cpill${cat === category ? " on" : ""}`}
+                onClick={() => setCat(category)}
+              >
+                {category}
+              </button>
+            ))}
           </div>
 
           <div>
@@ -330,7 +337,7 @@ function Book({
               <span className="bp-mlbl">Mode:</span>
               {[
                 ["regular", "Regular"],
-                ["express", "Express"],
+                ...(!isAlterationCategory ? [["express", "Express"]] : []),
               ].map(([id, label]) => (
                 <button
                   key={id}
@@ -340,6 +347,7 @@ function Book({
                   {label}
                 </button>
               ))}
+
               <span className="bp-mnote">
                 {mode === "express" ? "+50% surcharge" : "Standard rate"}
               </span>
@@ -362,21 +370,27 @@ function Book({
                       <div>
                         <div className="bp-cname">{item.service_name}</div>
                         <div className="bp-csub">
-                          Standard: NPR {item.standard_price}
+                          {mode === "express" ? "Express" : "Regular"}: NPR{" "}
+                          {mode === "express"
+                            ? Math.round(item.standard_price * 1.5)
+                            : item.standard_price}
                         </div>
                       </div>
                     </div>
-                    <div className="bp-copts">
-                      {["Wash & Fold", "Wash & Iron"].map((option) => (
-                        <button
-                          key={option}
-                          className={`bp-copt${selected.option === option ? " on" : ""}`}
-                          onClick={() => togOpt(item.id, option)}
-                        >
-                          {option}
-                        </button>
-                      ))}
-                    </div>
+                    {(item.category === "Casual & Daily Wear" ||
+                      item.category === "Formal & Business Wear") && (
+                      <div className="bp-copts">
+                        {["Wash & Fold", "Wash & Iron"].map((option) => (
+                          <button
+                            key={option}
+                            className={`bp-copt${selected.option === option ? " on" : ""}`}
+                            onClick={() => togOpt(item.id, option)}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                     <div className="bp-cfoot">
                       <span className="bp-cql">Qty</span>
                       <div className="bp-stepper">
@@ -499,8 +513,16 @@ function Book({
                       <div className="bp-basket-info">
                         <div className="bp-basket-name">{item.name}</div>
                         <div className="bp-basket-meta">
-                          {item.option} -{" "}
-                          {item.mode === "express" ? "Express" : "Regular"}
+                          {item.option ? (
+                            <>
+                              {item.option} -{" "}
+                              {item.mode === "express" ? "Express" : "Regular"}
+                            </>
+                          ) : (
+                            <>
+                              {item.mode === "express" ? "Express" : "Regular"}
+                            </>
+                          )}
                         </div>
                         <div className="bp-basket-actions">
                           <button onClick={() => updateBasketQty(item.id, -1)}>
