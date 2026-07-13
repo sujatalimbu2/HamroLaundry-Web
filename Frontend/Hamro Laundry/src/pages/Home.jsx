@@ -114,7 +114,7 @@ const Home = () => {
       <section className="why-choose-section">
         <div className="why-choose-content">
           <div className="why-choose-image">
-            <img src={clothes} alt="clothes" className="clothes-img" />
+            <img src={clothes} alt="clothes" className="img-clothes" />
           </div>
           <div className="why-choose-text">
             <h2>Why choose us ?</h2>

@@ -38,19 +38,87 @@ const deleteById = async (id) => {
   return result.rows;
 };
 
-const updateUser = async (
-  id,
-  name,
-  email,
-  password,
-  address,
-  contact,
-  image,
-) => {
+const updateUser = async (id, name, email, address, contact, image) => {
+  let result;
+
+  if (image) {
+    result = await pool.query(
+      `
+      UPDATE users
+      SET
+        name = $1,
+        email = $2,
+        address = $3,
+        contact = $4,
+        image = $5
+      WHERE id = $6
+      RETURNING *
+      `,
+      [name, email, address, contact, image, id],
+    );
+  } else {
+    result = await pool.query(
+      `
+      UPDATE users
+      SET
+        name = $1,
+        email = $2,
+        address = $3,
+        contact = $4
+      WHERE id = $5
+      RETURNING *
+      `,
+      [name, email, address, contact, id],
+    );
+  }
+
+  return result.rows[0];
+};
+
+const updatePassword = async (id, password) => {
   const result = await pool.query(
-    "Update users SET name = $1, email = $2, address = $3, contact = $4, image= $5 WHERE id = $6 RETURNING *",
-    [name, email, address, contact, image, id],
+    "UPDATE users SET password = $1 WHERE id = $2 RETURNING *",
+    [password, id],
   );
+
+  return result.rows[0];
+};
+
+const saveResetToken = async (id, token, expiry) => {
+  const result = await pool.query(
+    `UPDATE users
+     SET reset_token = $1,
+         reset_token_expiry = $2
+     WHERE id = $3
+     RETURNING *`,
+    [token, expiry, id],
+  );
+
+  return result.rows[0];
+};
+
+const findUserByResetToken = async (token) => {
+  const result = await pool.query(
+    `SELECT *
+     FROM users
+     WHERE reset_token = $1
+     AND reset_token_expiry > NOW()`,
+    [token],
+  );
+
+  return result.rows[0];
+};
+
+const clearResetToken = async (id) => {
+  const result = await pool.query(
+    `UPDATE users
+     SET reset_token = NULL,
+         reset_token_expiry = NULL
+     WHERE id = $1
+     RETURNING *`,
+    [id],
+  );
+
   return result.rows[0];
 };
 
@@ -62,4 +130,8 @@ module.exports = {
   deleteById,
   updateUser,
   searchUser,
+  updatePassword,
+  saveResetToken,
+  findUserByResetToken,
+  clearResetToken,
 }; // for exports to run any file

@@ -531,3 +531,39 @@
   color: #6b7280;
   font-size: 15px;
 }
+
+.forgot-password-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+  margin-bottom: 10px;
+}
+
+.forgot-password-link {
+  color: #111;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #555;
+}
+
+.back-login {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.back-login a {
+  color: #111;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.back-login a:hover {
+  color: #555;
+}

@@ -96,6 +96,18 @@ function Login({ onLogin }) {
               </button>
             </div>
 
+            <div className="forgot-password-row">
+              <Link
+                to="/forgot-password"
+                className="forgot-password-link"
+                state={{
+                  backgroundLocation:
+                    location.state?.backgroundLocation || location,
+                }}
+              >
+                Forgot Password?
+              </Link>
+            </div>
             {message && <div className="auth-error">{message}</div>}
 
             <button type="submit">Sign In</button>

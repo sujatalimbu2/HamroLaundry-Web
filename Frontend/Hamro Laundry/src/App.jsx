@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter,
   Routes,
@@ -18,6 +17,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import User from "./pages/User";
 import Admin from "./pages/Admin";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   const [basket, setBasket] = useState([]);
@@ -84,7 +84,7 @@ function AppShell({
 }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const modalRoutes = ["/login", "/register", "/profile"];
+  const modalRoutes = ["/login", "/register", "/profile", "/forgot-password",];
   const isModalRoute = modalRoutes.includes(location.pathname);
   const backgroundLocation = location.state?.backgroundLocation;
   const pageLocation = backgroundLocation || location;
@@ -162,6 +162,7 @@ function AppShell({
         <Routes>
           <Route path="/login" element={<Login onLogin={onLogin} />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
             path="/profile"
             element={
@@ -170,7 +171,6 @@ function AppShell({
           />
         </Routes>
       )}
-
     </>
   );
 }

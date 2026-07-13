@@ -2,17 +2,25 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/CCS/Auth.css";
 import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function User({ user, onUserUpdate, goLogin }) {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
-  const [message, setMessage] = useState("");
   const [address, setAddress] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
-  const [password, setPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const [profileMessage, setProfileMessage] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -30,7 +38,7 @@ function User({ user, onUserUpdate, goLogin }) {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setMessage("Please choose an image.");
+      setProfileMessage("Please choose an image.");
       return;
     }
 
@@ -39,20 +47,10 @@ function User({ user, onUserUpdate, goLogin }) {
 
   const saveProfile = async (e) => {
     e.preventDefault();
-    setMessage("");
+    setProfileMessage("");
 
     if (name.trim().length < 3) {
-      setMessage("Name must be at least 3 characters.");
-      return;
-    }
-
-    if (password && password.length < 6) {
-      setMessage("Password must be at least 6 characters.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match.");
+      setProfileMessage("Name must be at least 3 characters.");
       return;
     }
 
@@ -62,11 +60,6 @@ function User({ user, onUserUpdate, goLogin }) {
       formData.append("name", name.trim());
       formData.append("email", user.email);
       formData.append("address", address.trim());
-
-      // Only send password if you're allowing users to change it
-      if (password) {
-        formData.append("password", password);
-      }
 
       if (image instanceof File) {
         formData.append("image", image);
@@ -84,7 +77,55 @@ function User({ user, onUserUpdate, goLogin }) {
         navigate("/");
       }, 1500);
     } catch (error) {
-      setMessage(error.response?.data?.message || "Update failed.");
+      setProfileMessage(error.response?.data?.message || "Update failed.");
+    }
+  };
+
+  const changePassword = async (e) => {
+    e.preventDefault();
+
+    setPasswordMessage("");
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordMessage("All password fields are required.");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setPasswordMessage("Password must be at least 8 characters.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordMessage("Passwords do not match.");
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      setPasswordMessage(
+        "New password must be different from current password.",
+      );
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/updatePassword/${user.id}`,
+        {
+          currentPassword,
+          newPassword,
+        },
+      );
+
+      setPasswordMessage(response.data.message);
+
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      setPasswordMessage(
+        error.response?.data?.message || "Password update failed.",
+      );
     }
   };
 
@@ -146,27 +187,6 @@ function User({ user, onUserUpdate, goLogin }) {
                 placeholder="Enter your address"
               />
             </label>
-
-            <label>
-              New Password
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Leave blank to keep current password"
-              />
-            </label>
-
-            <label>
-              Confirm Password
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm new password"
-              />
-            </label>
-
             <label>
               Profile Picture
               <input
@@ -175,10 +195,72 @@ function User({ user, onUserUpdate, goLogin }) {
                 onChange={handleImageChange}
               />
             </label>
-
-            {message && <div className="auth-success">{message}</div>}
-
+            {profileMessage && (
+              <div className="auth-success">{profileMessage}</div>
+            )}
             <button type="submit">Save Changes</button>
+          </form>
+          <hr />
+
+          <form className="auth-form" onSubmit={changePassword}>
+            <h3>Change Password 🔒</h3>
+            <label>
+              Current Password
+              <div className="password-box">
+                <input
+                  type={showCurrent ? "text" : "password"}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowCurrent(!showCurrent)}
+                >
+                  {showCurrent ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </label>
+
+            <label>
+              New Password
+              <div className="password-box">
+                <input
+                  type={showNew ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowNew(!showNew)}
+                >
+                  {showNew ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </label>
+
+            <label>
+              Confirm New Password
+              <div className="password-box">
+                <input
+                  type={showConfirm ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                >
+                  {showConfirm ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </label>
+            <button type="submit">Change Password</button>
+            {passwordMessage && (
+              <div className="auth-success">{passwordMessage}</div>
+            )}
           </form>
         </div>
       </section>

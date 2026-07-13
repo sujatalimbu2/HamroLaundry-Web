@@ -1,5 +1,6 @@
 const { createBooking, createBookingItem } = require("../model/bookingModel");
 const sendBookingEmail = require("../utils/sendEmail");
+const pool = require("../database/db");
 
 const addBooking = async (req, res) => {
   try {
@@ -41,16 +42,14 @@ const addBooking = async (req, res) => {
         const service = result.rows[0];
 
         const price =
-          item.mode === "express"
-            ? service.express_price
-            : service.standard_price;
+          item === "express" ? service.express_price : service.standard_price;
 
         total += price * item.qty;
       }
     }
     // Get user's name and email
     const userResult = await pool.query(
-          `
+      `
       SELECT name, email
       FROM users
       WHERE id = $1
@@ -59,6 +58,15 @@ const addBooking = async (req, res) => {
     );
 
     const user = userResult.rows[0];
+    // Update total price
+    await pool.query(
+      `
+      UPDATE bookings
+      SET total_price=$1
+      WHERE id=$2
+      `,
+      [total, booking.id],
+    );
 
     // Send confirmation email
     try {
@@ -87,8 +95,6 @@ const addBooking = async (req, res) => {
     });
   }
 };
-
-const pool = require("../database/db");
 
 const getBookings = async (req, res) => {
   try {
@@ -144,17 +150,43 @@ const updateBooking = async (req, res) => {
   const { status } = req.body;
 
   try {
+    // Update booking status
     const result = await pool.query(
       `UPDATE bookings
-             SET status = $1
-             WHERE id = $2
-             RETURNING *`,
+       SET status = $1
+       WHERE id = $2
+       RETURNING *`,
       [status, id],
     );
 
+    const booking = result.rows[0];
+
+    // Get user email
+    const userResult = await pool.query(
+      `
+      SELECT name, email
+      FROM users
+      WHERE id = $1
+      `,
+      [booking.user_id],
+    );
+
+    const user = userResult.rows[0];
+
+    // Send status email
+    await sendBookingEmail({
+      to: user.email,
+      name: user.name,
+      bookingId: booking.id,
+      status: status,
+      date: booking.booking_date,
+      time: booking.booking_time,
+      total: booking.total_price,
+    });
+
     res.json({
       message: "Booking Updated",
-      booking: result.rows[0],
+      booking,
     });
   } catch (err) {
     console.log(err);

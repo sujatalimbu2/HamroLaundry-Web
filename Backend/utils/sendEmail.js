@@ -12,6 +12,7 @@ const sendBookingEmail = async ({
   to,
   name,
   bookingId,
+  status,
   date,
   time,
   total,
@@ -21,34 +22,21 @@ const sendBookingEmail = async ({
     to,
     subject: "Hamro Laundry - Booking Confirmation",
     html: `
-      <h2>Booking Confirmed ✅</h2>
+        <h2>Hamro Laundry Update</h2>
 
-      <p>Hello <b>${name}</b>,</p>
+        <p>Hello ${name},</p>
 
-      <p>Your laundry booking has been confirmed.</p>
+        <p>Your booking status has been updated.</p>
 
-      <table border="1" cellpadding="8" cellspacing="0">
-        <tr>
-          <td><b>Booking ID</b></td>
-          <td>${bookingId}</td>
-        </tr>
-        <tr>
-          <td><b>Date</b></td>
-          <td>${date}</td>
-        </tr>
-        <tr>
-          <td><b>Time</b></td>
-          <td>${time}</td>
-        </tr>
-        <tr>
-          <td><b>Total</b></td>
-          <td>NPR ${total}</td>
-        </tr>
-      </table>
+        <p>
+        <b>Booking ID:</b> ${bookingId}<br>
+        <b>Status:</b> ${status}<br>
+        <b>Date:</b> ${date}<br>
+        <b>Time:</b> ${time}<br>
+        <b>Total:</b> Rs. ${total}
+        </p>
 
-      <br>
-
-      <p>Thank you for choosing <b>Hamro Laundry</b>.</p>
+        <p>Thank you for choosing Hamro Laundry.</p>
     `,
   });
 };
