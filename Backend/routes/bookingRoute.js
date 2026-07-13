@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { downloadReceipt } = require("../controller/receiptController");
 
 const {
   addBooking,
@@ -23,5 +24,6 @@ router.get("/customers", getCustomers);
 router.get("/services", getServices);
 router.get("/my-bookings/:userId", getMyBookings);
 router.put("/booking/cancel/:id", cancelBooking);
+router.get("/receipt/:id", downloadReceipt);
 
 module.exports = router;

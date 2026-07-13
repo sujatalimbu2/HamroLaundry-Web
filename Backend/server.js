@@ -30,7 +30,6 @@ app.get("/db-config", async (req, res) => {
   res.json(result.rows);
 });
 
-app.use("/api", userRoute);
 // app.listen(PORT, () => {    // listen to port (connect to server)
 //     console.log(`Server is running on ${PORT}`);
 // });

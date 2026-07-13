@@ -1012,3 +1012,21 @@ p-mode-info {
   border-color: var(--ink);
   background: var(--surface);
 }
+
+.receipt-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.receipt-btn:hover {
+  background: #333;
+}

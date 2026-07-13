@@ -16,6 +16,7 @@ const addBooking = async (req, res) => {
     const booking = await createBooking(user_id, date, time, mode, 0);
 
     let total = 0;
+    let serviceList = "";
 
     // Save every basket item
     for (const item of basket) {
@@ -26,6 +27,22 @@ const addBooking = async (req, res) => {
         item.option,
         item.qty,
       );
+
+      serviceList += `
+      <tr>
+        <td style="padding:8px;border:1px solid #ddd;">
+          ${item.name}
+        </td>
+
+        <td style="padding:8px;border:1px solid #ddd;text-align:center;">
+          ${item.mode === "regular" ? "Standard" : "Express"}
+        </td>
+
+        <td style="padding:8px;border:1px solid #ddd;text-align:center;">
+          ${item.qty}
+        </td>
+      </tr>
+      `;
 
       console.log("Basket item:", item);
       // Get price from services table
@@ -42,8 +59,9 @@ const addBooking = async (req, res) => {
         const service = result.rows[0];
 
         const price =
-          item === "express" ? service.express_price : service.standard_price;
-
+          item.mode.toLowerCase() === "express"
+            ? service.express_price
+            : service.standard_price;
         total += price * item.qty;
       }
     }
@@ -77,6 +95,7 @@ const addBooking = async (req, res) => {
         date,
         time,
         total,
+        serviceList,
       });
 
       console.log("Booking confirmation email sent.");

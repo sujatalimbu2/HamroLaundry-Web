@@ -587,10 +587,25 @@ function Book({
                     <p>
                       💰 <strong>Total:</strong> NPR {booking.total_price}
                     </p>
+
+                    {booking.status === "Completed" && (
+                      <button
+                        className="receipt-btn"
+                        onClick={() =>
+                          window.open(
+                            `http://localhost:5000/api/receipt/${booking.id}`,
+                            "_blank",
+                          )
+                        }
+                      >
+                        📄 Download Receipt
+                      </button>
+                    )}
+
                     {booking.status === "Pending" && (
                       <button
                         className="cancel-booking-btn"
-                        onClick={() => {
+                         onClick={() => {
                           setSelectedBooking(booking.id);
                           setShowCancelModal(true);
                         }}
@@ -633,9 +648,21 @@ function Book({
                     <p>
                       <strong>Items:</strong> {booking.items}
                     </p>
-                    <p>
-                      <strong>Total:</strong> NPR {booking.total_price}
-                    </p>
+                   <p>
+  <strong>Total:</strong> NPR {booking.total_price}
+</p>
+
+<button
+  className="receipt-btn"
+  onClick={() =>
+    window.open(
+      `http://localhost:5000/api/receipt/${booking.id}`,
+      "_blank"
+    )
+  }
+>
+  📄 Download Receipt
+</button>
                   </div>
                 ))
               )}

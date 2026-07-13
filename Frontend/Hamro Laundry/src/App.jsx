@@ -18,6 +18,7 @@ import Register from "./pages/Register";
 import User from "./pages/User";
 import Admin from "./pages/Admin";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const [basket, setBasket] = useState([]);
@@ -84,11 +85,22 @@ function AppShell({
 }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const modalRoutes = ["/login", "/register", "/profile", "/forgot-password",];
-  const isModalRoute = modalRoutes.includes(location.pathname);
+
   const backgroundLocation = location.state?.backgroundLocation;
-  const pageLocation = backgroundLocation || location;
+
+  // Only these pages are modals
+  const isModalRoute =
+    !!backgroundLocation &&
+    ["/login", "/register", "/forgot-password", "/profile"].includes(
+      location.pathname,
+    );
+
+  const pageLocation = isModalRoute ? backgroundLocation : location;
+
   const isAdminPage = location.pathname === "/admin";
+
+  const hideNavbar =
+    isAdminPage || location.pathname.startsWith("/reset-password/");
 
   const addToBasket = (item) => {
     setBasket((prev) => {
@@ -100,31 +112,36 @@ function AppShell({
 
       return prev.map((basketItem) =>
         basketItem.id === item.id
-          ? { ...basketItem, qty: basketItem.qty + item.qty }
+          ? {
+              ...basketItem,
+              qty: basketItem.qty + item.qty,
+            }
           : basketItem,
       );
     });
   };
 
-  const goPrice = () => {
-    navigate("/price");
-  };
+  const goPrice = () => navigate("/price");
 
   const goLogin = () => {
-    navigate("/login", { state: { backgroundLocation: location } });
+    navigate("/login", {
+      state: {
+        backgroundLocation: location,
+      },
+    });
   };
 
   return (
     <>
-      {/* ✅ NAVBAR ALWAYS SHOWS */}
-      {!isAdminPage && <Navbar user={user} onLogout={onLogout} />}
+      {!hideNavbar && <Navbar user={user} onLogout={onLogout} />}
 
-      {/* PAGE CONTENT CHANGES */}
+      {/* Normal Pages */}
       <Routes location={pageLocation}>
         <Route
           path="/"
           element={<Home basket={basket} setBasket={setBasket} />}
         />
+
         <Route
           path="/book"
           element={
@@ -138,14 +155,19 @@ function AppShell({
             />
           }
         />
+
         <Route
           path="/price"
           element={<Price basket={basket} setBasket={setBasket} />}
         />
+
         <Route
           path="/about"
           element={<About basket={basket} setBasket={setBasket} />}
         />
+
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+
         <Route
           path="/admin"
           element={
@@ -158,11 +180,15 @@ function AppShell({
         />
       </Routes>
 
+      {/* Modal Pages */}
       {isModalRoute && (
         <Routes>
           <Route path="/login" element={<Login onLogin={onLogin} />} />
+
           <Route path="/register" element={<Register />} />
+
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
           <Route
             path="/profile"
             element={

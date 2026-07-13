@@ -1,15 +1,40 @@
 import { useState } from "react";
 import "../assets/CCS/Auth.css";
+import axios from "axios";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email);
+
+    setMessage("");
+    setError("");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/forgot-password",
+        { email },
+      );
+
+      setMessage(response.data.message);
+
+      setTimeout(() => {
+        navigate("/login", {
+          state: {
+            backgroundLocation: location.state?.backgroundLocation || location,
+          },
+        });
+      }, 2000);
+    } catch (error) {
+      setError(error.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
@@ -60,6 +85,9 @@ function ForgotPassword() {
               />
             </label>
 
+            {message && <div className="auth-success">{message}</div>}
+            {error && <div className="auth-error">{error}</div>}
+
             <button type="submit">Send Reset Link</button>
           </form>
 
@@ -71,7 +99,7 @@ function ForgotPassword() {
                   location.state?.backgroundLocation || location,
               }}
             >
-             ⬅  Back to Login
+              ⬅ Back to Login
             </Link>
           </div>
         </div>
