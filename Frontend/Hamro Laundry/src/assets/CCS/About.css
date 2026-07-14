@@ -18,8 +18,8 @@
   background: #f8f8f8;
   padding: 80px 56px;
   text-align: center;
-  position: relative;
-  overflow: hidden;
+
+  height:200px;
 }
 
 @media (max-width: 768px) {
@@ -227,7 +227,8 @@
   justify-content: center;
   gap: 80px;
   padding: 90px 70px;
-  background: #f8f8f8;
+  background: #ffffff;
+  height:250px;
 }
 
 .about-service-img {
@@ -238,11 +239,12 @@
 .about-service-img img {
   width: 100%;
   max-width: 600px;
+  margin-bottom:92px
 }
 
 .about-service-content {
   flex: 1;
-  max-width: 520px;
+  max-width: 500px;
 }
 
 .about-tag {
@@ -261,7 +263,7 @@
 }
 
 .about-service-content p {
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.9;
   color: #666;
 }

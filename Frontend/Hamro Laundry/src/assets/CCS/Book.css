@@ -413,7 +413,7 @@
   gap: 16px;
 }
 .bp-lbl {
-  font-size: 0.62rem;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -728,13 +728,7 @@ p-mode-info {
   align-items: center;
   gap: 8px;
 }
-.bp-mdot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--ink);
-  flex-shrink: 0;
-}
+
 .bp-mname {
   font-size: 0.8rem;
   font-weight: 700;
@@ -1029,4 +1023,35 @@ p-mode-info {
 
 .receipt-btn:hover {
   background: #333;
+}
+
+.bp-search {
+  margin: 12px 0 18px;
+}
+
+
+.bp-empty {
+  text-align: center;
+  color: #777;
+  padding: 20px;
+}
+
+.bp-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.bp-search-input {
+  width: 250px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.bp-search-input:focus {
+  border-color: #000;
 }

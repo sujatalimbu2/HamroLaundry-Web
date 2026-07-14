@@ -35,6 +35,7 @@ function Book({
   const [showHistory, setShowHistory] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [serviceSearch, setServiceSearch] = useState("");
 
   const [alert, setAlert] = useState({
     show: false,
@@ -108,7 +109,13 @@ function Book({
 
   const isAlterationCategory = cat === "Alterations & Repairs";
   const total = navBasket.reduce((sum, item) => sum + item.qty, 0);
-  const catObj = cat ? groupedServices[cat] || [] : services;
+  const search = serviceSearch.toLowerCase();
+
+  const filteredServices = (cat ? groupedServices[cat] || [] : services).filter(
+    (service) =>
+      service.service_name.toLowerCase().includes(search) ||
+      service.category.toLowerCase().includes(search),
+  );
   useEffect(() => {
     if (isAlterationCategory && mode === "express") {
       setMode("regular");
@@ -358,63 +365,87 @@ function Book({
           </div>
 
           <div>
-            <span className="bp-lbl">{cat} - Choose & Add</span>
-            <div className="bp-cards">
-              {catObj.map((item) => {
-                const selected = sels[item.id] || {};
+            <div className="bp-heading">
+              <span className="bp-lbl">
+                {cat || "All Services"} - Choose & Add
+              </span>
 
-                return (
-                  <div className="bp-card" key={item.id}>
-                    <div className="bp-ctop">
-                      <div className="bp-cico">{item.icon || "👕"}</div>
-                      <div>
-                        <div className="bp-cname">{item.service_name}</div>
-                        <div className="bp-csub">
-                          {mode === "express" ? "Express" : "Regular"}: NPR{" "}
-                          {mode === "express"
-                            ? Math.round(item.standard_price * 1.5)
-                            : item.standard_price}
+              <input
+                type="text"
+                className="bp-search-input"
+                placeholder="Search..."
+                value={serviceSearch}
+                onChange={(e) => setServiceSearch(e.target.value)}
+              />
+            </div>
+            <div className="bp-cards">
+              {filteredServices.length === 0 ? (
+                <p className="bp-empty">No services found.</p>
+              ) : (
+                filteredServices.map((item) => {
+                  const selected = sels[item.id] || {};
+
+                  return (
+                    <div className="bp-card" key={item.id}>
+                      <div className="bp-ctop">
+                        <div className="bp-cico">{item.icon || "👕"}</div>
+
+                        <div>
+                          <div className="bp-cname">{item.service_name}</div>
+
+                          <div className="bp-csub">
+                            {mode === "express" ? "Express" : "Regular"}: NPR{" "}
+                            {mode === "express"
+                              ? Math.round(item.standard_price * 1.5)
+                              : item.standard_price}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    {(item.category === "Casual & Daily Wear" ||
-                      item.category === "Formal & Business Wear") && (
-                      <div className="bp-copts">
-                        {["Wash & Fold", "Wash & Iron"].map((option) => (
+
+                      {(item.category === "Casual & Daily Wear" ||
+                        item.category === "Formal & Business Wear") && (
+                        <div className="bp-copts">
+                          {["Wash & Fold", "Wash & Iron"].map((option) => (
+                            <button
+                              key={option}
+                              className={`bp-copt${selected.option === option ? " on" : ""}`}
+                              onClick={() => togOpt(item.id, option)}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="bp-cfoot">
+                        <span className="bp-cql">Qty</span>
+
+                        <div className="bp-stepper">
                           <button
-                            key={option}
-                            className={`bp-copt${selected.option === option ? " on" : ""}`}
-                            onClick={() => togOpt(item.id, option)}
+                            className="bp-sb"
+                            onClick={() => adjQty(item.id, -1)}
                           >
-                            {option}
+                            -
                           </button>
-                        ))}
+
+                          <span className="bp-sv">{selected.qty || 1}</span>
+
+                          <button
+                            className="bp-sb"
+                            onClick={() => adjQty(item.id, 1)}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
-                    )}
-                    <div className="bp-cfoot">
-                      <span className="bp-cql">Qty</span>
-                      <div className="bp-stepper">
-                        <button
-                          className="bp-sb"
-                          onClick={() => adjQty(item.id, -1)}
-                        >
-                          -
-                        </button>
-                        <span className="bp-sv">{selected.qty || 1}</span>
-                        <button
-                          className="bp-sb"
-                          onClick={() => adjQty(item.id, 1)}
-                        >
-                          +
-                        </button>
-                      </div>
+
+                      <button className="bp-cadd" onClick={() => add(item)}>
+                        + Add to Basket
+                      </button>
                     </div>
-                    <button className="bp-cadd" onClick={() => add(item)}>
-                      + Add to Basket
-                    </button>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
@@ -422,11 +453,13 @@ function Book({
         <div className="bp-right">
           <div className="bp-panel">
             <span className="bp-peyebrow">Service Mode</span>
+          
             <div className="bp-mode-info">
+              
               <div className="bp-mdot" />
               <div>
                 <div className="bp-mname">
-                  {mode === "express" ? "Express" : "Regular"}
+                 ◉ &nbsp;🕐 {mode === "express" ? "Express" : "Regular"}
                 </div>
                 <div className="bp-mdesc">
                   {mode === "express"
@@ -439,8 +472,10 @@ function Book({
 
           <div className="bp-panel">
             <span className="bp-peyebrow">Schedule Drop-Off</span>
+            <br></br>
             <div className="sched-field">
-              <label>Date</label>
+                
+              <label><br></br>Date</label>
               <input
                 type="date"
                 className="sched-input"
@@ -605,7 +640,7 @@ function Book({
                     {booking.status === "Pending" && (
                       <button
                         className="cancel-booking-btn"
-                         onClick={() => {
+                        onClick={() => {
                           setSelectedBooking(booking.id);
                           setShowCancelModal(true);
                         }}
@@ -648,21 +683,21 @@ function Book({
                     <p>
                       <strong>Items:</strong> {booking.items}
                     </p>
-                   <p>
-  <strong>Total:</strong> NPR {booking.total_price}
-</p>
+                    <p>
+                      <strong>Total:</strong> NPR {booking.total_price}
+                    </p>
 
-<button
-  className="receipt-btn"
-  onClick={() =>
-    window.open(
-      `http://localhost:5000/api/receipt/${booking.id}`,
-      "_blank"
-    )
-  }
->
-  📄 Download Receipt
-</button>
+                    <button
+                      className="receipt-btn"
+                      onClick={() =>
+                        window.open(
+                          `http://localhost:5000/api/receipt/${booking.id}`,
+                          "_blank",
+                        )
+                      }
+                    >
+                      📄 Download Receipt
+                    </button>
                   </div>
                 ))
               )}

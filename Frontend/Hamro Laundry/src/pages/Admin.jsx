@@ -144,8 +144,7 @@ export default function AdminDashboard({ onAdminLogout }) {
     },
   ];
   const activeCount = bookings.filter((b) => b.status === "Processing").length;
-
-  const readyCount = bookings.filter((b) => b.status === "").length;
+  const readyCount = bookings.filter((b) => b.status === "Ready").length;
 
   const navItems = [
     { id: "overview", label: "Overview", icon: "📊" },

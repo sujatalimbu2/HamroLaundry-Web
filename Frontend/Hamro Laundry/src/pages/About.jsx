@@ -16,24 +16,25 @@ const About = () => {
           <div className="about-eyebrow">Service you will love</div>
         </div>
       </div>
-    <section className="about-service">
-  <div className="about-service-img">
-    <img src={hom1} alt="Laundry Service" />
-  </div>
+      <section className="about-service">
+        <div className="about-service-img">
+          <img src={hom1} alt="Laundry Service" />
+        </div>
 
-  <div className="about-service-content">
-    <h2>Services you love</h2>
-    <span className="about-tag">We think ahead</span>
-
-
-    <p>
-      At Hamro Laundry, we provide professional garment care with attention to
-      every detail. From everyday clothing to delicate fabrics, our experienced
-      team ensures every item is cleaned, pressed, and returned looking its
-      best.
-    </p>
-  </div>
-</section>
+        <div className="about-service-content">
+          <h2>Services you love</h2>
+          <span className="about-tag">We think ahead</span>
+          <p>
+            At Hamro Laundry, we provide professional garment care with
+            attention to every detail. From everyday clothing to delicate
+            fabrics, our experienced team ensures every item is cleaned,
+            pressed, and returned looking its best. Using modern equipment and
+            quality cleaning products, we deliver reliable laundry services
+            while focusing on customer satisfaction, quality, and affordability
+            every step of the way.
+          </p>
+        </div>
+      </section>
       <br></br>
       <div className="services1">
         <div className="service-card1">

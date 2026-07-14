@@ -227,6 +227,7 @@
   }
 }
 
+
 /* Services Section */
 .services-section {
   background: white;
@@ -413,12 +414,13 @@
     font-size: 18px;
   }
 }
-.side-left img {
+.side-left{
   width: 100%;
   max-width: 500px;
-  height: auto;
-  margin: 0 auto;
-  display: block;
+  height:450px;
+ margin-left:719px;
+margin-top:-283px;
+
 }
 .side-section{
    height: 400px;
@@ -428,7 +430,7 @@
 .why-choose-section {
   background:#000;
   padding:72px 36px;
-  min-height:700px;
+  min-height:500px;
   height:auto;
 }
 
@@ -443,20 +445,22 @@
 }
 
 .img-clothes {
-  width:320px;
-  height:auto;
+  width:350px;
+  height:800px;
   margin-left: -30px;
-  margin-top:-100px;
+  margin-top:-99px;
 }
 
 .why-choose-text {
   color: white;
   text-align: left;
-  margin-top: -100px;
+  margin-top: -200px;
+  margin-right:100px;
+  width:600px;
 }
 
 .why-choose-text h2 {
-  font-size: 50.4px;
+  font-size: 65.4px;
   font-weight: 700;
   margin-bottom: 27px;
   line-height: 1.1;
@@ -484,7 +488,7 @@
 }
 
 .why-choose-text p {
-  font-size: 20px;
+  font-size: 22px;
   color: white;
   font-weight: 400;
 }
@@ -495,14 +499,16 @@
 }
 .services {
   display: flex;
-  align-items: flex-start;
-  gap: 40px;
-  margin: 60px auto;
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 36px;
+  margin-left: 90px;
+  padding: 0 40px;
 }
-
+.h-serices{
+  display: flex;
+  height:600px;
+  width:700px;
+ width: 100%;
+  max-width: 1000px;
+}
 .service-card {
   flex: 1;
   text-align: left;
@@ -524,7 +530,7 @@
 }
 
 .service-card p {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.8;
   color: #666;
 }
@@ -661,6 +667,7 @@
   background: var(--surface);
   padding: 96px 56px;
   border-bottom: 1px solid var(--border);
+  height:600px;
 }
 .h-proc-head {
   text-align: center;

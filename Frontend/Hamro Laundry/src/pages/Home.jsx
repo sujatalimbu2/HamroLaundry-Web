@@ -75,7 +75,7 @@ const Home = () => {
 
           <div className="services-hero-right">
             <img src={callIcon} alt="Call now" className="services-call-ico" />
-            <div className="services-call-number">555-080-201</div>
+            <div className="services-call-number">964-080-201</div>
             <span>Call Now!</span>
           </div>
         </div>
@@ -163,18 +163,16 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="side-section">
-        <div>
-          <div className="side-left">
-            <img src={side} alt="side" />
-          </div>
-          <div>
-            <div className="services">
-              <div className="service-card">
+      <br></br>
+      <br></br>
+      <br></br>
+      <section className="h-services">
+           <div className="services"> 
+               <div className="service-card">
                 <img src={fold} alt="Guaranteed Services" />
                 <h3>Guaranteed Services</h3>
                 <p>
-                  We provide professional laundry services with quality care and
+                  We provide professional laundry services with<br></br> quality care and
                   attention to every garment.
                 </p>
               </div>
@@ -183,7 +181,7 @@ const Home = () => {
                 <img src={iron} alt="Always Open" />
                 <h3>Always Open</h3>
                 <p>
-                  Book your laundry anytime. Our online service is available
+                  Book your laundry anytime. Our online service is<br></br> available
                   24/7 for your convenience.
                 </p>
               </div>
@@ -192,14 +190,14 @@ const Home = () => {
                 <img src={shi} alt="Free Pickup" />
                 <h3>Affordable Prices</h3>
                 <p>
-                  Enjoy high-quality laundry services at reasonable prices with
+                  Enjoy high-quality laundry services at reasonable <br></br>prices with
                   no hidden charges.
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
+              </div>
       </section>
+      <br></br>
+
       <section className="h-process">
         <div className="h-proc-head">
           <span className="h-sm">How It Works</span>
@@ -231,6 +229,10 @@ const Home = () => {
           ))}
         </div>
       </section>
+      <div className="side-left">
+            <img src={side} alt="side" />
+      </div>
+      
 
       <section className="h-reviews">
         <div className="h-rev-header">

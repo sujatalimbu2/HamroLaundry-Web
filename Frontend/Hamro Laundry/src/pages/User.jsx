@@ -156,7 +156,7 @@ function User({ user, onUserUpdate, goLogin }) {
             )}
           </div>
 
-          <div>
+          <div className="profile-info">
             <h1>{name}</h1>
             <p>{user.email}</p>
           </div>
