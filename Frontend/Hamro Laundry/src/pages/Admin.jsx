@@ -26,6 +26,7 @@ export default function AdminDashboard({ onAdminLogout }) {
   const [serviceSearch, setServiceSearch] = useState("");
   const [showServiceEdit, setShowServiceEdit] = useState(false);
   const [editService, setEditService] = useState(null);
+  const [message, setMessage] = useState("");
 
   const COLORS = ["#fbbf24", "#3b82f6", "#8b5cf6", "#22c55e", "#ef4444"];
 
@@ -36,11 +37,20 @@ export default function AdminDashboard({ onAdminLogout }) {
         editService,
       );
 
-      getServices();
+      setMessage("Service updated successfully!");
 
+      getServices();
       setShowServiceEdit(false);
-    } catch (err) {
-      console.log(err);
+
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+    } catch (error) {
+      error.setMessage("Failed to update service.");
+
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
     }
   };
 
@@ -553,6 +563,7 @@ export default function AdminDashboard({ onAdminLogout }) {
             <div className="adm-panel">
               <div className="adm-panel-head">
                 <h3>Manage Services</h3>
+                {message && <div className="auth-success">{message}</div>}
                 <input
                   className="adm-search"
                   placeholder="Search service..."

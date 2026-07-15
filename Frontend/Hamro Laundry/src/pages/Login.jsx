@@ -79,7 +79,9 @@ function Login({ onLogin }) {
               />
             </label>
 
-            <div className="password-wrapper">
+            <div className="password-box">
+              <label>
+                Password
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -94,6 +96,7 @@ function Login({ onLogin }) {
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
+              </label>
             </div>
 
             <div className="forgot-password-row">

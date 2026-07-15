@@ -10,6 +10,8 @@ function User({ user, onUserUpdate, goLogin }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [address, setAddress] = useState("");
+  const [contact, setContact] = useState("");
+
   const [showSuccess, setShowSuccess] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -30,6 +32,7 @@ function User({ user, onUserUpdate, goLogin }) {
     setName(user.name);
     setImage(user.image || "");
     setAddress(user.address || "");
+    setContact(user.contact || "");
   }, [user, goLogin]);
 
   const handleImageChange = (event) => {
@@ -53,6 +56,11 @@ function User({ user, onUserUpdate, goLogin }) {
       setProfileMessage("Name must be at least 3 characters.");
       return;
     }
+    
+    if (!/^9\d{9}$/.test(contact.trim())) {
+      setProfileMessage("Please enter a valid 10-digit contact number.");
+      return;
+    }
 
     try {
       const formData = new FormData();
@@ -60,6 +68,7 @@ function User({ user, onUserUpdate, goLogin }) {
       formData.append("name", name.trim());
       formData.append("email", user.email);
       formData.append("address", address.trim());
+      formData.append("contact", contact.trim());
 
       if (image instanceof File) {
         formData.append("image", image);
@@ -176,6 +185,15 @@ function User({ user, onUserUpdate, goLogin }) {
             <label>
               Email
               <input value={user.email} readOnly />
+            </label>
+            <label>
+              Contact Number
+              <input
+                type="tel"
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                placeholder="98XXXXXXXX"
+              />
             </label>
 
             <label>

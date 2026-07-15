@@ -355,12 +355,51 @@ const cancelBooking = async (req, res) => {
   }
 };
 
+const updateService = async (req, res) => {
+  const { id } = req.params;
+  const { category, service_name, standard_price, express_price } = req.body;
+
+  try {
+    const result = await pool.query(
+      `
+      UPDATE services
+      SET
+        category = $1,
+        service_name = $2,
+        standard_price = $3,
+        express_price = $4
+      WHERE id = $5
+      RETURNING *
+      `,
+      [category, service_name, standard_price, express_price, id],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        message: "Service not found",
+      });
+    }
+
+    res.json({
+      message: "Service updated successfully",
+      service: result.rows[0],
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
 module.exports = {
   addBooking,
   getBookings,
   updateBooking,
   getCustomers,
   getServices,
+  updateService,
   getMyBookings,
   cancelBooking,
 };

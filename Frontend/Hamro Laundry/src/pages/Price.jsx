@@ -15,10 +15,9 @@ function Price() {
       console.log(err);
     }
   };
-   useEffect(() => {
+  useEffect(() => {
     getServices();
   }, []);
-
 
   const grouped = services.reduce((acc, item) => {
     if (!acc[item.category]) acc[item.category] = [];
@@ -32,10 +31,8 @@ function Price() {
         <div className="pp-deco">NPR</div>
         <span className="pp-eyebrow">Pricing Guide</span>
         <h1>
-          Simple,
-         
-          Transparent
-         <br></br>
+          Simple, Transparent
+          <br></br>
           Pricing.
         </h1>
         <p className="pp-subp">
@@ -85,7 +82,15 @@ function Price() {
           </div>
         ))}
       </div>
-       <FeedbackSection />
+      <FeedbackSection />
+      <div className="pp-book">
+        <h2>Ready to book your laundry?</h2>
+        <p>Fast, reliable, and affordable laundry service.</p>
+
+        <button onClick={() => (window.location.href = "/book")}>
+          Book Now
+        </button>
+      </div>
       <Footer />
     </div>
   );

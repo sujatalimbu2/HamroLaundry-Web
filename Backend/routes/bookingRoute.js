@@ -10,6 +10,7 @@ const {
   getServices,
   getMyBookings,
   cancelBooking,
+  updateService,
 } = require("../controller/bookingController");
 
 router.post("/booking/create", addBooking);
@@ -22,6 +23,7 @@ router.put("/booking/:id", updateBooking);
 
 router.get("/customers", getCustomers);
 router.get("/services", getServices);
+router.put("/services/:id", updateService);
 router.get("/my-bookings/:userId", getMyBookings);
 router.put("/booking/cancel/:id", cancelBooking);
 router.get("/receipt/:id", downloadReceipt);
