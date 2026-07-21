@@ -20,9 +20,9 @@ const nodemailer = require("nodemailer");
 const addUser = async (req, res) => {
   try {
     console.log(req.body); // debugging
-    const { name, email, address, contact } = req.body;
+    const { name, email, password, address, contact } = req.body;
     const image = req.file ? req.file.filename : null; //
-    if (!name || !email || !address || !contact) {
+    if (!name || !email || !password || !address || !contact) {
       return res.status(400).json({
         // return to exit loop
         message: "Field empty",

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Footer from "../component/Footer";
 import FeedbackSection from "../component/FeedbackSection";
+import bas1 from "../assets/bas1.png";
 
 function Price() {
   const [services, setServices] = useState([]);
@@ -84,12 +85,20 @@ function Price() {
       </div>
       <FeedbackSection />
       <div className="pp-book">
-        <h2>Ready to book your laundry?</h2>
-        <p>Fast, reliable, and affordable laundry service.</p>
+        <div className="pp-book-content">
+          <div className="pp-book-text">
+            <h2>Ready to book your laundry?</h2>
+            <p>Fast, reliable, and affordable laundry service.</p>
 
-        <button onClick={() => (window.location.href = "/book")}>
-          Book Now
-        </button>
+            <button onClick={() => (window.location.href = "/book")}>
+              Book Now
+            </button>
+          </div>
+
+          <div className="pp-book-image">
+            <img src={bas1} alt="Laundry Basket" />
+          </div>
+        </div>
       </div>
       <Footer />
     </div>

@@ -19,7 +19,7 @@
   padding: 80px 56px;
   text-align: center;
 
-  height:200px;
+  height: 200px;
 }
 
 @media (max-width: 768px) {
@@ -91,15 +91,18 @@
   font-size: 20px;
 }
 
-.contact-info {
+.contact-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 32px;
   margin-top: 24px;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
 }
 
-.contact-info p {
+.contact-card p {
   margin: 0 0 12px 0;
   font-size: 0.95rem;
   color: var(--ink3);
@@ -112,6 +115,11 @@
 .contact-info strong {
   color: var(--ink);
   font-weight: 700;
+}
+
+.contact-right img {
+  width: 170px;
+  margin-bottom:-54px;
 }
 
 .h-sm {
@@ -181,7 +189,7 @@
   height: 480px;
   border-radius: 5%;
   object-fit: cover;
-  margin-left:-50px;
+  margin-left: -50px;
 }
 .services1 {
   background: #000000; /* Change to black if you want */
@@ -214,7 +222,7 @@
 }
 
 .service-card1 p {
-  color: rgba(255,255,255,.9);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 16px;
   line-height: 1.8;
   max-width: 320px;
@@ -228,7 +236,7 @@
   gap: 80px;
   padding: 90px 70px;
   background: #ffffff;
-  height:250px;
+  height: 250px;
 }
 
 .about-service-img {
@@ -239,7 +247,7 @@
 .about-service-img img {
   width: 100%;
   max-width: 600px;
-  margin-bottom:92px
+  margin-bottom: 92px;
 }
 
 .about-service-content {
@@ -282,4 +290,86 @@
   .about-service-img img {
     max-width: 420px;
   }
+}
+
+ab-team {
+  padding: 92px 56px;
+}
+.ab-team-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+.ab-tgrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.ab-tcard {
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 30px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.ab-tcard:hover {
+  border-color: var(--ink);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+.ab-tav {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #222;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: Arial, sans-serif;
+  margin: 0 auto 16px;
+}
+.ab-tcard h4 {
+  font-family: "Fraunces", serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.ab-trole {
+  font-size: 0.71rem;
+  color: var(--muted);
+  margin-bottom: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+.ab-tcard p {
+  font-size: 0.76rem;
+  color: var(--ink3);
+  line-height: 1.62;
+  font-weight: 300;
+}
+.ab-vico {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+}
+
+.ab-tcard {
+  text-align: center;
+}
+
+.ab-tcard h4 {
+  margin-bottom: 12px;
+}
+
+.ab-tcard p {
+  line-height: 1.7;
+  color: #555;
 }

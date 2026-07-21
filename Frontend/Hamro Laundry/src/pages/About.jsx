@@ -6,6 +6,10 @@ import FeedbackSection from "../component/FeedbackSection";
 import iron from "../assets/iron.png";
 import fold from "../assets/fold.png";
 import shi from "../assets/shi.png";
+import quality from "../assets/bas2.png";
+import express from "../assets/time.png";
+import pricing from "../assets/mach.png";
+import contactImg from "../assets/phone.png";
 
 const About = () => {
   return (
@@ -78,28 +82,16 @@ const About = () => {
             </h2>
             <p className="ab-story-p">
               Hamro Laundry began in 2016 with one pressing machine and a
-              commitment to treating every garment as if it were our own. Eight
-              years on, word of mouth has made us one of Kathmandu's most
-              trusted laundry services.
-            </p>
-            <p className="ab-story-p">
-              Hamro Laundry began in 2016 with one pressing machine and a
-              commitment to treating every garment as if it were our own. Eight
-              years on, word of mouth has made us one of Kathmandu's most
-              trusted laundry services. We don't do pickups or delivery —
-              because the best results come from a face-to-face conversation,
-              where we understand exactly what you need before we begin.
-            </p>
-            <p className="ab-story-p">
-              Our experienced team uses high-quality equipment and carefully
-              selected cleaning products to ensure every item receives the
-              attention it deserves. Whether it's your everyday clothes, office
-              wear, delicate fabrics, or special garments, we focus on
-              delivering outstanding cleanliness, freshness, and professional
-              care. At Hamro Laundry, our goal is simple: provide reliable,
-              affordable, and high-quality laundry services while building
-              lasting relationships with our customers through trust,
-              consistency, and exceptional service.
+              commitment to treating every garment with care. Over the years, we
+              have earned the trust of customers by providing reliable,
+              affordable, and high-quality laundry services. We focus on
+              delivering excellent garment care using modern equipment and
+              quality cleaning products. Whether it's everyday clothing, office
+              wear, or delicate fabrics, every item is handled with attention
+              and professionalism. Although we do not offer pickup or delivery
+              services, we believe that meeting customers in person helps us
+              better understand their requirements and provide the best possible
+              results.
             </p>
           </div>
         </div>
@@ -143,26 +135,71 @@ const About = () => {
               </div>
             ))}
           </div>
+          <br></br>
+          <br></br>
         </div>
         <br></br>
         <br></br>
 
-        <div className="about-section">
-          <h2>Contact Us</h2>
-          <div className="contact-info">
-            <p>
-              <strong>Phone:</strong> +977 1 XXXX XXXX
-            </p>
-            <p>
-              <strong>Email:</strong> info@hamrolaundry.com
-            </p>
-            <p>
-              <strong>Address:</strong> Kathmandu, Nepal
-            </p>
-            <p>
-              <strong>Hours:</strong> Monday - Sunday, 9:00 AM - 6:00 PM
-            </p>
+        <div className="ab-choose">
+          <div className="ab-team-header">
+            <span
+              className="h-sm"
+              style={{ marginBottom: "12px", display: "block" }}
+            >
+              Why Choose Us
+            </span>
+
+            <h2 className="h-sec-h2">
+              Trusted laundry care
+              <br />
+              for every garment.
+            </h2>
           </div>
+
+          <div className="ab-tgrid">
+            {[
+              {
+                img: quality,
+                t: "Quality Cleaning",
+                b: "Every garment is cleaned using professional equipment and high-quality products to ensure excellent results.",
+              },
+              {
+                img: express,
+                t: "Express Service",
+                b: "Need your clothes quickly? Choose our express service for faster turnaround without compromising quality.",
+              },
+              {
+                img: pricing,
+                t: "Affordable Pricing",
+                b: "Enjoy transparent pricing with reliable service and no hidden charges for every order.",
+              },
+            ].map((item) => (
+              <div className="ab-tcard" key={item.t}>
+                <img src={item.img} alt={item.t} className="ab-card-img" />
+                <h4>{item.t}</h4>
+                <p>{item.b}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+
+        <div className="contact-card">
+          <div className="contact-left">
+            <h2>Contact Us</h2>
+
+            <p>📞 +977 1 XXXX XXXX</p>
+            <p>📧 info@hamrolaundry.com</p>
+            <p>📍 Kathmandu, Nepal</p>
+            <p>🕒 Monday – Sunday | 9:00 AM – 6:00 PM</p>
+          </div>
+          <div className="contact-right">
+    <img src={contactImg} alt="Laundry" />
+  </div>
         </div>
         <br></br>
       </div>

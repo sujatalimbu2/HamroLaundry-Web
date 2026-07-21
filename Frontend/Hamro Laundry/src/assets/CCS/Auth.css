@@ -570,3 +570,13 @@
 .back-login a:hover {
   color: #555;
 }
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 50px;
+  box-sizing: border-box;
+}

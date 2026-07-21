@@ -12,9 +12,7 @@ import ironIcon from "../assets/app.png";
 import FeedbackSection from "../component/FeedbackSection";
 import { useNavigate } from "react-router-dom";
 import side from "../assets/hand.png";
-import iron from "../assets/iron.png";
-import fold from "../assets/fold.png";
-import shi from "../assets/shi.png";
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -93,9 +91,9 @@ const Home = () => {
               alt: "Affordable price",
             },
             {
-              title: "Pick Up & Delivery Free",
+              title: "Always Open Freely",
               icon: ironIcon,
-              alt: "Pick up and delivery",
+              alt: "Always Open Freelyy",
             },
           ].map((item) => (
             <div className="services-feature" key={item.title}>
@@ -163,41 +161,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <br></br>
-      <br></br>
-      <br></br>
-      <section className="h-services">
-           <div className="services"> 
-               <div className="service-card">
-                <img src={fold} alt="Guaranteed Services" />
-                <h3>Guaranteed Services</h3>
-                <p>
-                  We provide professional laundry services with<br></br> quality care and
-                  attention to every garment.
-                </p>
-              </div>
-
-              <div className="service-card">
-                <img src={iron} alt="Always Open" />
-                <h3>Always Open</h3>
-                <p>
-                  Book your laundry anytime. Our online service is<br></br> available
-                  24/7 for your convenience.
-                </p>
-              </div>
-
-              <div className="service-card">
-                <img src={shi} alt="Free Pickup" />
-                <h3>Affordable Prices</h3>
-                <p>
-                  Enjoy high-quality laundry services at reasonable <br></br>prices with
-                  no hidden charges.
-                </p>
-              </div>
-              </div>
-      </section>
-      <br></br>
-
+      
       <section className="h-process">
         <div className="h-proc-head">
           <span className="h-sm">How It Works</span>

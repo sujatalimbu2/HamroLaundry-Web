@@ -222,7 +222,7 @@ export default function AdminDashboard({ onAdminLogout }) {
               {view === "overview" && "Snapshot of today's business"}
               {view === "bookings" && "All customer drop-off bookings"}
               {view === "orders" && "Track order progress"}
-              {view === "customers" && "Manage your customer base"}
+              {view === "customers" && "View registered customers"}
               {view === "services" && "Manage service categories and pricing"}
             </div>
           </div>
