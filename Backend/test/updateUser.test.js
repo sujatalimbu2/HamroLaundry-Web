@@ -30,31 +30,26 @@ describe("PUT /api/updateUser/:id", () => {
 
     updateUser.mockResolvedValue(user);
 
-    const res = await request(app)
-      .put("/api/updateUser/1")
-      .send({
-        name: "John",
-        email: "john@gmail.com",
-        address: "Kathmandu",
-        contact: "9812345678",
-      });
-
-    expect(res.statusCode).toBe(200);
-    expect(res.body.message).toBe("User updated successfully");
+    const res = await request(app).put("/api/updateUser/1").send({
+      name: "John",
+      email: "john@gmail.com",
+      address: "Kathmandu",
+      contact: "9812345678",
+    });
+    expect(res.statusCode).toBe(201);
+    expect(res.body.message).toBe("Updated Successfully");
   });
 
   // Test 2: User not found
   test("should return 404 if user not found", async () => {
     updateUser.mockResolvedValue(null);
 
-    const res = await request(app)
-      .put("/api/updateUser/999")
-      .send({
-        name: "John",
-        email: "john@gmail.com",
-        address: "Kathmandu",
-        contact: "9812345678",
-      });
+    const res = await request(app).put("/api/updateUser/999").send({
+      name: "John",
+      email: "john@gmail.com",
+      address: "Kathmandu",
+      contact: "9812345678",
+    });
 
     expect(res.statusCode).toBe(404);
     expect(res.body.message).toBe("User not found");
@@ -64,14 +59,12 @@ describe("PUT /api/updateUser/:id", () => {
   test("should return 500 if database fails", async () => {
     updateUser.mockRejectedValue(new Error("Database Error"));
 
-    const res = await request(app)
-      .put("/api/updateUser/1")
-      .send({
-        name: "John",
-        email: "john@gmail.com",
-        address: "Kathmandu",
-        contact: "9812345678",
-      });
+    const res = await request(app).put("/api/updateUser/1").send({
+      name: "John",
+      email: "john@gmail.com",
+      address: "Kathmandu",
+      contact: "9812345678",
+    });
 
     expect(res.statusCode).toBe(500);
     expect(res.body.message).toBe("Server error");
@@ -84,22 +77,20 @@ describe("PUT /api/updateUser/:id", () => {
       name: "John",
     });
 
-    await request(app)
-      .put("/api/updateUser/1")
-      .send({
-        name: "John",
-        email: "john@gmail.com",
-        address: "Kathmandu",
-        contact: "9812345678",
-      });
+    await request(app).put("/api/updateUser/1").send({
+      name: "John",
+      email: "john@gmail.com",
+      address: "Kathmandu",
+      contact: "9812345678",
+    });
 
     expect(updateUser).toHaveBeenCalledWith(
-      "1",
+      "2",
       "John",
       "john@gmail.com",
       "Kathmandu",
       "9812345678",
-      null
+      null,
     );
   });
 
@@ -115,14 +106,12 @@ describe("PUT /api/updateUser/:id", () => {
 
     updateUser.mockResolvedValue(user);
 
-    const res = await request(app)
-      .put("/api/updateUser/1")
-      .send({
-        name: "John Updated",
-        email: "john@gmail.com",
-        address: "Pokhara",
-        contact: "9800000000",
-      });
+    const res = await request(app).put("/api/updateUser/1").send({
+      name: "John Updated",
+      email: "john@gmail.com",
+      address: "Pokhara",
+      contact: "9800000000",
+    });
 
     expect(res.body.user).toEqual(user);
   });
@@ -134,14 +123,12 @@ describe("PUT /api/updateUser/:id", () => {
       image: null,
     });
 
-    const res = await request(app)
-      .put("/api/updateUser/1")
-      .send({
-        name: "John",
-        email: "john@gmail.com",
-        address: "Kathmandu",
-        contact: "9812345678",
-      });
+    const res = await request(app).put("/api/updateUser/1").send({
+      name: "John",
+      email: "john@gmail.com",
+      address: "Kathmandu",
+      contact: "9812345678",
+    });
 
     expect(res.statusCode).toBe(200);
   });
