@@ -36,7 +36,28 @@ function Book({
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [serviceSearch, setServiceSearch] = useState("");
+  const [bookedSlots, setBookedSlots] = useState([]);
 
+  useEffect(() => {
+    if (!date) {
+      setBookedSlots([]);
+      return;
+    }
+
+    const fetchBookedSlots = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/booking/booked-slots?date=${date}`,
+        );
+
+        setBookedSlots(res.data.map((slot) => slot.booking_time));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchBookedSlots();
+  }, [date]);
   const [alert, setAlert] = useState({
     show: false,
     title: "",
@@ -239,7 +260,9 @@ function Book({
       setAlert({
         show: true,
         title: "Booking Failed",
-        message: "Unable to complete your booking. Please try again.",
+        message:
+          error.response?.data?.message ||
+          "Unable to complete your booking. Please try again.",
       });
     }
   };
@@ -453,13 +476,12 @@ function Book({
         <div className="bp-right">
           <div className="bp-panel">
             <span className="bp-peyebrow">Service Mode</span>
-          
+
             <div className="bp-mode-info">
-              
               <div className="bp-mdot" />
               <div>
                 <div className="bp-mname">
-                 ◉ &nbsp;🕐 {mode === "express" ? "Express" : "Regular"}
+                  ◉ &nbsp;🕐 {mode === "express" ? "Express" : "Regular"}
                 </div>
                 <div className="bp-mdesc">
                   {mode === "express"
@@ -474,8 +496,9 @@ function Book({
             <span className="bp-peyebrow">Schedule Drop-Off</span>
             <br></br>
             <div className="sched-field">
-                
-              <label><br></br>Date</label>
+              <label>
+                <br></br>Date
+              </label>
               <input
                 type="date"
                 className="sched-input"
@@ -500,7 +523,14 @@ function Book({
                   "3:00 PM - 4:00 PM",
                   "4:00 PM - 5:00 PM",
                 ].map((slot) => (
-                  <option key={slot}>{slot}</option>
+                  <option
+                    key={slot}
+                    value={slot}
+                    disabled={bookedSlots.includes(slot)}
+                  >
+                    {slot}
+                    {bookedSlots.includes(slot) ? " (Booked)" : ""}
+                  </option>
                 ))}
               </select>
             </div>

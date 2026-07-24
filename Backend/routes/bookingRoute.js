@@ -11,6 +11,7 @@ const {
   getMyBookings,
   cancelBooking,
   updateService,
+  getBookedSlots,
 } = require("../controller/bookingController");
 
 router.post("/booking/create", addBooking);
@@ -27,5 +28,6 @@ router.put("/services/:id", updateService);
 router.get("/my-bookings/:userId", getMyBookings);
 router.put("/booking/cancel/:id", cancelBooking);
 router.get("/receipt/:id", downloadReceipt);
+router.get("/booked-slots", getBookedSlots);
 
 module.exports = router;

@@ -5,10 +5,47 @@ const pool = require("../database/db");
 const addBooking = async (req, res) => {
   try {
     const { user_id, basket, date, time, mode } = req.body;
+    // Allow bookings only from today up to 30 days ahead
+    const bookingDate = new Date(date);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const maxDate = new Date();
+    maxDate.setHours(0, 0, 0, 0);
+    maxDate.setDate(maxDate.getDate() + 30);
+
+    if (bookingDate < today || bookingDate > maxDate) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Bookings are only allowed from today up to 30 days in advance.",
+      });
+    }
 
     if (!user_id || !basket || basket.length === 0 || !date || !time) {
       return res.status(400).json({
         message: "Missing booking information",
+      });
+    }
+
+    // Check if the selected slot is already booked
+    const slotResult = await pool.query(
+      `
+      SELECT COUNT(*) AS total
+      FROM bookings
+      WHERE booking_date = $1
+        AND booking_time = $2
+        AND status != 'Cancelled'
+      `,
+      [date, time],
+    );
+
+    if (parseInt(slotResult.rows[0].total) > 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This time slot is already booked. Please choose another time.",
       });
     }
 
@@ -108,6 +145,30 @@ const addBooking = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+const getBookedSlots = async (req, res) => {
+  const { date } = req.query;
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT booking_time
+      FROM bookings
+      WHERE booking_date = $1
+      AND status != 'Cancelled'
+      `,
+      [date],
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
 
     res.status(500).json({
       message: "Server Error",
@@ -402,4 +463,5 @@ module.exports = {
   updateService,
   getMyBookings,
   cancelBooking,
+  getBookedSlots,
 };
